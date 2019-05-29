@@ -4,7 +4,7 @@ highlighter:      rouge
 
 # Setup
 title:            0x41.cf
-tagline:          'InfoSec, RE, etc.'
+tagline:          'InfoSec, Reversing, and more'
 description:      'InfoSec, Reverse Engineering and more (soon&trade;)'
 url:              https://fongandrew.github.io
 #baseurl:          '/hydeout'
