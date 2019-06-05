@@ -76,8 +76,8 @@ The first thing we would need to do is find target Qt apps to exploit, which are
 
 I've found 2 of them already installed on my machine:
 
-- [Free Download Manager](freedownloadmanager.org){:target="_blank"}{:rel="noopener noreferrer"} - The 2nd Google result when searching 'download manager'.
-- And [Origin](origin.com){:target="_blank"}{:rel="noopener noreferrer"}, of course.
+- [Free Download Manager](//freedownloadmanager.org){:target="_blank"}{:rel="noopener noreferrer"} - The 2nd Google result when searching 'download manager'.
+- And [Origin](//origin.com){:target="_blank"}{:rel="noopener noreferrer"}, of course.
 
 I've tried to find more apps that meet the 2 conditions to verify my claims, and sure enough with little to no effort I was able to find the [Transmission](https://github.com/transmission/transmission){:target="_blank"}{:rel="noopener noreferrer"} torrent client, which I'm also adding to the list.
 
