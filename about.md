@@ -15,7 +15,7 @@ sidebar_link: true
 
 <br>
 <p>Hello there, I'm Sami ALAOUI KENDIL!</p>
-<p>Moroccan, <span id="age"></span>, currently an IT student at SUPINFO, hopefully soon employed in the InfoSec field.</p>
+<p>Moroccan, <span id="age">born in 1996</span>, currently an IT student at SUPINFO, hopefully soon employed in the InfoSec field.</p>
 <p>I enjoy learning about computers, what we already know they can do and what we don't - I like to spend time on x86, WebSec and Android.</p>
 <p>Find me on:
   <li>
