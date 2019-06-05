@@ -35,12 +35,25 @@ body {
   min-height: 100vh;
 }
 
+@font-face {
+  font-family: 'FixedsysExcelsior';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../font/fsex300-webfont.eot');
+  src: url('../font/fsex300-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../font/fsex300-webfont.woff') format('woff'),
+       url('../font/fsex300-webfont.ttf') format('truetype'),
+       url('../font/fsex300-webfont.svg#FixedsysExcelsior301Regular') format('svg');
+  -webkit-font-smoothing: aliased;
+  font-smooth: never;
+}
+
 #sidebar {
   flex: 0 0 auto;
   padding: $section-spacing;
 
   .site-title {
-    font-family: "Lucida Console";
+    font-family: 'FixedsysExcelsior';
     font-weight: normal;
     font-size: $large-font-size;
     margin-top: 0;
@@ -110,7 +123,7 @@ body {
 
   // Bigger title
   .site-title {
-    font-size: 3.25rem;
+    font-size: 4rem;
   }
 
   // Show secondary nav content + lead
@@ -162,7 +175,7 @@ body {
 
   #sidebar {
     .site-title {
-      font-size: 3.25rem;
+      font-size: 4rem;
       .back-arrow { display: none; }
     }
 
