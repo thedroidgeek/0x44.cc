@@ -5,13 +5,16 @@ highlighter:      rouge
 # Setup
 title:            0x41.cf
 tagline:          'InfoSec, Reversing, and more'
-description:      'InfoSec, Reverse Engineering and more (soon&trade;)'
+description:      'InfoSec, Reverse Engineering, and more (soon&trade;)'
 url:              https://fongandrew.github.io
 #baseurl:          '/hydeout'
 
 author:
   name:           'Sami ALAOUI KENDIL'
   url:            https://linkedin.com/thedroidgeek
+
+github_username:      thedroidgeek
+linkedin_username:    thedroidgeek
 
 paginate:         5
 # paginate_path:    '/page:num'
