@@ -11,21 +11,20 @@ sidebar_link: true
       document.getElementById("age").innerText = Math.abs(ageDate.getUTCFullYear() - 1970);
   }
 </script>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 <br>
-<p>Hello there, I'm Sami ALAOUI KENDIL!</p>
+<p>Hello there, I'm {{ site.author.name }}!</p>
 <p>Moroccan, <span id="age">born in 1996</span>, currently an IT student at SUPINFO, hopefully soon employed in the InfoSec field.</p>
 <p>I enjoy learning about computers, what we already know they can do and what we don't - I like to spend time on x86, WebSec and Android.</p>
 <p>Find me on:
   <li>
-    <a href="https://github.com/thedroidgeek">
-      <i class="fa fa-github"></i> @thedroidgeek
+    <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener noreferrer">
+      {% include svg/github.svg %} @{{ site.github_username }}
     </a>
   </li>
   <li>
-    <a href="https://linkedin.com/in/thedroidgeek">
-      <i class="fa fa-linkedin"></i> @thedroidgeek
+    <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener noreferrer">
+      {% include svg/linkedin.svg %} @{{ site.linkedin_username }}
     </a>
   </li>
 </p>
