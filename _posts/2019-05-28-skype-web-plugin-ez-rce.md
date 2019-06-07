@@ -113,7 +113,7 @@ Now all that's left for us to have is an SMB share that will host our malicous p
 
 Here's a detailed video of the PoC in action, from crafting the .dll files to the MessageBox on the 3 apps:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/xVZU-2Y0Pzc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p style="position: relative; padding: 30px 0px 57% 0px; height: 0; overflow: hidden;"><iframe src="https://www.youtube.com/embed/xVZU-2Y0Pzc" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="display: block; margin: 0px auto; position: absolute; top: 0; left: 0;"></iframe></p>
 
 
 ### DoS Bonus
