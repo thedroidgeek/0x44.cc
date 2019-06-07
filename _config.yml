@@ -16,6 +16,9 @@ author:
 github_username:      thedroidgeek
 linkedin_username:    thedroidgeek
 
+disqus:
+  shortname:     0x41-cf
+
 paginate:         5
 # paginate_path:    '/page:num'
                     # Or '/blog/page:num' if you want to move your index pages
