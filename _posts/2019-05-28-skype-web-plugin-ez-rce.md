@@ -46,7 +46,7 @@ This is where the Skype Web Plugin comes to play ...
 
 When Skype for Web first launched, you could use Skype for instant messaging and share multimedia files, but not as a VoIP tool. To make voice and video calls in most supported browsers, people had to install a plugin.
 
-Doing a quick search online revealed the last available version of the plugin was 7.32.6.278, which was released somewhere in 2016, but is still obtainable via their official CDN: [https://swx.cdn.skype.com/plugin/7.32.6.278/SkypeWebPlugin.msi](https://swx.cdn.skype.com/plugin/7.32.6.278/SkypeWebPlugin.msi){:target="_blank"}{:rel="noopener noreferrer"}
+Doing a quick search online revealed the last available version of the plugin was 7.32.6.278, which was released somewhere in 2017, but is still obtainable via their official CDN: [https://swx.cdn.skype.com/plugin/7.32.6.278/SkypeWebPlugin.msi](https://swx.cdn.skype.com/plugin/7.32.6.278/SkypeWebPlugin.msi){:target="_blank"}{:rel="noopener noreferrer"}
 
 After Microsoft introduced plugin-free Skype for Web for their supported browsers, they ditched the plugin and dropped support for Internet Explorer. However, the plugin remains available in systems where previously installed, with the only way to get rid of it being a manual uninstall.
 
@@ -60,7 +60,7 @@ First of all, protected mode is off by default, so this may potentially allow fo
 
 Secondly (which is what's more relevant to us), I can load any link with a custom URI from within the shell without having the user to confirm or know anything.
 
-For reference, here's what trying to exploit a Qt app using plugin injection would prompt for, when running IE normally:
+For reference, here's what trying to exploit a Qt app using plugin injection would prompt for, when running IE (11.116.18362.0) normally:
 
 ![](/assets/media/ie-scheme-prompt.png)
 
@@ -121,3 +121,17 @@ Here's a detailed video of the PoC in action, from crafting the .dll files to th
 
 I've come across this URI `ms-cxh-full://` that seems to be the fullscreen version of `ms-cxh://` which is something used in Microsoft account setup, but what's interesting is that this one can cause a black screen that can't be dismissed, forcing the user to sign out/reboot.
 [⚠️ Try at your own risk ⚠️](ms-cxh-full://)
+
+
+### Update
+
+
+Microsoft released the [KB4503293](https://support.microsoft.com/en-us/help/4503293/windows-10-update-kb4503293){:target="_blank"}{:rel="noopener noreferrer"} cumulative update for Windows 10 version 1903 on June 11, which updated Internet Explorer from .116 to .175, which includes sanitization for URI scheme links to prevent command-line argument injection:
+
+<p align="center">
+  <img src="/assets/media/ie-scheme-prompt-new.png" /> Internet Explorer 11.175.18362.0
+</p>
+
+As a result, this attack is no longer feasible on an up-to-date Windows system.
+
+[(edited)](https://github.com/thedroidgeek/0x41.cf/commits/master/_posts/2019-05-28-skype-web-plugin-ez-rce.md){:target="_blank"}{:rel="noopener noreferrer"}
