@@ -6,6 +6,31 @@
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
+
+  /* scrollbar */
+  
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #222; 
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #666; 
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #444; 
+  }
+  
+  // firefox
+  scrollbar-color: #222 #666;
+
+  // IE
+  scrollbar-face-color: #222;
+  scrollbar-shadow-color: #666;
+  scrollbar-track-color: #666;
 }
 
 html,

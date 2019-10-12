@@ -52,6 +52,12 @@ pre code {
        -moz-user-select: none;
             user-select: none;
   }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  scrollbar-width: thin; // firefox
 }
 
 pre {
