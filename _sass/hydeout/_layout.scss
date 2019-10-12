@@ -29,9 +29,9 @@ body {
     to bottom,
     lighten($sidebar-bg-color, 7%),
     darken($sidebar-bg-color, 7%));
+  background-attachment: fixed;
   display: flex;
   flex-direction: column;
-  min-width: 100vw;
   min-height: 100vh;
 }
 
@@ -152,11 +152,10 @@ body {
 @media (min-width: $large-breakpoint) {
   body {
     flex-direction: row;
-    height: 100vh;
+    min-height: 100vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     > * {
-      max-height: 100vh; 
       overflow-y: auto; 
       -webkit-overflow-scrolling: touch;
     }
@@ -186,6 +185,14 @@ body {
     header ~ nav {
       display: flex;
     }
+
+    // attach to bottom of page
+    position: fixed;
+    bottom: 0;
+
+    @if $layout-reverse {
+      right: 0;
+    }
   }
 
   .index #sidebar { margin-bottom: 0; }
@@ -197,8 +204,14 @@ body {
     padding: $section-spacing * 2
              $section-spacing * 2
              0;
-    height: 100vh;
+    min-height: 100vh;
 
+    @if $layout-reverse {
+      margin-right: $sidebar-width;
+    }
+    @else {
+      margin-left: $sidebar-width;
+    }
     > header {
       color: $heading-color;
       margin: 0;
