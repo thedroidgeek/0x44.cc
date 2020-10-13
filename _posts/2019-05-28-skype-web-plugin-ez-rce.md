@@ -13,6 +13,8 @@ Earlier this year, I've heard that you could send links with custom URI schemes 
 
 I've been experimenting with URI schemes ever since, I wanted to see how far I can push it in terms of exploitability, and I've found that you could do all sort of fun things in windows - stuff like opening the action center or the task switcher, etc. But I have quickly lost interest however, since I've realized there was a bunch of filters that Discord has in place, likely due to various reports from researchers, that prevent a lot of the known 'malicious' scheme links from triggering (though I still don't understand Discord's decision of not simply using a whitelist for schemes instead of adding regex filters ¯&#92;&#95;(ツ)&#95;/¯).
 
+***Update***: Discord has now started [warning](/assets/media/discord-proto-warn.png){:target="_blank"} people when clicking on protocol links.
+
 A couple of months later, it hit the headlines that Electronic Arts' digital distribution platform, Origin, was found to be vulnerable to an RCE through a URI scheme. This was due to an AngularJS template injection, that was met with some bad implementation that exposed Qt's common desktop services to JavaScript - more on this [here](https://zeropwn.github.io/2019-05-13-xss-to-rce/){:target="_blank"}{:rel="noopener noreferrer"}.
 
 A [second blog post](https://zeropwn.github.io/2019-05-22-fun-with-uri-handlers/){:target="_blank"}{:rel="noopener noreferrer"} from the same researcher emerged, a couple of days later, where he found another 'flaw' in Origin that can be leveraged for RCE, but unlike the first one, this one wasn't exactly new - it was merely Qt's plugin feature which can be abused with the right conditions to load arbitrary .dll files through SMB shares ...
@@ -46,7 +48,7 @@ This is where the Skype Web Plugin comes to play ...
 
 When Skype for Web first launched, you could use Skype for instant messaging and share multimedia files, but not as a VoIP tool. To make voice and video calls in most supported browsers, people had to install a plugin.
 
-Doing a quick search online revealed the last available version of the plugin was 7.32.6.278, which was released somewhere in 2017, but is still obtainable via their official CDN: [https://swx.cdn.skype.com/plugin/7.32.6.278/SkypeWebPlugin.msi](https://swx.cdn.skype.com/plugin/7.32.6.278/SkypeWebPlugin.msi){:target="_blank"}{:rel="noopener noreferrer"}
+Doing a quick search online revealed the last available version of the plugin was 7.32.6.278, which was released sometime in 2017, but is still obtainable via their official CDN: [https://swx.cdn.skype.com/plugin/7.32.6.278/SkypeWebPlugin.msi](https://swx.cdn.skype.com/plugin/7.32.6.278/SkypeWebPlugin.msi){:target="_blank"}{:rel="noopener noreferrer"}
 
 After Microsoft introduced plugin-free Skype for Web for their supported browsers, they ditched the plugin and dropped support for Internet Explorer. However, the plugin remains available in systems where previously installed, with the only way to get rid of it being a manual uninstall.
 
@@ -122,11 +124,17 @@ Here's a detailed video of the PoC in action, from crafting the .dll files to th
 I've come across this URI `ms-cxh-full://` that seems to be the fullscreen version of `ms-cxh://` which is something used in Microsoft account setup, but what's interesting is that this one can cause a black screen that can't be dismissed, forcing the user to sign out/reboot.
 [⚠️ Try at your own risk ⚠️](ms-cxh-full://)
 
+***Update (10/2020)***: Since I've noticed a recent surge in the malicious usage of this particular URI scheme, I've added simple steps you can follow, in case you need to recover your Windows 10 session, after an unintended click:
+1. Press Ctrl + Shift + Esc to invoke the Task Manager.
+2. Use Alt + Tab to peek, but make sure to keep the Task Manager window focused, after you do so.
+3. If the Task Manager is in ['simple view'](/assets/media/taskmgr-simple.png){:target="_blank"}: Hit Tab, then Space - so that it switches to ['expanded view'](/assets/media/taskmgr-expand.png){:target="_blank"}.
+4. Blindly type the following on your keyboard (including the space): `user oobe`, in order to highlight the offending process.
+5. Hit the Delete keyboard key, to end it.
 
-### Update
+### Update (05/2019)
 
 
-Microsoft released the [KB4503293](https://support.microsoft.com/en-us/help/4503293/windows-10-update-kb4503293){:target="_blank"}{:rel="noopener noreferrer"} cumulative update for Windows 10 version 1903 on June 11, which updated Internet Explorer from .116 to .175, which includes sanitization for URI scheme links to prevent command-line argument injection:
+Microsoft released the [KB4503293](https://support.microsoft.com/en-us/help/4503293/windows-10-update-kb4503293){:target="_blank"}{:rel="noopener noreferrer"} cumulative update for Windows 10 version 1903 on June 11 of 2019, which updated Internet Explorer from .116 to .175, which includes sanitization for URI scheme links to prevent command-line argument injection:
 
 <p align="center">
   <img src="/assets/media/ie-scheme-prompt-new.png" /> Internet Explorer 11.175.18362.0
