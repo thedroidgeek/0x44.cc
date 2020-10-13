@@ -126,12 +126,12 @@ I've come across this URI `ms-cxh-full://` that seems to be the fullscreen versi
 
 ***Update (10/2020)***: Since I've noticed a recent surge in the malicious usage of this particular URI scheme, I've added simple steps you can follow, in case you need to recover your Windows 10 session, after an unintended click:
 1. Press Ctrl + Shift + Esc to invoke the Task Manager.
-2. Use Alt + Tab to peek, but make sure to keep the Task Manager window focused, after you do so.
+2. You can use Alt + Tab to peek at open windows, but make sure to keep the Task Manager window focused, after you do so.
 3. If the Task Manager is in ['simple view'](/assets/media/taskmgr-simple.png){:target="_blank"}: Hit Tab, then Space - so that it switches to ['expanded view'](/assets/media/taskmgr-expand.png){:target="_blank"}.
 4. Blindly type the following on your keyboard (including the space): `user oobe`, in order to highlight the offending process.
 5. Hit the Delete keyboard key, to end it.
 
-### Update (05/2019)
+### Update (06/2019)
 
 
 Microsoft released the [KB4503293](https://support.microsoft.com/en-us/help/4503293/windows-10-update-kb4503293){:target="_blank"}{:rel="noopener noreferrer"} cumulative update for Windows 10 version 1903 on June 11 of 2019, which updated Internet Explorer from .116 to .175, which includes sanitization for URI scheme links to prevent command-line argument injection:
