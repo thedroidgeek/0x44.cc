@@ -1,0 +1,9 @@
+{% unless cmd_str %}
+  {% assign cmd_str = '_' %}
+{% endunless %}
+{% unless dir_str %}
+  {% assign dir_str = '~' %}
+{% endunless %}
+<pre class="terminal-title">
+<font style="color:#eaf">┌──(<font style="color:#bbf">visitor<font style="color:white">@</font>{{ site.title }}</font>)-[<font style="color:white">{{ dir_str }}</font>]
+└─</font><font style="color:#bbf">$</font> {{ cmd_str }}</pre>

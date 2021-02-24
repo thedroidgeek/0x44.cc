@@ -3,40 +3,56 @@ layout: default
 ---
 
 <div class="content">
-  {% include pagination-newer.html %}
 
-  {{ content }}
+  {% assign cmd_str = "head -c " | append: site.excerpt_max_length | append: " */* | less" %}
+  {% include terminal-title.html %}
 
-  {% for post in paginator.posts %}
-  <article class="post-body">
-    <h2 class="post-title">
-      <a href="{{ site.baseurl }}{{ post.url }}">
-        {{ post.title }}
-      </a>
-    </h2>
-    {% include post-meta.html post=post %}
-
-    {% if post.excerpt %}
-      {{ post.excerpt }}
-    {% else %}
-      {{ post.content }}
-    {% endif %}
-
-    {% if post.excerpt %}
-      {% comment %}Excerpt may be equal to content. Check.{% endcomment %}
-      {% capture content_words %}
-        {{ post.content | number_of_words }}
-      {% endcapture %}
-      {% capture excerpt_words %}
-        {{ post.excerpt | number_of_words }}
-      {% endcapture %}
-
-      {% if content_words != excerpt_words %}
-        <a href="{{ site.baseurl }}{{ post.url }}">More &hellip;</a>
-      {% endif %}
-    {% endif %}
-  </article>
-  {% endfor %}
-
-  {% include pagination-older.html %}
+  <br>
+  <table class="posts-list">
+    <tbody>
+      {% for post in paginator.posts %}
+        {% assign category_page = false %}
+        {% for node in site.pages %}
+          {% if node.category == post.categories[0] or node.title == post.categories[0] %}
+            {% assign category_page = node %}
+          {% endif %}
+        {% endfor %}
+        <tr>
+          <td>
+            <h3><small>{{ post.date | date_to_string }}</small></h3>
+          </td>
+          <td><h3><small>&bull;</small></h3></td>
+          <td>
+            <h3>
+              <small>
+              {% if category_page.icon %}
+                <a href="{{ site.baseurl }}{{ category_page.url }}">{% include svg/{{ category_page.icon }}.svg %}</a>
+              {% else %}
+                {{ category_page.title }}
+              {% endif %} / </small>
+              <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+            </h3>
+          </td>
+        </tr>
+        <tr>
+          <td></td><td></td>
+          <td>
+            <p class="post-excerpt">
+              {% assign post_excerpt = post.excerpt | strip_html %}
+              {% assign excerpt_lines = post_excerpt | newline_to_br | split: '<br />' %}
+              {% if excerpt_lines[0] == 'Context' %}
+                {% assign post_excerpt = '' %}
+                {% for line in excerpt_lines offset:1 %}
+                  {% assign post_excerpt = post_excerpt | append: line %}
+                {% endfor %}
+              {% endif %}
+              {{ post_excerpt | truncate: site.excerpt_max_length }}
+              <a href="{{ site.baseurl }}{{ post.url }}">[&nbsp;Read more&nbsp;]</a>
+            </p>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include pagination-buttons.html %}
 </div>

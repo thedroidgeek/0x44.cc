@@ -4,9 +4,92 @@ title: "404: Page not found"
 permalink: 404.html
 ---
 
+<style>
+
+#site-title::before, #site-title::after {
+  position: absolute;
+}
+#site-title::before {
+  content: '0x404cf';
+  animation: glitch-b .9s steps(1) infinite alternate, peek-b 20s steps(1) infinite alternate;
+}
+#site-title::after {
+  content: '{{ site.title }}';
+  animation: glitch-a 1s steps(1) infinite alternate, peek-a 20s steps(1) infinite alternate;
+}
+
+@keyframes peek-a {
+  0%, 12%, 20%, 26%, 30%, 45%, 48%, 55%, 61%, 69%, 80%, 87%, 95% {
+    visibility: hidden;
+  }
+  10%, 15%, 25%, 28%, 40%, 47%, 50%, 60%, 65%, 75%, 82%, 91% {
+    visibility: visible;
+  }
+}
+@keyframes peek-b {
+  0%, 17%, 20%, 52%, 80%, 84%, 89% {
+    visibility: hidden;
+  }
+  15%, 18%, 50%, 78%, 83%, 88% {
+    visibility: visible;
+  }
+}
+
+@keyframes glitch-a {
+  0%, 30%, 50%, 70%, 90% {
+    text-shadow: 0 0 .02em lime, 0 0 .02em magenta;
+  }
+  20% {
+    transform: translateX(-2%);
+    text-shadow: -.015em 0 .02em lime, -.03em 0 .02em magenta;
+  }
+  40% {
+    transform: translateX(1%);
+    text-shadow: -.03em 0 .02em lime, -.06em 0 .02em magenta;
+  }
+  60% {
+    transform: translateX(-3%);
+    text-shadow: -.1em 0 .02em lime, -.2em 0 .02em magenta;
+  }
+  80% {
+    transform: translateX(7%);
+    text-shadow: -.2em 0 .02em lime, -.4em 0 .02em magenta;
+  }
+  100% {
+    transform: translateX(2%);
+    text-shadow: -.25em 0 .02em lime, -.5em 0 .02em magenta;
+  }
+}
+@keyframes glitch-b {
+  10%, 30%, 50%, 70%, 100% {
+    text-shadow: 0 0 .02em lime, 0 0 .02em magenta;
+  }
+  0% {
+    transform: translateX(-2%);
+    text-shadow: .25em 0 .02em lime, .5em 0 .02em magenta;
+  }
+  20% {
+    transform: translateX(-7%);
+    text-shadow: .2em 0 .02em lime, .4em 0 .02em magenta;
+  }
+  40% {
+    transform: translateX(3%);
+    text-shadow: .1em 0 .02em lime, .2em 0 .02em magenta;
+  }
+  60% {
+    transform: translateX(-1%);
+    text-shadow: .03em 0 .02em lime, .06em 0 .02em magenta;
+  }
+  80% {
+    transform: translateX(2%);
+    text-shadow: .015em 0 .02em lime, .03em 0 .02em magenta;
+  }
+}
+</style>
+
 <header>
-  <h1 class="page-title">404: Page not found</h1>
+  <h1 class="page-title">4&#x1F631;4, !found</h1>
 </header>
 <div class="content">
-  <p class="lead">Sorry, we've misplaced that URL or it's pointing to something that doesn't exist. <a href="{{ site.url }}">Head back home</a> to try finding it again.</p>
+  :(<br>colonel panik &#x1F3B7;&#x1F3B8;<br>sementation false &#x1F95B;&#x274C;<br><br><img src="{{ site.baseurl }}/assets/media/kaboomboom.gif"/>0x4040403F out !! []<br><a href="{{ site.url }}">ctrl-z</a>
 </div>

@@ -19,9 +19,10 @@ linkedin_username:    thedroidgeek
 disqus:
   shortname:     0x41-cf
 
-paginate:         5
+paginate:           3
 # paginate_path:    '/page:num'
                     # Or '/blog/page:num' if you want to move your index pages
+excerpt_max_length: 300
 
 plugins:
   - jekyll-feed

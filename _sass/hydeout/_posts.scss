@@ -32,6 +32,50 @@ article + *, .post-body ~ section {
   margin-top: 0;
 }
 
+.terminal-title { // todo: more accurate/flexible values
+  font-family: Consolas, monospace;
+  font-size: calc(6vw - 0.3rem);
+  line-height: calc(6.6vw - 0.33rem);
+  @media (min-width: 35rem) {
+    font-size: 1.8rem;
+    line-height: 2rem;
+  }
+  @media (min-width: $large-breakpoint) {
+    font-size: calc(6vw - 1.6rem);
+    line-height: calc(6.6vw - 1.76rem);
+  }
+  @media (min-width: $large-breakpoint + 15rem) {
+    font-size: 1.8rem;
+    line-height: 2rem;
+  }
+  overflow: hidden;
+}
+
+#progress-bar {
+  @if $layout-reverse {
+    background: linear-gradient(to left, $heading-color var(--progress), rgba($body-bg, .75) 0);
+  }
+  @else {
+    background: linear-gradient(to right, $heading-color var(--progress), rgba($body-bg, .75) 0);
+  }
+  top: 0;
+  position: fixed;
+  overflow: hidden;
+  width: 100%;
+  height: 4px;
+  box-shadow: 1px 1px 5px $body-bg;
+  @media (min-width: $large-breakpoint) {
+    width: calc(100% - #{$sidebar-width});
+    @if $layout-reverse {
+      right: $sidebar-width;
+    }
+    @else {
+      left: $sidebar-width;
+    }
+  }
+  z-index: 1;
+}
+
 // h1-size h2
 h2.post-title, h2.page-title {
   font-size: 2rem;
@@ -64,26 +108,59 @@ h2.post-title, h2.page-title {
 .posts-list {
   padding-left: 0;
   list-style: none;
+  position: relative;
+
+  table, th, td {
+    border: 0;
+    border-spacing: 0;
+    padding: 0;
+    padding-right: 2px;
+  }
 
   h3 {
     margin-top: 0;
   }
 
-  li {
+  li, td {
     small {
       font-size: 75%;
       color: #999;
       white-space: nowrap;
     }
-
-    a:hover {
-      color: $link-color;
-      text-decoration: none;
-
-      small {
-        color: inherit;
+    a {
+      color: $heading-color;
+      &:hover, &:focus {
+        color: $link-color;
+        text-decoration: none;
       }
     }
+  }
+  z-index: 1;
+}
+
+.anchorjs-link {
+  color: $heading-color;  
+  &:hover, &:focus {
+    color: $link-color;
+    text-decoration: none;
+  }
+}
+:target::before {
+  content: "";
+  display: block;
+  margin-top: -1.5rem;
+  height: 1.5rem;
+  width: 1px;
+}
+
+.post-excerpt {
+  margin-bottom: 2rem;
+}
+
+.related .posts-list li a {
+  color: $link-color;
+  &:hover, &:focus {
+    color: $heading-color;
   }
 }
 

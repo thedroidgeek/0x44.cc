@@ -1,22 +1,31 @@
 ---
 layout: page
+terminal_style: true
 ---
 
 {% unless page.content == '' %}
   {{ content }}
 {% endunless %}
 
-<br>
-<ul class="posts-list">
-  {% assign category = page.category | default: page.title %}
-  {% for post in site.categories[category] %}
-    <li>
-      <h3>
-        <a href="{{ site.baseurl }}{{ post.url }}">
-          {{ post.title }}
-          <small>{{ post.date | date_to_string }}</small>
-        </a>
-      </h3>
-    </li>
-  {% endfor %}
-</ul>
+<div id="category-bg">
+{% if page.icon %}
+{% include svg/{{ page.icon }}.svg %}
+{% endif %}
+</div>
+
+<table class="posts-list">
+  <tbody>
+    {% assign category = page.category | default: page.title %}
+    {% for post in site.categories[category] %}
+      <tr>
+        <td><h3><small>{{ post.date | date_to_string }}</small></h3></td>
+        <td><h3><small>&bull;</small></h3></td>
+        <td>
+          <h3>
+            <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+          </h3>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

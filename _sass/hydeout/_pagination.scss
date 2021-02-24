@@ -13,18 +13,24 @@
 
   > a {
     display: inline-block;
-    padding: $padding-v $padding-h;
+    padding: 0.5em 0.5em;
     border: solid $border-color;
     border-radius: $border-radius;
     border-width: 1px;
-    width: 60%;
+    width: 120px;
     max-width: $sidebar-width;
     background: $body-bg;
     box-shadow: $default-box-shadow;
 
-    &:hover {
+    &:hover, &:focus {
       background-color: $border-color;
+      text-decoration: none;
     }
+  }
+
+  > a.disabled {
+    background: $border-color;
+    color: $gray-3;
   }
 }
 

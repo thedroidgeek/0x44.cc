@@ -24,11 +24,10 @@
 
 body {
   color: $sidebar-text-color;
-  background-color: $sidebar-bg-color;
-  background-image: linear-gradient(
-    to bottom,
-    lighten($sidebar-bg-color, 7%),
-    darken($sidebar-bg-color, 7%));
+  background-color: $body-bg;
+  @media (min-width: $large-breakpoint) {
+    background-image: $sidebar-gradient
+  }
   background-attachment: fixed;
   display: flex;
   flex-direction: column;
@@ -52,14 +51,40 @@ body {
   flex: 0 0 auto;
   padding: $section-spacing;
 
+  overflow-x: hidden;
+
+  background-image: $sidebar-gradient-mobile;
+  @media (min-width: $large-breakpoint) {
+    background-image: none;
+  }
+
   .site-title {
     font-family: 'FixedsysExcelsior';
     font-weight: normal;
     font-size: $large-font-size;
     margin-top: 0;
-    margin-bottom: $heading-spacing;
+    > a:hover, a:focus {
+      text-decoration: none;
+    }
 
-    .back-arrow { margin-right: 0.5rem; }
+    // margin fixes for empty 'sidebar title' on mobile
+    margin-bottom: 0;
+    @media (min-width: $large-breakpoint) {
+      margin-bottom: $heading-spacing;
+    }
+
+    .back-arrow {
+      size: 0rem;
+      margin-right: 0.5rem;
+    }
+
+    // 404
+    ::before, ::after {
+      left: calc(#{$section-spacing} * 2 + 24px);
+      @media (min-width: $large-breakpoint) {
+        left: $section-spacing;
+      }
+    }
   }
 }
 
@@ -92,16 +117,29 @@ body {
   header ~ *, header ~ nav, p.lead {
     display: none;
   }
+  // collapsed mobile sidebar title
+  .site-title {
+    font-size: 2rem;
+    svg {
+      height: 20px;
+    }
+  }
 }
 
 // Make header elements blend into sidebar / background
 .container > header {
   color: $sidebar-title-color;
-  background: transparent;
-  margin: ($heading-spacing - $section-spacing)
-          $section-spacing
-          $section-spacing;
-
+  background-image: $sidebar-gradient-mobile;
+  padding: $section-spacing;
+  padding-top: 0;
+  @media (min-width: $large-breakpoint) {
+    background: transparent;
+    margin: ($heading-spacing - $section-spacing)
+            $section-spacing
+            $section-spacing;
+    padding: 0;
+  }
+  
   h1, h2 {
     color: inherit;
 

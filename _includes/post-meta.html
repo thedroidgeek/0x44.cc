@@ -19,6 +19,9 @@
 
       {% if category_page %}
         <a href="{{ site.baseurl }}{{ category_page.url }}">
+          {% if category_page.icon %}
+            {% include svg/{{ category_page.icon }}.svg %}
+          {% endif %}
           {{ category_page.fullname | default: category_page.category }}
         </a>
       {% else %}

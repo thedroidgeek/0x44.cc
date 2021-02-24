@@ -4,6 +4,7 @@
       Load Comments
     </button>
   </div>
+  <script src="{{ site.baseurl }}/assets/js/disqusloader.min.js"></script>
   <script>
 
   /**
@@ -23,6 +24,10 @@
     s.setAttribute('data-timestamp', +new Date());
     (d.head || d.body).appendChild(s);
   }
+
+  // Disqus lazy-loading (on visibility)
+  disqusLoader('#disqus_thread', { scriptUrl: '//{{ site.disqus.shortname }}.disqus.com/embed.js' });
+
   </script>
   <noscript>
     Please enable JavaScript to view the

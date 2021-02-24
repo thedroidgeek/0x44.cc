@@ -18,13 +18,13 @@ $root-font-size: 1rem !default;
 $root-line-height: 1.5 !default;
 
 $body-color: $gray-3 !default;
-$body-muted: $gray-4 !default;
+$body-muted: #888888 !default;
 $body-bg: #111 !default;
-$link-color: $blue !default;
+$link-color: #50b0ff !default;
 $heading-color: white !default;
 
-$border-color: $gray-2 !default;
-$border-radius: 300px !default;
+$border-color: $gray-6 !default;
+$border-radius: 10px !default;
 $padding-v: 1em !default;
 $padding-h: 1.5em !default;
 $heading-spacing: 1rem !default;
@@ -43,11 +43,13 @@ $default-box-shadow: $box-shadow-size
 
 $code-font-family: Menlo, Monaco, "Courier New", monospace !default;
 $code-color: #90A0FF !default;
-$code-background-color: $gray-6 !default;
+$code-background-color: #222 !default;
 
 // Hyde theming
-$sidebar-bg-color: #231B3A !default;
+$sidebar-bg-color: #271B3A !default;
 $sidebar-fg-color: white !default;
+$sidebar-gradient: linear-gradient(to bottom, $sidebar-bg-color 30%, $body-bg 100%);
+$sidebar-gradient-mobile:  linear-gradient(to right, $sidebar-bg-color 50%, $body-bg 100%);
 $sidebar-sticky: true !default;
 $layout-reverse: false !default;
 

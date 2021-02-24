@@ -120,5 +120,27 @@ a[href^="#fnref:"] {
 a svg, .icon svg {
   height: 1em;
 }
-a svg { fill: $link-color; }
+a svg {
+  fill: $link-color;
+}
+.home a svg {
+  &:hover, &:focus {
+    fill: $heading-color;
+  }
+}
+#category {
+  background-color: $body-bg;
+  height: auto;
+}
+#category-bg svg {
+  fill: $heading-color;
+  opacity: 0.02;
+  transform: scale(20) translateX(50%) translateY(50%);
+  @media (min-width: $large-breakpoint) {
+    transform: scale(30) translateX(50%) translateY(50%);
+  }
+  margin-left: 0;
+  position: fixed;
+  overflow: hidden;
+}
 .icon { vertical-align: middle; }

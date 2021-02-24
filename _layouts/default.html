@@ -5,6 +5,38 @@
 
   <body class="{{ page.layout }}{% if page.url == '/' %} home{% endif %}">
 
+    {% if page.layout == 'post' %}
+    <script src="{{ site.baseurl }}/assets/js/anchor.min.js"></script>
+    <script>
+      // progress bar
+      prog = document.createElement('div');
+      prog.setAttribute("id", "progress-bar");
+      document.body.insertBefore(prog, document.body.childNodes[0]);
+      const article = document.querySelector('.post');
+      const progressBar = document.querySelector('#progress-bar');
+      // IE support
+      if (window.MSInputMethodContext && document.documentMode) {
+         document.write('<script src="{{ site.baseurl }}/assets/js/ie11CustomProperties.min.js"><\x2fscript>');
+      }
+      document.addEventListener('scroll', function() {
+        const articleScroll = pageYOffset - article.offsetTop;
+        const height = document.documentElement.scrollHeight - innerHeight - article.offsetTop;
+        const readPercent = articleScroll / height * 100;
+        if (readPercent > 0) {
+          progressBar.style.setProperty('--progress', readPercent + '%');
+        } else {
+          progressBar.style.setProperty('--progress', '0%');
+        }
+      })
+
+      // initialize AnchorJS
+      document.addEventListener("DOMContentLoaded", function(event) {
+        anchors.add('.post-body h3');
+        anchors.options.placement = 'left';
+      });
+    </script>
+    {% endif %}
+
     {% include sidebar.html %}
 
     <main class="container">

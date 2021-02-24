@@ -2,9 +2,27 @@
 layout: default
 ---
 
+{% unless page.terminal_style or layout.terminal_style %}
 <header>
   <h1 class="page-title">{% if page.fullname != null %}{{ page.fullname }}{% else %}{{ page.title }}{% endif %}</h1>
 </header>
+{% endunless %}
+
 <div class="content">
+
+  {% if page.terminal_style or layout.terminal_style %}
+
+    {% if page.layout == "category" %}
+      {% assign category = page.category | default: page.title %}
+      {% assign cmd_str = "ls -lt " | append: category | append: '/' %}
+    {% endif %}
+
+    {% if page.title == "whoami" %}
+      {% assign cmd_str = 'whoami' %}
+    {% endif %}
+
+    {% include terminal-title.html %}
+  {% endif %}
+  <br>
   {{ content }}
 </div>
