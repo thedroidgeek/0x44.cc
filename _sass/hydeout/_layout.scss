@@ -80,7 +80,7 @@ body {
 
     // 404
     ::before, ::after {
-      left: calc(#{$section-spacing} * 2 + 24px);
+      left: calc(#{$section-spacing} * 2 + 0.5em);
       @media (min-width: $large-breakpoint) {
         left: $section-spacing;
       }
