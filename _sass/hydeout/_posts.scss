@@ -33,7 +33,7 @@ article + *, .post-body ~ section {
 }
 
 .terminal-title { // todo: more accurate/flexible values
-  font-family: Consolas, monospace;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace !important;
   font-size: calc(6vw - 0.3rem);
   line-height: calc(6.6vw - 0.33rem);
   @media (min-width: 35rem) {

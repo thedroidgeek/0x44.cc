@@ -25,12 +25,13 @@
   }
   
   // firefox
-  scrollbar-color: #222 #666;
+  scrollbar-color: #666 #222;
 
   // IE
-  scrollbar-face-color: #222;
+  scrollbar-face-color: #666;
   scrollbar-shadow-color: #666;
-  scrollbar-track-color: #666;
+  scrollbar-arrow-color: #666;
+  scrollbar-track-color: #222;
 }
 
 html,
