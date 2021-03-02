@@ -53,17 +53,17 @@ article + *, .post-body ~ section {
 
 #progress-bar {
   @if $layout-reverse {
-    background: linear-gradient(to left, $heading-color var(--progress), rgba($body-bg, .75) 0);
+    background: linear-gradient(to left, $heading-color var(--progress), rgba(#111, .75) 0);
   }
   @else {
-    background: linear-gradient(to right, $heading-color var(--progress), rgba($body-bg, .75) 0);
+    background: linear-gradient(to right, $heading-color var(--progress), rgba(#111, .75) 0);
   }
   top: 0;
   position: fixed;
   overflow: hidden;
   width: 100%;
   height: 4px;
-  box-shadow: 1px 1px 5px $body-bg;
+  box-shadow: 1px 1px 5px #111;
   @media (min-width: $large-breakpoint) {
     width: calc(100% - #{$sidebar-width});
     @if $layout-reverse {
