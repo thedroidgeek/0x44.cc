@@ -72,3 +72,4 @@ jobs:
           # if the repo you are deploying to is <username>.github.io, uncomment the line below.
           # if you are including the line below, make sure your source files are NOT in the master branch:
           # publish_branch: master
+          exclude_assets: '**.gemspec,README.md'
