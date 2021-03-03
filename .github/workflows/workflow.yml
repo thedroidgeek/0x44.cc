@@ -28,7 +28,7 @@ jobs:
       - name: 🔨 install dependencies & build site
         uses: limjh16/jekyll-action-ts@v2
         with:
-          enable_cache: true
+          enable_cache: false
           ### Enables caching. Similar to https://github.com/actions/cache.
           #
           # format_output: true
