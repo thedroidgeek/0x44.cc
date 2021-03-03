@@ -1,273 +1,284 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
   <head>
-  <link href="https://gmpg.org/xfn/11" rel="profile" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link href="https://gmpg.org/xfn/11" rel="profile" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-  <!-- Enable responsiveness on mobile devices-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <!-- Enable responsiveness on mobile devices-->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
 
-  <title>
-    
+    <title>
       Google Assistant YouTube command for smart TVs &middot; 0x41.cf
-    
-  </title>
+    </title>
 
-  
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css" />
 
+    <!-- Icons -->
+    <link
+      rel="apple-touch-icon-precomposed"
+      sizes="144x144"
+      href="/favicon.png"
+    />
+    <link rel="shortcut icon" href="/favicon.ico" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="/assets/css/main.css" />
-  
+    <!-- RSS -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RSS"
+      href="/feed.xml"
+    />
 
-  <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/favicon.png" />
-<link rel="shortcut icon" href="/favicon.ico" />
-
-  <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml" />
-
-  <!-- Additional head bits without overriding original head -->
-</head>
-
+    <!-- Additional head bits without overriding original head -->
+  </head>
 
   <body class="post">
-
-    
     <script src="/assets/js/anchor.min.js"></script>
     <script>
       // IE support
       if (window.MSInputMethodContext && document.documentMode) {
-        document.write('<script src="/assets/js/ie11CustomProperties.min.js"><\x2fscript>');
+        document.write(
+          '<script src="/assets/js/ie11CustomProperties.min.js"><\x2fscript>'
+        );
       }
       // progress bar
-      prog = document.createElement('div');
+      prog = document.createElement("div");
       prog.setAttribute("id", "progress-bar");
-      prog.style.setProperty('--progress', '0%');
+      prog.style.setProperty("--progress", "0%");
       document.body.insertBefore(prog, document.body.childNodes[0]);
-      const article = document.querySelector('.post');
-      const progressBar = document.querySelector('#progress-bar');
-      document.addEventListener('scroll', function() {
+      const article = document.querySelector(".post");
+      const progressBar = document.querySelector("#progress-bar");
+      document.addEventListener("scroll", function () {
         const articleScroll = pageYOffset - article.offsetTop;
-        const height = document.documentElement.scrollHeight - innerHeight - article.offsetTop;
-        const readPercent = articleScroll / height * 100;
+        const height =
+          document.documentElement.scrollHeight -
+          innerHeight -
+          article.offsetTop;
+        const readPercent = (articleScroll / height) * 100;
         if (readPercent > 0) {
-          progressBar.style.setProperty('--progress', readPercent + '%');
+          progressBar.style.setProperty("--progress", readPercent + "%");
         } else {
-          progressBar.style.setProperty('--progress', '0%');
+          progressBar.style.setProperty("--progress", "0%");
         }
-      })
+      });
 
       // initialize AnchorJS
-      document.addEventListener("DOMContentLoaded", function(event) {
-        anchors.add('.post-body h3, .post-body h4');
-        anchors.options.placement = 'left';
+      document.addEventListener("DOMContentLoaded", function (event) {
+        anchors.add(".post-body h3, .post-body h4");
+        anchors.options.placement = "left";
       });
     </script>
-    
 
     <div id="sidebar">
-  <header>
-    <div class="site-title">
-      <a href="/">
-        
-          <span class="back-arrow icon"><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-  <path d="M0 0h24v24H0z" fill="none"/>
-  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-</svg></span>
-        
-        <span id="site-title">0x41.cf</span>
-      </a>
+      <header>
+        <div class="site-title">
+          <a href="/">
+            <span class="back-arrow icon"
+              ><svg
+                fill="#000000"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                /></svg
+            ></span>
+
+            <span id="site-title">0x41.cf</span>
+          </a>
+        </div>
+        <p class="lead">InfoSec, Reverse Engineering, and more (soon&trade;)</p>
+      </header>
+      <nav id="sidebar-nav-links">
+        <a class="home-link" href="/">Home</a>
+
+        <a class="page-link" href="/about.html">whoami</a>
+
+        <a class="category-link" href="/infosec">InfoSec</a>
+
+        <a class="category-link" href="/reversing">Reverse Engineering</a>
+
+        <a class="category-link" href="/automation">Automation</a>
+
+        <!-- Optional additional links to insert in sidebar nav -->
+      </nav>
+
+      <nav id="sidebar-icon-links">
+        <a
+          id="subscribe-link"
+          class="icon"
+          title="Subscribe"
+          aria-label="Subscribe"
+          href="/feed.xml"
+        >
+          <svg
+            fill="#000000"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <circle cx="6.18" cy="17.82" r="2.18" />
+            <path
+              d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"
+            />
+          </svg>
+        </a>
+
+        <a
+          id="github-link"
+          class="icon"
+          title="GitHub"
+          aria-label="GitHub"
+          href="https://github.com/thedroidgeek"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+          >
+            <path
+              d="M12 2c6.625 0 12 5.375 12 12 0 5.297-3.437 9.797-8.203 11.391-0.609 0.109-0.828-0.266-0.828-0.578 0-0.391 0.016-1.687 0.016-3.297 0-1.125-0.375-1.844-0.812-2.219 2.672-0.297 5.484-1.313 5.484-5.922 0-1.313-0.469-2.375-1.234-3.219 0.125-0.313 0.531-1.531-0.125-3.187-1-0.313-3.297 1.234-3.297 1.234-0.953-0.266-1.984-0.406-3-0.406s-2.047 0.141-3 0.406c0 0-2.297-1.547-3.297-1.234-0.656 1.656-0.25 2.875-0.125 3.187-0.766 0.844-1.234 1.906-1.234 3.219 0 4.594 2.797 5.625 5.469 5.922-0.344 0.313-0.656 0.844-0.766 1.609-0.688 0.313-2.438 0.844-3.484-1-0.656-1.141-1.844-1.234-1.844-1.234-1.172-0.016-0.078 0.734-0.078 0.734 0.781 0.359 1.328 1.75 1.328 1.75 0.703 2.141 4.047 1.422 4.047 1.422 0 1 0.016 1.937 0.016 2.234 0 0.313-0.219 0.688-0.828 0.578-4.766-1.594-8.203-6.094-8.203-11.391 0-6.625 5.375-12 12-12zM4.547 19.234c0.031-0.063-0.016-0.141-0.109-0.187-0.094-0.031-0.172-0.016-0.203 0.031-0.031 0.063 0.016 0.141 0.109 0.187 0.078 0.047 0.172 0.031 0.203-0.031zM5.031 19.766c0.063-0.047 0.047-0.156-0.031-0.25-0.078-0.078-0.187-0.109-0.25-0.047-0.063 0.047-0.047 0.156 0.031 0.25 0.078 0.078 0.187 0.109 0.25 0.047zM5.5 20.469c0.078-0.063 0.078-0.187 0-0.297-0.063-0.109-0.187-0.156-0.266-0.094-0.078 0.047-0.078 0.172 0 0.281s0.203 0.156 0.266 0.109zM6.156 21.125c0.063-0.063 0.031-0.203-0.063-0.297-0.109-0.109-0.25-0.125-0.313-0.047-0.078 0.063-0.047 0.203 0.063 0.297 0.109 0.109 0.25 0.125 0.313 0.047zM7.047 21.516c0.031-0.094-0.063-0.203-0.203-0.25-0.125-0.031-0.266 0.016-0.297 0.109s0.063 0.203 0.203 0.234c0.125 0.047 0.266 0 0.297-0.094zM8.031 21.594c0-0.109-0.125-0.187-0.266-0.172-0.141 0-0.25 0.078-0.25 0.172 0 0.109 0.109 0.187 0.266 0.172 0.141 0 0.25-0.078 0.25-0.172zM8.937 21.438c-0.016-0.094-0.141-0.156-0.281-0.141-0.141 0.031-0.234 0.125-0.219 0.234 0.016 0.094 0.141 0.156 0.281 0.125s0.234-0.125 0.219-0.219z"
+            ></path>
+          </svg>
+        </a>
+
+        <a
+          id="linkedin-link"
+          class="icon"
+          title="LinkedIn"
+          aria-label="LinkedIn"
+          href="https://linkedin.com/in/thedroidgeek"
+          target="_blank"
+          rel="noopener"
+        >
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+          >
+            <path
+              d="M 24.007812 14.597656 L 24.007812 23.472656 L 18.859375 23.472656 L 18.859375 15.191406 C 18.859375 13.113281 18.117188 11.691406 16.253906 11.691406 C 14.832031 11.691406 13.988281 12.648438 13.613281 13.574219 C 13.480469 13.90625 13.445312 14.367188 13.445312 14.828125 L 13.445312 23.472656 L 8.296875 23.472656 C 8.296875 23.472656 8.367188 9.449219 8.296875 7.996094 L 13.441406 7.996094 L 13.441406 10.1875 C 13.433594 10.207031 13.417969 10.222656 13.410156 10.238281 L 13.441406 10.238281 L 13.441406 10.1875 C 14.128906 9.136719 15.347656 7.632812 18.082031 7.632812 C 21.46875 7.632812 24.007812 9.84375 24.007812 14.597656 Z M 2.914062 0.535156 C 1.152344 0.535156 0 1.6875 0 3.207031 C 0 4.691406 1.117188 5.882812 2.84375 5.882812 L 2.878906 5.882812 C 4.671875 5.882812 5.789062 4.691406 5.789062 3.207031 C 5.757812 1.6875 4.671875 0.535156 2.914062 0.535156 Z M 0.304688 23.472656 L 5.449219 23.472656 L 5.449219 7.996094 L 0.304688 7.996094 Z M 0.304688 23.472656 "
+            />
+          </svg>
+        </a>
+      </nav>
+
+      <p>
+        &copy; 2021.
+        <a href="/LICENSE.md">MIT License.</a>
+      </p>
     </div>
-    <p class="lead">InfoSec, Reverse Engineering, and more (soon&trade;)</p>
-  </header>
-  <nav id="sidebar-nav-links">
-  
-    <a class="home-link "
-        href="/">Home</a>
-  
-  
-
-  
-
-  
-
-
-  
-    
-  
-
-  
-    
-      <a class="page-link "
-          href="/about.html">whoami</a>
-    
-  
-
-  
-    
-  
-
-  
-
-  
-
-  
-    
-  
-
-  
-    
-  
-
-  
-    
-  
-
-
-  
-
-
-  
-    
-  
-
-  
-    
-  
-
-  
-    
-  
-
-  
-
-  
-
-  
-    
-      <a class="category-link "
-          href="/infosec">InfoSec</a>
-    
-  
-
-  
-    
-      <a class="category-link "
-          href="/reversing">Reverse Engineering</a>
-    
-  
-
-  
-    
-      <a class="category-link "
-          href="/automation">Automation</a>
-    
-  
-
-
-  <!-- Optional additional links to insert in sidebar nav -->
-</nav>
-
-
-  
-
-  <nav id="sidebar-icon-links">
-  
-
-  <a id="subscribe-link"
-     class="icon" title="Subscribe" aria-label="Subscribe"
-     href="/feed.xml">
-    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 0h24v24H0z" fill="none"/>
-    <circle cx="6.18" cy="17.82" r="2.18"/>
-    <path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/>
-</svg>
-  </a>
-
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    <a id="github-link" class="icon" title="GitHub" aria-label="GitHub" href="https://github.com/thedroidgeek" target="_blank" rel="noopener noreferrer">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24">
-    <path d="M12 2c6.625 0 12 5.375 12 12 0 5.297-3.437 9.797-8.203 11.391-0.609 0.109-0.828-0.266-0.828-0.578 0-0.391 0.016-1.687 0.016-3.297 0-1.125-0.375-1.844-0.812-2.219 2.672-0.297 5.484-1.313 5.484-5.922 0-1.313-0.469-2.375-1.234-3.219 0.125-0.313 0.531-1.531-0.125-3.187-1-0.313-3.297 1.234-3.297 1.234-0.953-0.266-1.984-0.406-3-0.406s-2.047 0.141-3 0.406c0 0-2.297-1.547-3.297-1.234-0.656 1.656-0.25 2.875-0.125 3.187-0.766 0.844-1.234 1.906-1.234 3.219 0 4.594 2.797 5.625 5.469 5.922-0.344 0.313-0.656 0.844-0.766 1.609-0.688 0.313-2.438 0.844-3.484-1-0.656-1.141-1.844-1.234-1.844-1.234-1.172-0.016-0.078 0.734-0.078 0.734 0.781 0.359 1.328 1.75 1.328 1.75 0.703 2.141 4.047 1.422 4.047 1.422 0 1 0.016 1.937 0.016 2.234 0 0.313-0.219 0.688-0.828 0.578-4.766-1.594-8.203-6.094-8.203-11.391 0-6.625 5.375-12 12-12zM4.547 19.234c0.031-0.063-0.016-0.141-0.109-0.187-0.094-0.031-0.172-0.016-0.203 0.031-0.031 0.063 0.016 0.141 0.109 0.187 0.078 0.047 0.172 0.031 0.203-0.031zM5.031 19.766c0.063-0.047 0.047-0.156-0.031-0.25-0.078-0.078-0.187-0.109-0.25-0.047-0.063 0.047-0.047 0.156 0.031 0.25 0.078 0.078 0.187 0.109 0.25 0.047zM5.5 20.469c0.078-0.063 0.078-0.187 0-0.297-0.063-0.109-0.187-0.156-0.266-0.094-0.078 0.047-0.078 0.172 0 0.281s0.203 0.156 0.266 0.109zM6.156 21.125c0.063-0.063 0.031-0.203-0.063-0.297-0.109-0.109-0.25-0.125-0.313-0.047-0.078 0.063-0.047 0.203 0.063 0.297 0.109 0.109 0.25 0.125 0.313 0.047zM7.047 21.516c0.031-0.094-0.063-0.203-0.203-0.25-0.125-0.031-0.266 0.016-0.297 0.109s0.063 0.203 0.203 0.234c0.125 0.047 0.266 0 0.297-0.094zM8.031 21.594c0-0.109-0.125-0.187-0.266-0.172-0.141 0-0.25 0.078-0.25 0.172 0 0.109 0.109 0.187 0.266 0.172 0.141 0 0.25-0.078 0.25-0.172zM8.937 21.438c-0.016-0.094-0.141-0.156-0.281-0.141-0.141 0.031-0.234 0.125-0.219 0.234 0.016 0.094 0.141 0.156 0.281 0.125s0.234-0.125 0.219-0.219z"></path>
-</svg>
-    </a>
-
-
-
-    <a id="linkedin-link" class="icon" title="LinkedIn" aria-label="LinkedIn" href="https://linkedin.com/in/thedroidgeek" target="_blank" rel="noopener">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24">
-    <path d="M 24.007812 14.597656 L 24.007812 23.472656 L 18.859375 23.472656 L 18.859375 15.191406 C 18.859375 13.113281 18.117188 11.691406 16.253906 11.691406 C 14.832031 11.691406 13.988281 12.648438 13.613281 13.574219 C 13.480469 13.90625 13.445312 14.367188 13.445312 14.828125 L 13.445312 23.472656 L 8.296875 23.472656 C 8.296875 23.472656 8.367188 9.449219 8.296875 7.996094 L 13.441406 7.996094 L 13.441406 10.1875 C 13.433594 10.207031 13.417969 10.222656 13.410156 10.238281 L 13.441406 10.238281 L 13.441406 10.1875 C 14.128906 9.136719 15.347656 7.632812 18.082031 7.632812 C 21.46875 7.632812 24.007812 9.84375 24.007812 14.597656 Z M 2.914062 0.535156 C 1.152344 0.535156 0 1.6875 0 3.207031 C 0 4.691406 1.117188 5.882812 2.84375 5.882812 L 2.878906 5.882812 C 4.671875 5.882812 5.789062 4.691406 5.789062 3.207031 C 5.757812 1.6875 4.671875 0.535156 2.914062 0.535156 Z M 0.304688 23.472656 L 5.449219 23.472656 L 5.449219 7.996094 L 0.304688 7.996094 Z M 0.304688 23.472656 "/>
-</svg>
-    </a>
-
-</nav>
-
-  <p>
-  &copy; 2021.
-  <a href="/LICENSE.md">MIT License.</a>
-</p>
-
-</div>
 
     <main class="container">
       <header>
-  <h1 class="post-title">Google Assistant YouTube command for smart TVs</h1>
-</header>
-<div class="content">
-  <div class="post-meta">
-  <span class="post-date">02 Mar 2021</span>
-  <span class="post-categories">
-    
-      &bull;
+        <h1 class="post-title">
+          Google Assistant YouTube command for smart TVs
+        </h1>
+      </header>
+      <div class="content">
+        <div class="post-meta">
+          <span class="post-date">02 Mar 2021</span>
+          <span class="post-categories">
+            &bull;
 
-      
-      
-      
+            <a href="/automation">
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                height="24"
+                width="24"
+              >
+                <path
+                  d="M 23.140625 10.195312 L 21.9375 10.195312 L 21.9375 6.386719 C 21.910156 5.929688 21.535156 5.554688 21.078125 5.527344 L 12.859375 5.527344 L 12.859375 0.257812 L 11.140625 0.257812 L 11.140625 5.527344 L 2.921875 5.527344 C 2.464844 5.554688 2.089844 5.929688 2.0625 6.386719 L 2.0625 10.195312 L 0.859375 10.195312 C 0.371094 10.195312 0 10.566406 0 11.054688 L 0 16.726562 C 0 17.210938 0.371094 17.585938 0.859375 17.585938 L 2.0625 17.585938 L 2.0625 22.882812 C 2.089844 23.339844 2.464844 23.714844 2.921875 23.742188 L 21.078125 23.742188 C 21.535156 23.714844 21.910156 23.339844 21.9375 22.882812 L 21.9375 17.585938 L 23.140625 17.585938 C 23.628906 17.585938 24 17.210938 24 16.726562 L 24 11.054688 C 24 10.566406 23.628906 10.195312 23.140625 10.195312 Z M 5.613281 12.230469 C 5.613281 10.855469 6.730469 9.738281 8.105469 9.738281 C 9.480469 9.738281 10.597656 10.855469 10.597656 12.230469 C 10.597656 13.605469 9.480469 14.722656 8.105469 14.722656 C 6.730469 14.722656 5.613281 13.605469 5.613281 12.230469 Z M 15.78125 19.703125 L 8.21875 19.703125 L 8.21875 17.984375 L 15.78125 17.984375 Z M 18.386719 12.230469 C 18.386719 13.605469 17.269531 14.722656 15.894531 14.722656 C 14.492188 14.722656 13.375 13.605469 13.347656 12.230469 C 13.347656 10.824219 14.464844 9.707031 15.835938 9.679688 C 17.210938 9.652344 18.359375 10.796875 18.386719 12.171875 C 18.386719 12.199219 18.386719 12.199219 18.386719 12.230469 Z M 18.386719 12.230469 "
+                />
+              </svg>
 
-      
-        <a href="/automation">
-          
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24">
-    <path d="M 23.140625 10.195312 L 21.9375 10.195312 L 21.9375 6.386719 C 21.910156 5.929688 21.535156 5.554688 21.078125 5.527344 L 12.859375 5.527344 L 12.859375 0.257812 L 11.140625 0.257812 L 11.140625 5.527344 L 2.921875 5.527344 C 2.464844 5.554688 2.089844 5.929688 2.0625 6.386719 L 2.0625 10.195312 L 0.859375 10.195312 C 0.371094 10.195312 0 10.566406 0 11.054688 L 0 16.726562 C 0 17.210938 0.371094 17.585938 0.859375 17.585938 L 2.0625 17.585938 L 2.0625 22.882812 C 2.089844 23.339844 2.464844 23.714844 2.921875 23.742188 L 21.078125 23.742188 C 21.535156 23.714844 21.910156 23.339844 21.9375 22.882812 L 21.9375 17.585938 L 23.140625 17.585938 C 23.628906 17.585938 24 17.210938 24 16.726562 L 24 11.054688 C 24 10.566406 23.628906 10.195312 23.140625 10.195312 Z M 5.613281 12.230469 C 5.613281 10.855469 6.730469 9.738281 8.105469 9.738281 C 9.480469 9.738281 10.597656 10.855469 10.597656 12.230469 C 10.597656 13.605469 9.480469 14.722656 8.105469 14.722656 C 6.730469 14.722656 5.613281 13.605469 5.613281 12.230469 Z M 15.78125 19.703125 L 8.21875 19.703125 L 8.21875 17.984375 L 15.78125 17.984375 Z M 18.386719 12.230469 C 18.386719 13.605469 17.269531 14.722656 15.894531 14.722656 C 14.492188 14.722656 13.375 13.605469 13.347656 12.230469 C 13.347656 10.824219 14.464844 9.707031 15.835938 9.679688 C 17.210938 9.652344 18.359375 10.796875 18.386719 12.171875 C 18.386719 12.199219 18.386719 12.199219 18.386719 12.230469 Z M 18.386719 12.230469 "/>
-</svg>
-          
-          Automation
-        </a>
-      
-    
-  </span>
-</div>
+              Automation
+            </a>
+          </span>
+        </div>
 
+        <div class="post-body">
+          <h3 id="context">Context</h3>
 
-  <div class="post-body">
-    <h3 id="context">Context</h3>
+          <p>
+            After I’ve noticed my 2019 Samsung TV had support for Google
+            Assistant commands for basic controls such as power, volume,
+            channel, input source, etc., I thought it would be cool to also be
+            able to cast media content using my voice, but I then realized that
+            the only officially supported TVs were labeled ‘Chromecast-enabled’,
+            and that people without those generally end up buying the Chromecast
+            TV stick, for the ‘full compatibility’, which sounds like a waste
+            when you already own a ‘smart’ TV.
+          </p>
 
-<p>After I’ve noticed my 2019 Samsung TV had support for Google Assistant commands for basic controls such as power, volume, channel, input source, etc., I thought it would be cool to also be able to cast media content using my voice, but I then realized that the only officially supported TVs were labeled ‘Chromecast-enabled’, and that people without those generally end up buying the Chromecast TV stick, for the ‘full compatibility’, which sounds like a waste when you already own a ‘smart’ TV.</p>
+          <p>
+            As YouTube takes up the largest part of my ‘media consumption’, one
+            day, <del>and after procrastinating for months,</del> I went ahead
+            and checked out the inner-workings of the existing casting
+            functionnality, by casting YouTube videos from the Android app to
+            the TV, to try to figure out a way to automate that process, to then
+            link it to the Google Assistant.
+          </p>
 
-<p>As YouTube takes up the largest part of my ‘media consumption’, one day, <del>and after procrastinating for months,</del> I went ahead and checked out the inner-workings of the existing casting functionnality, by casting YouTube videos from the Android app to the TV, to try to figure out a way to automate that process, to then link it to the Google Assistant.</p>
+          <h3 id="dial-protocol">DIAL protocol</h3>
 
-<h3 id="dial-protocol">DIAL protocol</h3>
+          <p>
+            By doing a quick capture of the network traffic between the phone
+            and the TV - by using the Intercepter-NG app (requires root), I’ve
+            already noticed a very simple and easy-to-spot HTTP endpoint that
+            was being hit during the cast connection:
+          </p>
 
-<p>By doing a quick capture of the network traffic between the phone and the TV - by using the Intercepter-NG app (requires root), I’ve already noticed a very simple and easy-to-spot HTTP endpoint that was being hit during the cast connection:</p>
+          <p>
+            <code class="language-plaintext highlighter-rouge"
+              >http://tizen:8080/ws/apps/YouTube</code
+            >
+            (‘tizen’ being the TV’s LAN hostname)
+          </p>
 
-<p><code class="language-plaintext highlighter-rouge">http://tizen:8080/ws/apps/YouTube</code> (‘tizen’ being the TV’s LAN hostname)</p>
+          <p>
+            A quick search online revealed that this endpoint is part of a
+            protocol called DIAL, for Discovery and Launch, which is used to
+            initiate applications on “1st screen” devices, such as TVs, via
+            small factor (“2nd screen”) devices, such as phones and tablets. (<a
+              href="https://en.wikipedia.org/wiki/Discovery_and_Launch"
+              rel="noopener noreferrer"
+              target="_blank"
+              >More on Wikipedia</a
+            >)
+          </p>
 
-<p>A quick search online revealed that this endpoint is part of a protocol called DIAL, for Discovery and Launch, which is used to initiate applications on “1st screen” devices, such as TVs, via small factor (“2nd screen”) devices, such as phones and tablets. (<a href="https://en.wikipedia.org/wiki/Discovery_and_Launch" rel="noopener noreferrer" target="_blank">More on Wikipedia</a>)</p>
+          <p>
+            It turns out that a simple empty POST request to the previously
+            mentionned endpoint would launch the application on the target TV,
+            and a GET would return various metadata around the application, in
+            XML format, including its status (running/stopped), and other
+            application-specific information:
+          </p>
 
-<p>It turns out that a simple empty POST request to the previously mentionned endpoint would launch the application on the target TV, and a GET would return various metadata around the application, in XML format, including its status (running/stopped), and other application-specific information:</p>
-
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;service</span> <span class="na">xmlns=</span><span class="s">"urn:dial-multiscreen-org:schemas:dial"</span> <span class="na">xmlns:atom=</span><span class="s">"http://www.w3.org/2005/Atom"</span> <span class="na">dialVer=</span><span class="s">"2.1"</span><span class="nt">&gt;</span>
+          <div class="language-xml highlighter-rouge">
+            <div class="highlight">
+              <pre
+                class="highlight"
+              ><code><span class="nt">&lt;service</span> <span class="na">xmlns=</span><span class="s">"urn:dial-multiscreen-org:schemas:dial"</span> <span class="na">xmlns:atom=</span><span class="s">"http://www.w3.org/2005/Atom"</span> <span class="na">dialVer=</span><span class="s">"2.1"</span><span class="nt">&gt;</span>
   <span class="nt">&lt;name&gt;</span>YouTube<span class="nt">&lt;/name&gt;</span>
   <span class="nt">&lt;options</span> <span class="na">allowStop=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
   <span class="nt">&lt;state&gt;</span>running<span class="nt">&lt;/state&gt;</span>
@@ -282,55 +293,127 @@
     <span class="nt">&lt;loungeTokenRefreshIntervalMs&gt;</span>1500000<span class="nt">&lt;/loungeTokenRefreshIntervalMs&gt;</span>
   <span class="nt">&lt;/additionalData&gt;</span>
 <span class="nt">&lt;/service&gt;</span>
-</code></pre></div></div>
+</code></pre>
+            </div>
+          </div>
 
-<p>Great, we now have an easy way of launching the app on the target TV so that it’s ready to receive casted content.</p>
+          <p>
+            Great, we now have an easy way of launching the app on the target TV
+            so that it’s ready to receive casted content.
+          </p>
 
-<p>After doing more research, it seems there’s also an ‘easy’ way of playing actual videos using this same endpoint, by simply adding a <code class="language-plaintext highlighter-rouge">v</code> parameter on the body of the POST request, which would be the YouTube video ID.</p>
+          <p>
+            After doing more research, it seems there’s also an ‘easy’ way of
+            playing actual videos using this same endpoint, by simply adding a
+            <code class="language-plaintext highlighter-rouge">v</code>
+            parameter on the body of the POST request, which would be the
+            YouTube video ID.
+          </p>
 
-<p>However though, it seems that this method was recently (late 2020) rendered useless, as it now requires manual confirmation on the TV each time a video is requested.</p>
+          <p>
+            However though, it seems that this method was recently (late 2020)
+            rendered useless, as it now requires manual confirmation on the TV
+            each time a video is requested.
+          </p>
 
-<p><img src="/assets/media/yt-shady-cast-prompt.jpg" alt=""></p>
+          <p><img src="/assets/media/yt-shady-cast-prompt.jpg" alt="" /></p>
 
-<p>Time to dig deeper.</p>
+          <p>Time to dig deeper.</p>
 
-<h3 id="youtube-cast-functionnality">YouTube cast functionnality</h3>
+          <h3 id="youtube-cast-functionnality">YouTube cast functionnality</h3>
 
-<p>In order to proceed with further network traffic inspection, it was needed to achieve HTTPS interception, which would require bypassing SSL-pinning on the Android YouTube app, in order to be able to decrypt its traffic.</p>
+          <p>
+            In order to proceed with further network traffic inspection, it was
+            needed to achieve HTTPS interception, which would require bypassing
+            SSL-pinning on the Android YouTube app, in order to be able to
+            decrypt its traffic.
+          </p>
 
-<p>Luckily though, it turns out that the Google Chrome browser also supports the casting functionnality on YouTube - so I’ve simply fired up <a href="https://www.telerik.com/download/fiddler" rel="noopener noreferrer" target="_blank">Fiddler</a> and started watching the web requests.</p>
+          <p>
+            Luckily though, it turns out that the Google Chrome browser also
+            supports the casting functionnality on YouTube - so I’ve simply
+            fired up
+            <a
+              href="https://www.telerik.com/download/fiddler"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Fiddler</a
+            >
+            and started watching the web requests.
+          </p>
 
-<p>When a compatible TV is discovered, a casting icon pops up on the YouTube player control bar, like so:</p>
+          <p>
+            When a compatible TV is discovered, a casting icon pops up on the
+            YouTube player control bar, like so:
+          </p>
 
-<p><img src="/assets/media/yt-cast-icon.png" alt=""></p>
+          <p><img src="/assets/media/yt-cast-icon.png" alt="" /></p>
 
-<p>After clicking the icon and choosing the cast device, the YouTube player starts acting as a remote.</p>
+          <p>
+            After clicking the icon and choosing the cast device, the YouTube
+            player starts acting as a remote.
+          </p>
 
-<p>Behind the scenes, a private YouTube API called ‘Lounge’ is used, in order to do the pairing and the remote control functionnality for YouTube Leanback (big screen) devices.</p>
+          <p>
+            Behind the scenes, a private YouTube API called ‘Lounge’ is used, in
+            order to do the pairing and the remote control functionnality for
+            YouTube Leanback (big screen) devices.
+          </p>
 
-<p><img src="/assets/media/yt-lounge-api-capture.png" alt=""></p>
+          <p><img src="/assets/media/yt-lounge-api-capture.png" alt="" /></p>
 
-<p>By analysing these requests, I’ve noticed that the API was fairly complicated, with a mix of body and URL parameters, comprising tokens, IDs, as well as some weird changing alphanumeric values.</p>
+          <p>
+            By analysing these requests, I’ve noticed that the API was fairly
+            complicated, with a mix of body and URL parameters, comprising
+            tokens, IDs, as well as some weird changing alphanumeric values.
+          </p>
 
-<p><img src="/assets/media/yt-lounge-api-params.png" alt=""></p>
+          <p><img src="/assets/media/yt-lounge-api-params.png" alt="" /></p>
 
-<p>The responses were also seemingly in a custom JSON-based format.</p>
+          <p>
+            The responses were also seemingly in a custom JSON-based format.
+          </p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">B</span><span class="mi">2</span><span class="w">
+          <div class="language-json highlighter-rouge">
+            <div class="highlight">
+              <pre
+                class="highlight"
+              ><code><span class="err">B</span><span class="mi">2</span><span class="w">
 </span><span class="mi">174</span><span class="w">
 </span><span class="p">[[</span><span class="mi">105</span><span class="p">,[</span><span class="s2">"onStateChange"</span><span class="p">,{</span><span class="nl">"currentTime"</span><span class="p">:</span><span class="s2">"50"</span><span class="p">,</span><span class="nl">"duration"</span><span class="p">:</span><span class="s2">"318.321"</span><span class="p">,</span><span class="nl">"cpn"</span><span class="p">:</span><span class="s2">"7s_Qx1i3xE4fXNVX"</span><span class="p">,</span><span class="nl">"loadedTime"</span><span class="p">:</span><span class="s2">"50"</span><span class="p">,</span><span class="nl">"state"</span><span class="p">:</span><span class="s2">"3"</span><span class="p">,</span><span class="nl">"seekableStartTime"</span><span class="p">:</span><span class="s2">"0"</span><span class="p">,</span><span class="nl">"seekableEndTime"</span><span class="p">:</span><span class="s2">"318.3"</span><span class="p">}]]</span><span class="w">
 </span><span class="p">]</span><span class="w">
 
 </span><span class="mi">0</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre>
+            </div>
+          </div>
 
-<p>However, I was able to find some very useful code on GitHub, which saved me the hassle of reverse engineering the API, which quite frankly, I might’ve gave up doing. 👀</p>
+          <p>
+            However, I was able to find some very useful code on GitHub, which
+            saved me the hassle of reverse engineering the API, which quite
+            frankly, I might’ve gave up doing. 👀
+          </p>
 
-<h3 id="youtube-remote-by-mutantmonkey">youtube-remote by @mutantmonkey</h3>
+          <h3 id="youtube-remote-by-mutantmonkey">
+            youtube-remote by @mutantmonkey
+          </h3>
 
-<p><a href="https://github.com/mutantmonkey/youtube-remote" rel="noopener noreferrer" target="_blank">youtube-remote</a> allows us to play/queue a video, and pause/resume the playback, using the YouTube Lounge API.</p>
+          <p>
+            <a
+              href="https://github.com/mutantmonkey/youtube-remote"
+              rel="noopener noreferrer"
+              target="_blank"
+              >youtube-remote</a
+            >
+            allows us to play/queue a video, and pause/resume the playback,
+            using the YouTube Lounge API.
+          </p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage: remote.py [-h] (--play PLAY | --queue [QUEUE ...] | --pause | --unpause)
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre
+                class="highlight"
+              ><code>usage: remote.py [-h] (--play PLAY | --queue [QUEUE ...] | --pause | --unpause)
 
 Command-line YouTube Leanback remote
 
@@ -340,169 +423,360 @@ optional arguments:
   --queue [QUEUE ...]  Add a video to the queue
   --pause              Pause the current video
   --unpause            Unpause the current video
-</code></pre></div></div>
+</code></pre>
+            </div>
+          </div>
 
-<p>The first phase is the pairing phase.</p>
+          <p>The first phase is the pairing phase.</p>
 
-<p>Upon running the script, you are instructed to provide a pairing code - which is seemingly the method used to pair with ‘old-school’ leanback devices, that aren’t necessarily on the same network and/or don’t support casting protocols like DIAL.</p>
+          <p>
+            Upon running the script, you are instructed to provide a pairing
+            code - which is seemingly the method used to pair with ‘old-school’
+            leanback devices, that aren’t necessarily on the same network and/or
+            don’t support casting protocols like DIAL.
+          </p>
 
-<p>The pairing code is then used to retreive the <code class="language-plaintext highlighter-rouge">loungeToken</code> using the <code class="language-plaintext highlighter-rouge">/api/lounge/pairing/get_screen</code> endpoint.</p>
+          <p>
+            The pairing code is then used to retreive the
+            <code class="language-plaintext highlighter-rouge"
+              >loungeToken</code
+            >
+            using the
+            <code class="language-plaintext highlighter-rouge"
+              >/api/lounge/pairing/get_screen</code
+            >
+            endpoint.
+          </p>
 
-<p>We can skip this part, as in our case, the TV seems to always allocate its own <code class="language-plaintext highlighter-rouge">loungeToken</code>, as seen on the <a href="#dial-protocol">‘DIAL endpoint’ response</a>.</p>
+          <p>
+            We can skip this part, as in our case, the TV seems to always
+            allocate its own
+            <code class="language-plaintext highlighter-rouge">loungeToken</code
+            >, as seen on the
+            <a href="#dial-protocol">‘DIAL endpoint’ response</a>.
+          </p>
 
-<p>After commenting out the pairing code part, and manually assigning the <code class="language-plaintext highlighter-rouge">loungeToken</code> of the TV, the script worked!</p>
+          <p>
+            After commenting out the pairing code part, and manually assigning
+            the
+            <code class="language-plaintext highlighter-rouge"
+              >loungeToken</code
+            >
+            of the TV, the script worked!
+          </p>
 
-<p><img src="/assets/media/yt-remote-demo.gif" alt=""></p>
+          <p><img src="/assets/media/yt-remote-demo.gif" alt="" /></p>
 
-<p>Sweet! We now have a decent way of playing YouTube videos on the TV.</p>
+          <p>
+            Sweet! We now have a decent way of playing YouTube videos on the TV.
+          </p>
 
-<h3 id="automation">Automation</h3>
+          <h3 id="automation">Automation</h3>
 
-<p>Now that we’ve figured out the main part, it’s now time to find a method of automating the whole process.</p>
+          <p>
+            Now that we’ve figured out the main part, it’s now time to find a
+            method of automating the whole process.
+          </p>
 
-<p>First off, <a href="https://ifttt.com/" rel="noopener noreferrer" target="_blank">IFTTT</a> allows us to have <a href="https://support.google.com/googlenest/answer/7194656" rel="noopener noreferrer" target="_blank">custom Google Assistant commands</a>, so we can use that as a starting point.</p>
+          <p>
+            First off,
+            <a
+              href="https://ifttt.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >IFTTT</a
+            >
+            allows us to have
+            <a
+              href="https://support.google.com/googlenest/answer/7194656"
+              rel="noopener noreferrer"
+              target="_blank"
+              >custom Google Assistant commands</a
+            >, so we can use that as a starting point.
+          </p>
 
-<p>IFTTT has a <a href="https://ifttt.com/maker_webhooks" rel="noopener noreferrer" target="_blank">webhook plugin</a>, which would allow us to receive actions following a Google Assistant command, via HTTP.</p>
+          <p>
+            IFTTT has a
+            <a
+              href="https://ifttt.com/maker_webhooks"
+              rel="noopener noreferrer"
+              target="_blank"
+              >webhook plugin</a
+            >, which would allow us to receive actions following a Google
+            Assistant command, via HTTP.
+          </p>
 
-<p>But in order for us to receive these commands locally, we would have to expose a local webserver to the internet, which means that we have to use either a reverse proxy service such as <a href="https://ngrok.com/" rel="noopener noreferrer" target="_blank">ngrok</a> or <a href="https://localtunnel.me/" rel="noopener noreferrer" target="_blank">localtunnel</a>, or do port forwarding on the router, and configure a dynamic DNS (I went with the former option, for reference).</p>
+          <p>
+            But in order for us to receive these commands locally, we would have
+            to expose a local webserver to the internet, which means that we
+            have to use either a reverse proxy service such as
+            <a
+              href="https://ngrok.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >ngrok</a
+            >
+            or
+            <a
+              href="https://localtunnel.me/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >localtunnel</a
+            >, or do port forwarding on the router, and configure a dynamic DNS
+            (I went with the former option, for reference).
+          </p>
 
-<p>So, In short, here’s the complete execution flow:</p>
+          <p>So, In short, here’s the complete execution flow:</p>
 
-<ol>
-  <li>“Hey Google, <code class="language-plaintext highlighter-rouge">searchQuery</code> on YouTube.”</li>
-  <li>Google Assistant executes the IFTTT command.</li>
-  <li>Which calls IFTTT’s Maker Webhooks on a public webhook.</li>
-  <li>Which forwards to our local webserver.</li>
-  <li>Which would execute the following sequence:
-    <ul>
-      <li>Do a YouTube video search by scraping <code class="language-plaintext highlighter-rouge">youtube.com/results?search_query={searchQuery}</code>, in order to find/parse the video ID.</li>
-      <li>Launch the YouTube app on the TV (POST :8080/ws/apps/YouTube).</li>
-      <li>Wait for the <code class="language-plaintext highlighter-rouge">loungeToken</code> to be available (GET).</li>
-      <li>Use the Lounge API to play the video on the TV (youtube-remote on GitHub).</li>
-    </ul>
-  </li>
-</ol>
+          <ol>
+            <li>
+              “Hey Google,
+              <code class="language-plaintext highlighter-rouge"
+                >searchQuery</code
+              >
+              on YouTube.”
+            </li>
+            <li>Google Assistant executes the IFTTT command.</li>
+            <li>Which calls IFTTT’s Maker Webhooks on a public webhook.</li>
+            <li>Which forwards to our local webserver.</li>
+            <li>
+              Which would execute the following sequence:
+              <ul>
+                <li>
+                  Do a YouTube video search by scraping
+                  <code class="language-plaintext highlighter-rouge"
+                    >youtube.com/results?search_query={searchQuery}</code
+                  >, in order to find/parse the video ID.
+                </li>
+                <li>
+                  Launch the YouTube app on the TV (POST :8080/ws/apps/YouTube).
+                </li>
+                <li>
+                  Wait for the
+                  <code class="language-plaintext highlighter-rouge"
+                    >loungeToken</code
+                  >
+                  to be available (GET).
+                </li>
+                <li>
+                  Use the Lounge API to play the video on the TV (youtube-remote
+                  on GitHub).
+                </li>
+              </ul>
+            </li>
+          </ol>
 
-<h3 id="extras">Extras</h3>
+          <h3 id="extras">Extras</h3>
 
-<h4 id="1-multiple-search-results">1. Multiple search results</h4>
+          <h4 id="1-multiple-search-results">1. Multiple search results</h4>
 
-<p>As my TV already supported Google Assistant commands such as next and previous, I thought about queuing a dozen of YouTube videos that come up on the search, instead of just one, so I can go through the search results, in case the video I want is not the first one to show up.</p>
+          <p>
+            As my TV already supported Google Assistant commands such as next
+            and previous, I thought about queuing a dozen of YouTube videos that
+            come up on the search, instead of just one, so I can go through the
+            search results, in case the video I want is not the first one to
+            show up.
+          </p>
 
-<p>After I’ve noticed that queuing each video would show an annoying notification on the TV, I looked for better way to do the job.</p>
+          <p>
+            After I’ve noticed that queuing each video would show an annoying
+            notification on the TV, I looked for better way to do the job.
+          </p>
 
-<p>Luckily, after some analysis of YouTube JS code, and some trial and error, I was able to figure out how to use the Lounge API command <code class="language-plaintext highlighter-rouge">setPlaylist</code>, which takes 2 arguments, <code class="language-plaintext highlighter-rouge">videoId</code> and <code class="language-plaintext highlighter-rouge">videoIds</code> - the first one is the initial video to play, while the second one is a comma-separated list of the rest of the videos to be queued.</p>
+          <p>
+            Luckily, after some analysis of YouTube JS code, and some trial and
+            error, I was able to figure out how to use the Lounge API command
+            <code class="language-plaintext highlighter-rouge">setPlaylist</code
+            >, which takes 2 arguments,
+            <code class="language-plaintext highlighter-rouge">videoId</code>
+            and
+            <code class="language-plaintext highlighter-rouge">videoIds</code> -
+            the first one is the initial video to play, while the second one is
+            a comma-separated list of the rest of the videos to be queued.
+          </p>
 
-<p>Cool, no more pesky notifications, and a single command can do it all now.</p>
+          <p>
+            Cool, no more pesky notifications, and a single command can do it
+            all now.
+          </p>
 
-<h4 id="2-wake-on-lan">2. Wake-on-LAN</h4>
+          <h4 id="2-wake-on-lan">2. Wake-on-LAN</h4>
 
-<p>I’ve also implemented Wake-on-LAN, so that the TV would turn on in case it was off.</p>
+          <p>
+            I’ve also implemented Wake-on-LAN, so that the TV would turn on in
+            case it was off.
+          </p>
 
-<p>This is especially useful since, for some reason, there’s a <a href="https://community.smartthings.com/t/samsung-tv-cant-turn-on/114960" rel="noopener noreferrer" target="_blank">known issue</a>, at least on some select models, where if the TV is connected via Ethernet instead of Wi-Fi, it loses connection to <a href="https://www.smartthings.com/" rel="noopener noreferrer" target="_blank">SmartThings</a> soon after it’s turned off - which means you can’t turn it on from the cloud/Google Assistant.</p>
+          <p>
+            This is especially useful since, for some reason, there’s a
+            <a
+              href="https://community.smartthings.com/t/samsung-tv-cant-turn-on/114960"
+              rel="noopener noreferrer"
+              target="_blank"
+              >known issue</a
+            >, at least on some select models, where if the TV is connected via
+            Ethernet instead of Wi-Fi, it loses connection to
+            <a
+              href="https://www.smartthings.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >SmartThings</a
+            >
+            soon after it’s turned off - which means you can’t turn it on from
+            the cloud/Google Assistant.
+          </p>
 
-<h4 id="3-youtube-player-ui-visibility">3. YouTube player UI visibility</h4>
+          <h4 id="3-youtube-player-ui-visibility">
+            3. YouTube player UI visibility
+          </h4>
 
-<p>Lastly, a small UX improvement: I send a pause + play command (you can send multiple commands on a single request) after the <code class="language-plaintext highlighter-rouge">setPlaylist</code> command, to force the YouTube player UI to show up initially (so that one’s able to see the video title), as it doesn’t do so by default when casting.</p>
+          <p>
+            Lastly, a small UX improvement: I send a pause + play command (you
+            can send multiple commands on a single request) after the
+            <code class="language-plaintext highlighter-rouge"
+              >setPlaylist</code
+            >
+            command, to force the YouTube player UI to show up initially (so
+            that one’s able to see the video title), as it doesn’t do so by
+            default when casting.
+          </p>
 
-<h3 id="demo">Demo</h3>
+          <h3 id="demo">Demo</h3>
 
-<p style="position: relative; padding: 30px 0px 57% 0px; height: 0; overflow: hidden;"><iframe src="https://www.youtube.com/embed/2viK_LeoT4M" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" style="display: block; margin: 0px auto; position: absolute; top: 0; left: 0;"></iframe></p>
+          <p
+            style="
+              position: relative;
+              padding: 30px 0px 57% 0px;
+              height: 0;
+              overflow: hidden;
+            "
+          >
+            <iframe
+              src="https://www.youtube.com/embed/2viK_LeoT4M"
+              width="100%"
+              height="100%"
+              frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen=""
+              style="
+                display: block;
+                margin: 0px auto;
+                position: absolute;
+                top: 0;
+                left: 0;
+              "
+            ></iframe>
+          </p>
 
-<h3 id="code">Code</h3>
+          <h3 id="code">Code</h3>
 
-<p>I’ve <a href="https://github.com/thedroidgeek/youtube-cast-automation-api" rel="noopener noreferrer" target="_blank">shared my code on GitHub</a> - it’s a python script with a micro API that needs to be exposed to the internet, to then be linked to the Google Assistant through IFTTT, as previously explained - the details on how to do so as well as the API documentation can be found on the README of the repository.</p>
+          <p>
+            I’ve
+            <a
+              href="https://github.com/thedroidgeek/youtube-cast-automation-api"
+              rel="noopener noreferrer"
+              target="_blank"
+              >shared my code on GitHub</a
+            >
+            - it’s a python script with a micro API that needs to be exposed to
+            the internet, to then be linked to the Google Assistant through
+            IFTTT, as previously explained - the details on how to do so as well
+            as the API documentation can be found on the README of the
+            repository.
+          </p>
 
-<h3 id="potential-future-plans">Potential future plans</h3>
+          <h3 id="potential-future-plans">Potential future plans</h3>
 
-<p>Since I’m currently running my little server on a Raspberry Pi anyway, I might soon check out <a href="https://www.home-assistant.io/" rel="noopener noreferrer" target="_blank">Home Assistant</a>, so I can perhaps port my code to it, and potentially get into more home automation stuff - so I <em>might</em> diversify my future posts with more of such content as well, pending positive feedback.</p>
+          <p>
+            Since I’m currently running my little server on a Raspberry Pi
+            anyway, I might soon check out
+            <a
+              href="https://www.home-assistant.io/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Home Assistant</a
+            >, so I can perhaps port my code to it, and potentially get into
+            more home automation stuff - so I <em>might</em> diversify my future
+            posts with more of such content as well, pending positive feedback.
+          </p>
 
-<p>See you in 2 years! /s</p>
+          <p>See you in 2 years! /s</p>
 
-<p>“Hey Google, publish blog post.” 😂👌💯🌈</p>
+          <p>“Hey Google, publish blog post.” 😂👌💯🌈</p>
 
-    
+          <div class="post-tags"></div>
+        </div>
 
+        <section class="comments">
+          <h2>Comments</h2>
 
+          <div id="disqus_thread">
+            <button class="disqus-load" onClick="loadDisqusComments()">
+              Load Comments
+            </button>
+          </div>
+          <script src="/assets/js/disqusloader.min.js"></script>
+          <script>
+            /**
+             *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW
+             *  TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+             *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT:s
+             *  https://disqus.com/admin/universalcode/#configuration-variables
+             */
+            var disqus_config = function () {
+              this.page.url =
+                "https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html";
+              this.page.identifier =
+                "" ||
+                "https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html";
+            };
+            function loadDisqusComments() {
+              // DON'T EDIT BELOW THIS LINE
+              var d = document,
+                s = d.createElement("script");
+              s.src = "//0x41-cf.disqus.com/embed.js";
+              s.setAttribute("data-timestamp", +new Date());
+              (d.head || d.body).appendChild(s);
+            }
 
-<div class="post-tags">
-  
-</div>
-  </div>
+            // Disqus lazy-loading (on visibility)
+            disqusLoader("#disqus_thread", {
+              scriptUrl: "//0x41-cf.disqus.com/embed.js",
+            });
+          </script>
+          <noscript>
+            Please enable JavaScript to view the
+            <a href="https://disqus.com/?ref_noscript"
+              >comments powered by Disqus</a
+            >.
+          </noscript>
+        </section>
 
-  
-  <section class="comments">
-    <h2>Comments</h2>
-    
-  <div id="disqus_thread">
-    <button class="disqus-load" onClick="loadDisqusComments()">
-      Load Comments
-    </button>
-  </div>
-  <script src="/assets/js/disqusloader.min.js"></script>
-  <script>
+        <section class="related">
+          <h2>Related Posts</h2>
+          <ul class="posts-list">
+            <li>
+              <h3>
+                <a href="/reversing/2019/10/08/unlocking-nokia-g240wa.html">
+                  Unlocking IAM's Nokia G-240W-A router (Part 1)
+                  <small>&bull; 08 Oct 2019</small>
+                </a>
+              </h3>
+            </li>
 
-  /**
-  *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW
-  *  TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-  *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT:s
-  *  https://disqus.com/admin/universalcode/#configuration-variables
-  */
-  var disqus_config = function () {
-    this.page.url = "https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html";
-    this.page.identifier = "" ||
-                           "https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html";
-  }
-  function loadDisqusComments() { // DON'T EDIT BELOW THIS LINE
-    var d = document, s = d.createElement('script');
-    s.src = '//0x41-cf.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  }
-
-  // Disqus lazy-loading (on visibility)
-  disqusLoader('#disqus_thread', { scriptUrl: '//0x41-cf.disqus.com/embed.js' });
-
-  </script>
-  <noscript>
-    Please enable JavaScript to view the
-    <a href="https://disqus.com/?ref_noscript">comments powered by Disqus</a>.
-  </noscript>
-
-
-
-  </section>
-
-  <section class="related">
-  <h2>Related Posts</h2>
-  <ul class="posts-list">
-    
-      <li>
-        <h3>
-          <a href="/reversing/2019/10/08/unlocking-nokia-g240wa.html">
-            Unlocking IAM's Nokia G-240W-A router (Part 1)
-            <small>&bull; 08 Oct 2019</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/infosec/2019/05/28/skype-web-plugin-ez-rce.html">
-            1-click RCE with Skype Web Plugin and Qt apps
-            <small>&bull; 28 May 2019</small>
-          </a>
-        </h3>
-      </li>
-    
-  </ul>
-</section>
-
-</div>
-
+            <li>
+              <h3>
+                <a href="/infosec/2019/05/28/skype-web-plugin-ez-rce.html">
+                  1-click RCE with Skype Web Plugin and Qt apps
+                  <small>&bull; 28 May 2019</small>
+                </a>
+              </h3>
+            </li>
+          </ul>
+        </section>
+      </div>
     </main>
 
     <!-- Optional footer content -->
-
   </body>
 </html>
