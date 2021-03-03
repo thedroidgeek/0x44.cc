@@ -31,7 +31,7 @@ jobs:
           enable_cache: true
           ### Enables caching. Similar to https://github.com/actions/cache.
           #
-          # format_output: true
+          format_output: true
           ### Uses prettier https://prettier.io to format jekyll output HTML.
           #
           # prettier_opts: '{ "useTabs": true }'
