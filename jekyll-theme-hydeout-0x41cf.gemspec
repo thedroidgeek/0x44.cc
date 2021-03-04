@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 2.2.6"
   spec.add_development_dependency "jekyll-extlinks", "~> 0.0.5"
   spec.add_development_dependency "wdm", "~> 0.1" if Gem.win_platform?
+  spec.add_development_dependency "jekyll-timeago", "~> 0.14.0"
 end

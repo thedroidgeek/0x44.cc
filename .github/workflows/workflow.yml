@@ -7,6 +7,9 @@ on:
       # - source
       # It is highly recommended that you only run this action on push to a
       # specific branch, eg. master or source (if on *.github.io repo)
+  schedule:
+    - cron: '0 0 1 1 *' # copyright notice
+    - cron: '0 0 8 11 *' # birthday
 
 jobs:
   jekyll:
