@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://0x41.cf/feed.xml" rel="self" type="application/atom+xml" /><link href="https://0x41.cf/" rel="alternate" type="text/html" /><updated>2021-05-21T09:14:55+00:00</updated><id>https://0x41.cf/feed.xml</id><title type="html">0x41.cf</title><subtitle>InfoSec, Reverse Engineering, and more (soon&amp;trade;)</subtitle><author><name>Sami ALAOUI KENDIL</name></author><entry><title type="html">Google Assistant YouTube command for smart TVs</title><link href="https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html" rel="alternate" type="text/html" title="Google Assistant YouTube command for smart TVs" /><published>2021-03-02T00:00:00+00:00</published><updated>2021-03-02T00:00:00+00:00</updated><id>https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs</id><content type="html" xml:base="https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html">&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://0x41.cf/feed.xml" rel="self" type="application/atom+xml" /><link href="https://0x41.cf/" rel="alternate" type="text/html" /><updated>2021-05-26T11:10:19+00:00</updated><id>https://0x41.cf/feed.xml</id><title type="html">0x41.cf</title><subtitle>InfoSec, Reverse Engineering, and more (soon&amp;trade;)</subtitle><author><name>Sami ALAOUI KENDIL</name></author><entry><title type="html">Google Assistant YouTube command for smart TVs</title><link href="https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html" rel="alternate" type="text/html" title="Google Assistant YouTube command for smart TVs" /><published>2021-03-02T00:00:00+00:00</published><updated>2021-03-02T00:00:00+00:00</updated><id>https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs</id><content type="html" xml:base="https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html">&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
 
 &lt;p&gt;After I’ve noticed my 2019 Samsung TV had support for Google Assistant commands for basic controls such as power, volume, channel, input source, etc., I thought it would be cool to also be able to cast media content using my voice, but I then realized that the only officially supported TVs were labeled ‘Chromecast-enabled’, and that people without those generally end up buying the Chromecast TV stick, for the ‘full compatibility’, which sounds like a waste when you already own a ‘smart’ TV.&lt;/p&gt;
 
@@ -37,7 +37,7 @@
 
 &lt;p&gt;However though, it seems that this method was recently (late 2020) rendered useless, as it now requires manual confirmation on the TV each time a video is requested.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/yt-shady-cast-prompt.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/yt-shady-cast-prompt.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Time to dig deeper.&lt;/p&gt;
 
@@ -49,17 +49,17 @@
 
 &lt;p&gt;When a compatible TV is discovered, a casting icon pops up on the YouTube player control bar, like so:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/yt-cast-icon.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/yt-cast-icon.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;After clicking the icon and choosing the cast device, the YouTube player starts acting as a remote.&lt;/p&gt;
 
 &lt;p&gt;Behind the scenes, a private YouTube API called ‘Lounge’ is used, in order to do the pairing and the remote control functionnality for YouTube Leanback (big screen) devices.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/yt-lounge-api-capture.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/yt-lounge-api-capture.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;By analysing these requests, I’ve noticed that the API was fairly complicated, with a mix of body and URL parameters, comprising tokens, IDs, as well as some weird changing alphanumeric values.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/yt-lounge-api-params.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/yt-lounge-api-params.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The responses were also seemingly in a custom JSON-based format.&lt;/p&gt;
 
@@ -99,7 +99,7 @@ optional arguments:
 
 &lt;p&gt;After commenting out the pairing code part, and manually assigning the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;loungeToken&lt;/code&gt; of the TV, the script worked!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/yt-remote-demo.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/yt-remote-demo.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Sweet! We now have a decent way of playing YouTube videos on the TV.&lt;/p&gt;
 
@@ -174,7 +174,7 @@ optional arguments:
 
 &lt;p&gt;This got me intrigued, so I tried to take a look at what’s running inside this thing.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/nokia-g-240w-a.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/nokia-g-240w-a.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;first-look&quot;&gt;First look&lt;/h3&gt;
 
@@ -184,7 +184,7 @@ optional arguments:
 
 &lt;p&gt;The first thing I did, of course, is log into the web administration portal - there’s a sticker in the back of the router with the credentials, which seem device specific, which is good… Or so I thought - as it turns out there’s a known ‘superuser’ account for the web panel, which has a default password: AdminGPON / ALC#FGU&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/nokia-ont-back.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/nokia-ont-back.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;After fiddling with the web interface, trying to force the WiFi to use 802.11n and 40MHz bandwidth, I’ve noticed no difference. It was time to take a deeper dive.&lt;/p&gt;
 
@@ -198,7 +198,7 @@ optional arguments:
 
 &lt;p&gt;As the ‘AdminGPON’ user, you’re able to import and export the router configuration.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/nokia-ont-backup-restore.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/nokia-ont-backup-restore.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;As the exported config.cfg file wasn’t plain-text, I’ve tried looking for magic values, and binwalk was able to find something right away:&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ binwalk config.cfg
@@ -210,7 +210,7 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
 
 &lt;p&gt;Being the lazy guy that I am, I’ve opened the file in a hex editor, stripped out the first 20 bytes, then pasted the hex dump in &lt;a href=&quot;https://gchq.github.io/CyberChef/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;CyberChef&lt;/a&gt;, and a huge xml file showed up. Bingo!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/cyberchef-zlib.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/cyberchef-zlib.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Exploring the xml a bit, I was able to spot the Telnet credentials (or so I thought):&lt;/p&gt;
 
@@ -242,7 +242,7 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
 
 &lt;p&gt;After a few comparisons with the not so naked eye (I wear glasses), I was able to tell that a single 32-bit value in the header was always changing radically, so this must be a checksum of sorts.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/cfg-header-comparison.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/cfg-header-comparison.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Now before guessing what’s being checksumed and how, I first need to know where the zlib data ends and if there’s something else after it.&lt;/p&gt;
 
@@ -288,7 +288,7 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
 
 &lt;p&gt;I’ve set the ‘Enable’ flag to true, chose a username, and copied my password, and lo and behold, after a reboot, we have root!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/root-nokia-ont.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/root-nokia-ont.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Stay tuned for more. :)&lt;/p&gt;</content><author><name>Sami ALAOUI KENDIL</name></author><category term="Reversing" /><summary type="html">Context As we recently upgraded our home internet to try out Maroc Telecom’s 100mbps fiber offer, I’ve noticed that the Nokia router they installed had horrible Wi-Fi speed - the max I could to get standing next to it was around 60mbps down, while in the opposite room, the speed was always under 10mbps. What’s interesting is the fact that it had decent range - I get full bars most of the time, and my Wi-Fi adapter reports a 300mbps data rate. This got me intrigued, so I tried to take a look at what’s running inside this thing. First look Doing a little online research, you will find out that the firmware on this router had quite a bad history. There’s various blog posts showing that routers running on similar firmware were found to be vulnerable to unauthenticated RCE vulnerabilities, and had hardcoded Telnet backdoor accounts. The first thing I did, of course, is log into the web administration portal - there’s a sticker in the back of the router with the credentials, which seem device specific, which is good… Or so I thought - as it turns out there’s a known ‘superuser’ account for the web panel, which has a default password: AdminGPON / ALC#FGU After fiddling with the web interface, trying to force the WiFi to use 802.11n and 40MHz bandwidth, I’ve noticed no difference. It was time to take a deeper dive. According to someone at lafibre.info forum, Telnet access to this router was possible via the ONTUSER / SUGAR2A041 ‘backdoor’ account, before an update was deployed sometime in June 2018. I’ve tried the web account credentials as well as any backdoor credentials I was able to find, to no avail. The fact that Telnet access locks for 5 minutes every 3 failed attempts didn’t help as well. That’s when I’ve decided to take a look at the configuration backup and restore functionnality. Analysing the backup file As the ‘AdminGPON’ user, you’re able to import and export the router configuration. As the exported config.cfg file wasn’t plain-text, I’ve tried looking for magic values, and binwalk was able to find something right away: $ binwalk config.cfg DECIMAL HEXADECIMAL DESCRIPTION -------------------------------------------------------------------- 20 0x14 Zlib compressed data, default compression Being the lazy guy that I am, I’ve opened the file in a hex editor, stripped out the first 20 bytes, then pasted the hex dump in CyberChef, and a huge xml file showed up. Bingo! Exploring the xml a bit, I was able to spot the Telnet credentials (or so I thought): &amp;lt;TelnetEnable rw=&quot;RW&quot; t=&quot;boolean&quot; v=&quot;True&quot;&amp;gt;&amp;lt;/TelnetEnable&amp;gt; &amp;lt;TelnetUserName ml=&quot;256&quot; rw=&quot;RW&quot; t=&quot;string&quot; v=&quot;admin&quot;&amp;gt;&amp;lt;/TelnetUserName&amp;gt; &amp;lt;TelnetPassword ml=&quot;256&quot; rw=&quot;RW&quot; t=&quot;string&quot; v=&quot;OYdLWUVDdKQTPaCIeTqniA==&quot; ealgo=&quot;ab&quot;&amp;gt;&amp;lt;/TelnetPassword&amp;gt; Alrighty, now how do I crack/decrypt this admin password? Since this was 128-bit base64 encoded data, I tried MD5’ing known passwords, then I tried every other known hashing algorithm, but none of them gave me anything - so it has to be either salted or encryption. Exploring a little further, I’ve found another Telnet credential thingy: &amp;lt;TelnetSshAccount. n=&quot;TelnetSshAccount&quot; t=&quot;staticObject&quot;&amp;gt; &amp;lt;Enable rw=&quot;RW&quot; t=&quot;boolean&quot; v=&quot;False&quot;&amp;gt;&amp;lt;/Enable&amp;gt; &amp;lt;UserName ml=&quot;64&quot; rw=&quot;RW&quot; t=&quot;string&quot; v=&quot;&quot;&amp;gt;&amp;lt;/UserName&amp;gt; &amp;lt;Password ml=&quot;64&quot; rw=&quot;RW&quot; t=&quot;string&quot; v=&quot;&quot; ealgo=&quot;ab&quot;&amp;gt;&amp;lt;/Password&amp;gt; &amp;lt;/TelnetSshAccount.&amp;gt; But it’s unused… Damn. Now that modifying the configuration file seemed more necessary, I tried to take a second look at the exported config.cfg. Modifying the backup file I kept exporting backup files while changing the router settings to regenerate different files for me to look at. After a few comparisons with the not so naked eye (I wear glasses), I was able to tell that a single 32-bit value in the header was always changing radically, so this must be a checksum of sorts. Now before guessing what’s being checksumed and how, I first need to know where the zlib data ends and if there’s something else after it. So I tried recreating the compressed chunk, which was pretty trivial, again thanks to CyberChef. It turns out there’s about 300 bytes after it that are unknown, but still, CRC32 on the deflated data gave the exact value at offset 8, which was in big endian. Yay! Now the null bytes made more sense, and it was clear to me that the other values next to the checksum must be positive integers. Soon after, I was able to figure out that the first one (+4) was the length of the deflated data, while the second one (+C) was the size of the xml file. Since in all the config.cfg files that I’ve exported, the rest of the bytes were static, this seemed enough for me to generate my own backup file, and as expected, uploading my crafted config.cfg worked! Here’s a simple python script I’ve made for this purpose, for those interested. Unlocking Telnet and SSH access So I took the password that I’ve set for the the ‘AdminGPON’ web account from: &amp;lt;WebAccount. n=&quot;WebAccount&quot; t=&quot;staticObject&quot;&amp;gt; &amp;lt;Enable rw=&quot;RW&quot; t=&quot;boolean&quot; v=&quot;True&quot;&amp;gt;&amp;lt;/Enable&amp;gt; &amp;lt;Priority max=&quot;10&quot; min=&quot;1&quot; rw=&quot;RW&quot; t=&quot;unsignedInt&quot; v=&quot;1&quot;&amp;gt;&amp;lt;/Priority&amp;gt; &amp;lt;UserName ml=&quot;64&quot; rw=&quot;RW&quot; t=&quot;string&quot; v=&quot;AdminGPON&quot;&amp;gt;&amp;lt;/UserName&amp;gt; &amp;lt;Password ml=&quot;64&quot; rw=&quot;RW&quot; t=&quot;string&quot; v=&quot;[REDACTED]&quot; ealgo=&quot;ab&quot;&amp;gt;&amp;lt;/Password&amp;gt; &amp;lt;PresetPassword ml=&quot;64&quot; rw=&quot;R&quot; t=&quot;string&quot; v=&quot;xEKUBYh1yT50dQFNwAr/5A==&quot; ealgo=&quot;ab&quot;&amp;gt;&amp;lt;/PresetPassword&amp;gt; &amp;lt;/WebAccount.&amp;gt; And used it for TelnetPassword config node, but logging in as admin still didn’t work. Since I can now generate these password hashes (or whatever they are) also, I tried changing my ‘AdminGPON’ password and comparing the resulting value with the TelnetPassword one (OYdLWUVDdKQTPaCIeTqniA==), and after a couple of tries, I’ve realized that the password was simply: admin. Since we all know that admin:admin is the first login combo that I, and everyone else, use, when trying to login on any panel that’s not ours, it seems like they now ignore these credentials. But don’t worry, TelnetSshAccount comes to the rescue: &amp;lt;TelnetSshAccount. n=&quot;TelnetSshAccount&quot; t=&quot;staticObject&quot;&amp;gt; &amp;lt;Enable rw=&quot;RW&quot; t=&quot;boolean&quot; v=&quot;True&quot;&amp;gt;&amp;lt;/Enable&amp;gt; &amp;lt;UserName ml=&quot;64&quot; rw=&quot;RW&quot; t=&quot;string&quot; v=&quot;hexdd&quot;&amp;gt;&amp;lt;/UserName&amp;gt; &amp;lt;Password ml=&quot;64&quot; rw=&quot;RW&quot; t=&quot;string&quot; v=&quot;[REDACTED]&quot; ealgo=&quot;ab&quot;&amp;gt;&amp;lt;/Password&amp;gt; &amp;lt;/TelnetSshAccount.&amp;gt; I’ve set the ‘Enable’ flag to true, chose a username, and copied my password, and lo and behold, after a reboot, we have root! Stay tuned for more. :)</summary></entry><entry><title type="html">1-click RCE with Skype Web Plugin and Qt apps</title><link href="https://0x41.cf/infosec/2019/05/28/skype-web-plugin-ez-rce.html" rel="alternate" type="text/html" title="1-click RCE with Skype Web Plugin and Qt apps" /><published>2019-05-28T00:00:00+00:00</published><updated>2019-05-28T00:00:00+00:00</updated><id>https://0x41.cf/infosec/2019/05/28/skype-web-plugin-ez-rce</id><content type="html" xml:base="https://0x41.cf/infosec/2019/05/28/skype-web-plugin-ez-rce.html">&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
 
@@ -308,7 +308,7 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
 
 &lt;p&gt;According to Wikipedia, Qt is a free and open-source widget toolkit for creating GUIs and cross-platform applications, and it seems to be used by quite a lot of apps - a simple explorer search for the Qt core module revealed at least 9 64-bit apps currently installed on my machine:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/qtcoredll-explorer-search.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/qtcoredll-explorer-search.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Most of the modern Qt apps you will find will support a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-platformpluginpath&lt;/code&gt; commandline option, which specifies a path to start with while loading plugins. What’s interesting here is the fact that SMB shares are also supported, which means one can load plugins remotely.&lt;/p&gt;
 
@@ -316,8 +316,8 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
 
 &lt;p&gt;Yes, you guessed that right, URI schemes. In order for us to be able to launch an app with our custom input in the commandline, it has to have a registered custom URI handler so we can launch it via a webpage and have the URI be sent as an argument, here’s what that looks like on the registry:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/fdm-regedit.png&quot; alt=&quot;&quot; /&gt;
-&lt;img src=&quot;/assets/media/fdm-regedit2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/fdm-regedit.png&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://i.0x41.cf/b/fdm-regedit2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;However, there’s a slight problem with this approach (as explained in the second blog post I’ve mentionned earlier), and that’s the fact that modern browsers tend to apply URL encoding to the URI, before the app gets executed, which reduces our chance of pulling off the argument injection, since in most cases we would need to inject a double-quote to break out of the URI argument.&lt;/p&gt;
 
@@ -337,13 +337,13 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
 
 &lt;p&gt;First of all, protected mode is off by default, so this may potentially allow for more attack vectors that I’m currently not aware of, since I’m not familiar with what protected mode exactly even does, but this certainly doesn’t sound good.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/skypeshell-no-protected-mode.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/skypeshell-no-protected-mode.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Secondly (which is what’s more relevant to us), I can load any link with a custom URI from within the shell without having the user to confirm or know anything.&lt;/p&gt;
 
 &lt;p&gt;For reference, here’s what trying to exploit a Qt app using plugin injection would prompt for, when running IE (11.116.18362.0) normally:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/ie-scheme-prompt.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/ie-scheme-prompt.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;So not only can we successfully inject arguments regardless of what browser the victim uses, we can also spawn a dosen of apps through URIs simultaneously.&lt;/p&gt;
 
@@ -373,7 +373,7 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
 
 &lt;p&gt;And as expected, I soon started to hear my CPU fan …&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/calcspam.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/calcspam.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;So at the very least this can be used for DoS by spam launching resource heavy apps, so far so good.&lt;/p&gt;
 
