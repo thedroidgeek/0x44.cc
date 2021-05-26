@@ -31,6 +31,14 @@ plugins:
   - jekyll-extlinks
   - jekyll-timeago
 
+# Simplify category URLs
+defaults:
+    - scope:
+        path: category
+        type: pages
+      values:
+        permalink: /:basename/
+
 # Sidebar link settings
 sidebar_home_link:  true
 # sidebar_blog_link:  '/blog'   # By default, your home page is your blog
