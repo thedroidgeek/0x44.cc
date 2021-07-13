@@ -458,6 +458,14 @@ h2.post-title, h2.page-title { font-size: 2rem; }
 
 button.disqus-load { margin-top: 1em; }
 
+.kofi-btn table, .kofi-btn th, .kofi-btn td { border: 0; border-spacing: 0; padding: 0; padding-right: 7px; }
+
+@media (min-width: 55rem) { .kofi-btn table, .kofi-btn th, .kofi-btn td { padding-right: 10px; } }
+
+.kofi-btn img { border: 0px; max-height: 30px; width: auto; }
+
+@media (min-width: 55rem) { .kofi-btn img { max-height: 40px; } }
+
 /* Pagination Super lightweight (HTML-wise) blog pagination. Should only be visible when there is navigation available -- single buttons at top or bottom of each page. */
 .pagination { margin-bottom: 2rem; color: #ccc; text-align: center; }
 
