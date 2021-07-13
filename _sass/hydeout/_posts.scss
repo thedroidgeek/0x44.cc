@@ -167,3 +167,23 @@ h2.post-title, h2.page-title {
 button.disqus-load {
   margin-top: 1em;
 }
+
+.kofi-btn {
+  table, th, td {
+    border: 0;
+    border-spacing: 0;
+    padding: 0;
+    padding-right: 7px;
+    @media (min-width: $large-breakpoint) {
+      padding-right: 10px;
+    }
+  }
+  img {
+    border: 0px;
+    max-height: 30px;
+    @media (min-width: $large-breakpoint) {
+      max-height: 40px;
+    }
+    width: auto;
+  }
+}
