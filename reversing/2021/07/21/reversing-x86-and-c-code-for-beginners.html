@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <link href="https://gmpg.org/xfn/11" rel="profile" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <!-- Enable responsiveness on mobile devices-->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
+
+    <title>
+      Reversing for dummies - x86 assembly and C code (Beginner/ADHD friendly)
+      &middot; 0x41.cf
+    </title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css" />
+
+    <!-- Icons -->
+    <link
+      rel="apple-touch-icon-precomposed"
+      sizes="144x144"
+      href="/favicon.png"
+    />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- RSS -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RSS"
+      href="/feed.xml"
+    />
+
+    <!-- Additional head bits without overriding original head -->
+  </head>
+
+  <body class="post">
+    <script src="/assets/js/anchor.min.js"></script>
+    <script>
+      // IE support
+      if (window.MSInputMethodContext && document.documentMode) {
+        document.write(
+          '<script src="/assets/js/ie11CustomProperties.min.js"><\x2fscript>'
+        );
+      }
+      // progress bar
+      prog = document.createElement("div");
+      prog.setAttribute("id", "progress-bar");
+      prog.style.setProperty("--progress", "0%");
+      document.body.insertBefore(prog, document.body.childNodes[0]);
+      const article = document.querySelector(".post");
+      const progressBar = document.querySelector("#progress-bar");
+      document.addEventListener("scroll", function () {
+        const articleScroll = pageYOffset - article.offsetTop;
+        const height =
+          document.documentElement.scrollHeight -
+          innerHeight -
+          article.offsetTop;
+        const readPercent = (articleScroll / height) * 100;
+        if (readPercent > 0) {
+          progressBar.style.setProperty("--progress", readPercent + "%");
+        } else {
+          progressBar.style.setProperty("--progress", "0%");
+        }
+      });
+
+      // initialize AnchorJS
+      document.addEventListener("DOMContentLoaded", function (event) {
+        anchors.add(".post-body h3, .post-body h4");
+        anchors.options.placement = "left";
+      });
+    </script>
+
+    <div id="sidebar">
+      <header>
+        <div class="site-title">
+          <a href="/">
+            <span class="back-arrow icon"
+              ><svg
+                fill="#000000"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                /></svg
+            ></span>
+
+            <span id="site-title">0x41.cf</span>
+          </a>
+        </div>
+        <p class="lead">InfoSec, Reverse Engineering, and more (soon&trade;)</p>
+      </header>
+      <nav id="sidebar-nav-links">
+        <a class="home-link" href="/">Home</a>
+
+        <a class="page-link" href="/about.html">whoami</a>
+
+        <a class="category-link" href="/infosec/">InfoSec</a>
+
+        <a class="category-link" href="/reversing/">Reverse Engineering</a>
+
+        <a class="category-link" href="/automation/">Automation</a>
+
+        <!-- Optional additional links to insert in sidebar nav -->
+      </nav>
+
+      <nav id="sidebar-icon-links">
+        <a
+          id="subscribe-link"
+          class="icon"
+          title="Subscribe"
+          aria-label="Subscribe"
+          href="/feed.xml"
+        >
+          <svg
+            fill="#000000"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <circle cx="6.18" cy="17.82" r="2.18" />
+            <path
+              d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"
+            />
+          </svg>
+        </a>
+
+        <a
+          id="github-link"
+          class="icon"
+          title="GitHub"
+          aria-label="GitHub"
+          href="https://github.com/thedroidgeek"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+          >
+            <path
+              d="M12 2c6.625 0 12 5.375 12 12 0 5.297-3.437 9.797-8.203 11.391-0.609 0.109-0.828-0.266-0.828-0.578 0-0.391 0.016-1.687 0.016-3.297 0-1.125-0.375-1.844-0.812-2.219 2.672-0.297 5.484-1.313 5.484-5.922 0-1.313-0.469-2.375-1.234-3.219 0.125-0.313 0.531-1.531-0.125-3.187-1-0.313-3.297 1.234-3.297 1.234-0.953-0.266-1.984-0.406-3-0.406s-2.047 0.141-3 0.406c0 0-2.297-1.547-3.297-1.234-0.656 1.656-0.25 2.875-0.125 3.187-0.766 0.844-1.234 1.906-1.234 3.219 0 4.594 2.797 5.625 5.469 5.922-0.344 0.313-0.656 0.844-0.766 1.609-0.688 0.313-2.438 0.844-3.484-1-0.656-1.141-1.844-1.234-1.844-1.234-1.172-0.016-0.078 0.734-0.078 0.734 0.781 0.359 1.328 1.75 1.328 1.75 0.703 2.141 4.047 1.422 4.047 1.422 0 1 0.016 1.937 0.016 2.234 0 0.313-0.219 0.688-0.828 0.578-4.766-1.594-8.203-6.094-8.203-11.391 0-6.625 5.375-12 12-12zM4.547 19.234c0.031-0.063-0.016-0.141-0.109-0.187-0.094-0.031-0.172-0.016-0.203 0.031-0.031 0.063 0.016 0.141 0.109 0.187 0.078 0.047 0.172 0.031 0.203-0.031zM5.031 19.766c0.063-0.047 0.047-0.156-0.031-0.25-0.078-0.078-0.187-0.109-0.25-0.047-0.063 0.047-0.047 0.156 0.031 0.25 0.078 0.078 0.187 0.109 0.25 0.047zM5.5 20.469c0.078-0.063 0.078-0.187 0-0.297-0.063-0.109-0.187-0.156-0.266-0.094-0.078 0.047-0.078 0.172 0 0.281s0.203 0.156 0.266 0.109zM6.156 21.125c0.063-0.063 0.031-0.203-0.063-0.297-0.109-0.109-0.25-0.125-0.313-0.047-0.078 0.063-0.047 0.203 0.063 0.297 0.109 0.109 0.25 0.125 0.313 0.047zM7.047 21.516c0.031-0.094-0.063-0.203-0.203-0.25-0.125-0.031-0.266 0.016-0.297 0.109s0.063 0.203 0.203 0.234c0.125 0.047 0.266 0 0.297-0.094zM8.031 21.594c0-0.109-0.125-0.187-0.266-0.172-0.141 0-0.25 0.078-0.25 0.172 0 0.109 0.109 0.187 0.266 0.172 0.141 0 0.25-0.078 0.25-0.172zM8.937 21.438c-0.016-0.094-0.141-0.156-0.281-0.141-0.141 0.031-0.234 0.125-0.219 0.234 0.016 0.094 0.141 0.156 0.281 0.125s0.234-0.125 0.219-0.219z"
+            ></path>
+          </svg>
+        </a>
+
+        <a
+          id="linkedin-link"
+          class="icon"
+          title="LinkedIn"
+          aria-label="LinkedIn"
+          href="https://linkedin.com/in/thedroidgeek"
+          target="_blank"
+          rel="noopener"
+        >
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+          >
+            <path
+              d="M 24.007812 14.597656 L 24.007812 23.472656 L 18.859375 23.472656 L 18.859375 15.191406 C 18.859375 13.113281 18.117188 11.691406 16.253906 11.691406 C 14.832031 11.691406 13.988281 12.648438 13.613281 13.574219 C 13.480469 13.90625 13.445312 14.367188 13.445312 14.828125 L 13.445312 23.472656 L 8.296875 23.472656 C 8.296875 23.472656 8.367188 9.449219 8.296875 7.996094 L 13.441406 7.996094 L 13.441406 10.1875 C 13.433594 10.207031 13.417969 10.222656 13.410156 10.238281 L 13.441406 10.238281 L 13.441406 10.1875 C 14.128906 9.136719 15.347656 7.632812 18.082031 7.632812 C 21.46875 7.632812 24.007812 9.84375 24.007812 14.597656 Z M 2.914062 0.535156 C 1.152344 0.535156 0 1.6875 0 3.207031 C 0 4.691406 1.117188 5.882812 2.84375 5.882812 L 2.878906 5.882812 C 4.671875 5.882812 5.789062 4.691406 5.789062 3.207031 C 5.757812 1.6875 4.671875 0.535156 2.914062 0.535156 Z M 0.304688 23.472656 L 5.449219 23.472656 L 5.449219 7.996094 L 0.304688 7.996094 Z M 0.304688 23.472656 "
+            />
+          </svg>
+        </a>
+      </nav>
+
+      <p>
+        &copy; 2021.
+        <a href="/LICENSE.md">MIT License.</a>
+      </p>
+    </div>
+
+    <main class="container">
+      <header>
+        <h1 class="post-title">
+          Reversing for dummies - x86 assembly and C code (Beginner/ADHD
+          friendly)
+        </h1>
+      </header>
+      <div class="content">
+        <div class="post-meta">
+          <span class="post-date">21 Jul 2021</span>
+          <span class="post-categories">
+            &bull;
+
+            <a href="/reversing/">
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                height="24"
+                width="24"
+              >
+                <path
+                  d="M 23.703125 13 C 23.515625 12.808594 23.289062 12.714844 23.03125 12.714844 L 19.671875 12.714844 L 19.671875 8.308594 L 22.265625 5.710938 C 22.457031 5.523438 22.550781 5.296875 22.550781 5.039062 C 22.550781 4.777344 22.457031 4.554688 22.265625 4.363281 C 22.074219 4.171875 21.851562 4.078125 21.589844 4.078125 C 21.332031 4.078125 21.105469 4.171875 20.917969 4.363281 L 18.324219 6.957031 L 5.667969 6.957031 L 3.074219 4.363281 C 2.882812 4.171875 2.660156 4.078125 2.398438 4.078125 C 2.140625 4.078125 1.914062 4.171875 1.722656 4.363281 C 1.535156 4.554688 1.4375 4.777344 1.4375 5.039062 C 1.4375 5.296875 1.535156 5.523438 1.722656 5.710938 L 4.316406 8.308594 L 4.316406 12.714844 L 0.960938 12.714844 C 0.699219 12.714844 0.476562 12.808594 0.285156 13 C 0.09375 13.191406 0 13.414062 0 13.675781 C 0 13.933594 0.09375 14.160156 0.285156 14.347656 C 0.476562 14.539062 0.699219 14.632812 0.960938 14.632812 L 4.316406 14.632812 C 4.316406 16.234375 4.609375 17.601562 5.1875 18.742188 L 2.160156 22.144531 C 1.988281 22.347656 1.910156 22.578125 1.925781 22.84375 C 1.941406 23.109375 2.042969 23.332031 2.234375 23.511719 C 2.425781 23.671875 2.640625 23.75 2.878906 23.75 C 3.160156 23.75 3.398438 23.644531 3.597656 23.4375 L 6.34375 20.332031 L 6.566406 20.542969 C 6.707031 20.671875 6.925781 20.835938 7.21875 21.027344 C 7.515625 21.222656 7.84375 21.417969 8.210938 21.613281 C 8.574219 21.808594 9.007812 21.972656 9.511719 22.109375 C 10.019531 22.242188 10.527344 22.3125 11.035156 22.3125 L 11.035156 8.878906 L 12.953125 8.878906 L 12.953125 22.3125 C 13.433594 22.3125 13.917969 22.246094 14.410156 22.117188 C 14.898438 21.988281 15.308594 21.839844 15.640625 21.683594 C 15.96875 21.523438 16.292969 21.339844 16.613281 21.132812 C 16.933594 20.929688 17.144531 20.789062 17.242188 20.707031 C 17.34375 20.625 17.417969 20.5625 17.46875 20.511719 L 20.4375 23.464844 C 20.617188 23.65625 20.839844 23.75 21.113281 23.75 C 21.382812 23.75 21.605469 23.65625 21.785156 23.464844 C 21.976562 23.277344 22.070312 23.050781 22.070312 22.792969 C 22.070312 22.53125 21.976562 22.304688 21.785156 22.117188 L 18.667969 18.984375 C 19.335938 17.792969 19.671875 16.34375 19.671875 14.632812 L 23.03125 14.632812 C 23.289062 14.632812 23.515625 14.539062 23.707031 14.347656 C 23.894531 14.160156 23.992188 13.933594 23.992188 13.675781 C 23.992188 13.414062 23.894531 13.191406 23.703125 13 Z M 23.703125 13 "
+                />
+                <path
+                  d="M 15.390625 1.640625 C 14.457031 0.707031 13.324219 0.238281 11.996094 0.238281 C 10.664062 0.238281 9.535156 0.707031 8.597656 1.640625 C 7.664062 2.578125 7.199219 3.707031 7.199219 5.039062 L 16.792969 5.039062 C 16.792969 3.710938 16.324219 2.578125 15.390625 1.640625 Z M 15.390625 1.640625 "
+                />
+              </svg>
+
+              Reverse Engineering
+            </a>
+          </span>
+        </div>
+
+        <div class="post-body">
+          <h3 id="context">Context</h3>
+
+          <p>
+            Before I got into reverse engineering, executables always seemed
+            like black magic to me. I always wondered how stuff worked under the
+            hood, and how binary code is represented inside .exe files, and how
+            hard it is to modify this ‘compiled code’ without access to the
+            original source code.
+          </p>
+
+          <p>
+            But one of the main intimidating hurdles always seemed to be the
+            assembly language, it’s the thing that scares most people away from
+            trying to learn about this field.
+          </p>
+
+          <p>
+            That’s the main reason why I thought of writing this
+            straight-to-the-point article that only contains the essential stuff
+            that you encounter the most when reversing, albeit missing crucial
+            details for the sake of brevity, and assumes the reader has a reflex
+            of finding answers online, looking up definitions, and more
+            importantly, coming up with examples/ideas/projects to practice on.
+          </p>
+
+          <p>
+            The goal is to hopefully guide an aspiring reverse engineer and
+            arouse motivation towards learning more about this seemingly elusive
+            passion.
+          </p>
+
+          <p>
+            <strong><em>Note</em></strong
+            >: This article assumes the reader has elementary knowledge
+            regarding the
+            <a
+              href="https://en.wikipedia.org/wiki/Hexadecimal"
+              rel="noopener noreferrer"
+              target="_blank"
+              >hexadecimal numeral system</a
+            >, as well as the
+            <a
+              href="https://en.wikipedia.org/wiki/C_(programming_language)"
+              rel="noopener noreferrer"
+              target="_blank"
+              >C programming language</a
+            >, and is based on a 32-bit Windows executable case study - results
+            might differ across different OSes/architectures.
+          </p>
+
+          <h3 id="introduction">Introduction</h3>
+
+          <h4 id="compilation">Compilation</h4>
+
+          <p>
+            After writing code using a
+            <a
+              href="https://en.wikipedia.org/wiki/Compiled_language"
+              rel="noopener noreferrer"
+              target="_blank"
+              >compiled language</a
+            >, a compilation takes place <del>(duh)</del>, in order to generate
+            the output binary file (an example of such is an .exe file).
+          </p>
+
+          <p align="center">
+            <img src="https://i.0x41.cf/b/compilation-c-to-exe-file.png" />
+          </p>
+
+          <p>
+            Compilers are sophisticated programs which do this task. They make
+            sure the syntax of your <del>ugly</del> code is correct, before
+            compiling and optimizing the resulting machine code by minimizing
+            its size and improving its performance, whenever applicable.
+          </p>
+
+          <h4 id="binary-code">Binary code</h4>
+
+          <p>
+            As we were saying, the resulting output file contains binary code,
+            which can only be ‘understood’ by a CPU, it’s essentially a
+            succession of varying-length instructions to be executed in order -
+            here’s what some of them look like:
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>CPU-readable instruction data (in hex)</th>
+                <th>Human-readable interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>55</td>
+                <td>push ebp</td>
+              </tr>
+              <tr>
+                <td>8B EC</td>
+                <td>mov ebp, esp</td>
+              </tr>
+              <tr>
+                <td>83 EC 08</td>
+                <td>sub esp, 8</td>
+              </tr>
+              <tr>
+                <td>33 C5</td>
+                <td>xor eax, ebp</td>
+              </tr>
+              <tr>
+                <td>83 7D 0C 01</td>
+                <td>cmp dword ptr [ebp+0Ch], 1</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            These instructions are predominantly arithmetical, and they
+            manipulate CPU registers/flags as well as volatile memory, as
+            they’re executed.
+          </p>
+
+          <h4 id="cpu-registers">CPU registers</h4>
+
+          <p>
+            <a
+              href="https://en.wikipedia.org/wiki/Processor_register"
+              rel="noopener noreferrer"
+              target="_blank"
+              >A CPU register</a
+            >
+            is almost like a temporary integer variable - there’s a small fixed
+            number of them, and they exist because they’re quick to access,
+            unlike memory-based variables, and they help the CPU keep track of
+            its data (results, operands, counts, etc.) during execution.
+          </p>
+
+          <p>
+            It’s important to note the presence of a special register called the
+            <a
+              href="https://en.wikipedia.org/wiki/FLAGS_register"
+              rel="noopener noreferrer"
+              target="_blank"
+              ><code class="language-plaintext highlighter-rouge">FLAGS</code>
+              register</a
+            >
+            (<code class="language-plaintext highlighter-rouge">EFLAGS</code> on
+            32-bit), which houses a bunch of flags (boolean indicators), which
+            hold information about the state of the CPU, which include details
+            about the last arithmetic operation (zero:
+            <code class="language-plaintext highlighter-rouge">ZF</code>,
+            overflow:
+            <code class="language-plaintext highlighter-rouge">OF</code>,
+            parity:
+            <code class="language-plaintext highlighter-rouge">PF</code>, sign:
+            <code class="language-plaintext highlighter-rouge">SF</code>, etc.).
+          </p>
+
+          <p align="center">
+            <img src="https://i.0x41.cf/b/x32dbg-cpu-registers.png" />
+            <small
+              >CPU registers visualized while debugging a 32-bit process on
+              x64dbg, a debugging tool.</small
+            >
+          </p>
+
+          <p>
+            Some of these registers can also be spotted on the assembly excerpt
+            mentioned <a href="#binary-code">previously</a>, namely:
+            <code class="language-plaintext highlighter-rouge">EAX</code>,
+            <code class="language-plaintext highlighter-rouge">ESP</code> (stack
+            pointer) and
+            <code class="language-plaintext highlighter-rouge">EBP</code> (base
+            pointer).
+          </p>
+
+          <h4 id="memory-access">Memory access</h4>
+
+          <p>
+            As the CPU executes stuff, it needs to access and interact with
+            memory, that’s when the role of the <em>stack</em> and the
+            <em>heap</em> comes.
+          </p>
+
+          <p>
+            These are (without getting into too much detail) the 2 main ways of
+            ‘keeping track of variable data’ during the execution of a program:
+          </p>
+
+          <h5 id="-stack">🥞 <em>Stack</em></h5>
+          <p>
+            The simpler and faster of the two - it’s a linear contiguous LIFO
+            (last in = first out) data structure with a push/pop mechanism, it
+            serves to remember function-scoped variables, arguments, and keeps
+            track of calls (ever heard of a
+            <a
+              href="https://en.wikipedia.org/wiki/Stack_trace"
+              rel="noopener noreferrer"
+              target="_blank"
+              >stack trace</a
+            >?)
+          </p>
+
+          <h5 id="-heap">⛰ <em>Heap</em></h5>
+          <p>
+            The heap, however, is pretty unordered, and is for more complicated
+            data structures, it’s typically used for dynamic allocations, where
+            the size of the buffer isn’t initially known, and/or if it’s too
+            big, and/or needs to be modified later.
+          </p>
+
+          <h3 id="assembly-instructions">Assembly instructions</h3>
+
+          <p>
+            As I’ve mentioned earlier, assembly instructions have a varying
+            ‘byte-size’, and a varying number of arguments.
+          </p>
+
+          <p>
+            Arguments can also be either immediate (‘hardcoded’), or they can be
+            registers, depending on the instruction:
+          </p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre
+                class="highlight"
+              ><code>55         push    ebp     ; size: 1 byte,  argument: register
+6A 01      push    1       ; size: 2 bytes, argument: immediate
+</code></pre>
+            </div>
+          </div>
+
+          <p>
+            Let’s quickly run through a very small set of some of the common
+            ones we’ll get to see - feel free to do your own research for more
+            detail:
+          </p>
+
+          <h4 id="stack-operations">Stack operations</h4>
+          <ul>
+            <li>
+              <strong
+                >push
+                <code class="language-plaintext highlighter-rouge"
+                  >value</code
+                ></strong
+              >
+              <em
+                >; pushes a value into the stack (decrements
+                <code class="language-plaintext highlighter-rouge">ESP</code> by
+                4, the size of one stack ‘unit’).</em
+              >
+            </li>
+            <li>
+              <strong
+                >pop
+                <code class="language-plaintext highlighter-rouge"
+                  >register</code
+                ></strong
+              >
+              <em
+                >; pops a value to a register (increments
+                <code class="language-plaintext highlighter-rouge">ESP</code> by
+                4).</em
+              >
+            </li>
+          </ul>
+
+          <h4 id="data-transfer">Data transfer</h4>
+          <ul>
+            <li>
+              <strong
+                >mov
+                <code class="language-plaintext highlighter-rouge"
+                  >destination</code
+                >,
+                <code class="language-plaintext highlighter-rouge"
+                  >source</code
+                ></strong
+              >
+              ; <em><del>moves</del> copies a value from/to a register.</em>
+            </li>
+            <li>
+              <strong
+                >mov
+                <code class="language-plaintext highlighter-rouge"
+                  >destination</code
+                >, [<code class="language-plaintext highlighter-rouge"
+                  >expression</code
+                >]</strong
+              >
+              ;
+              <em
+                >copies a value from a memory address resolved from a ‘register
+                expression’ (single register or arithmetic expression involving
+                one or more registers) into a register.</em
+              >
+            </li>
+          </ul>
+
+          <h4 id="flow-control">Flow control</h4>
+          <ul>
+            <li>
+              <strong
+                >jmp
+                <code class="language-plaintext highlighter-rouge"
+                  >destination</code
+                ></strong
+              >
+              ;
+              <em
+                >jumps into a code location (sets
+                <code class="language-plaintext highlighter-rouge">EIP</code>
+                (instruction pointer)).</em
+              >
+            </li>
+            <li>
+              <strong
+                >jz/je
+                <code class="language-plaintext highlighter-rouge"
+                  >destination</code
+                ></strong
+              >
+              ;
+              <em
+                >jumps into a code location if
+                <code class="language-plaintext highlighter-rouge">ZF</code>
+                (the zero flag) is set.</em
+              >
+            </li>
+            <li>
+              <strong
+                >jnz/jne
+                <code class="language-plaintext highlighter-rouge"
+                  >destination</code
+                ></strong
+              >
+              ;
+              <em
+                >jumps into a code location if
+                <code class="language-plaintext highlighter-rouge">ZF</code> is
+                not set.</em
+              >
+            </li>
+          </ul>
+
+          <h4 id="operations">Operations</h4>
+          <ul>
+            <li>
+              <strong
+                >cmp
+                <code class="language-plaintext highlighter-rouge"
+                  >operand1</code
+                >,
+                <code class="language-plaintext highlighter-rouge"
+                  >operand2</code
+                ></strong
+              >
+              ;
+              <em
+                >compares the 2 operands and sets
+                <code class="language-plaintext highlighter-rouge">ZF</code> if
+                they’re equal.</em
+              >
+            </li>
+            <li>
+              <strong
+                >add
+                <code class="language-plaintext highlighter-rouge"
+                  >operand1</code
+                >,
+                <code class="language-plaintext highlighter-rouge"
+                  >operand2</code
+                ></strong
+              >
+              ; <em>operand1 += operand2;</em>
+            </li>
+            <li>
+              <strong
+                >sub
+                <code class="language-plaintext highlighter-rouge"
+                  >operand1</code
+                >,
+                <code class="language-plaintext highlighter-rouge"
+                  >operand2</code
+                ></strong
+              >
+              ; <em>operand1 -= operand2;</em>
+            </li>
+          </ul>
+
+          <h4 id="function-transitions">Function transitions</h4>
+          <ul>
+            <li>
+              <strong
+                >call
+                <code class="language-plaintext highlighter-rouge"
+                  >function</code
+                ></strong
+              >
+              ;
+              <em
+                >calls a function (pushes current
+                <code class="language-plaintext highlighter-rouge">EIP</code>,
+                then jumps to the function).</em
+              >
+            </li>
+            <li>
+              <strong>retn</strong> ;
+              <em
+                >returns to caller function (pops back the previous
+                <code class="language-plaintext highlighter-rouge">EIP</code
+                >).</em
+              >
+            </li>
+          </ul>
+
+          <p>
+            <strong><em>Note</em></strong
+            >: You might notice the words ‘equal’ and ‘zero’ being used
+            interchangeably in x86 terminology - that’s because comparison
+            instructions internally perform a subtraction, which means if the 2
+            operands are equal,
+            <code class="language-plaintext highlighter-rouge">ZF</code> is set.
+          </p>
+
+          <h3 id="assembly-patterns">Assembly patterns</h3>
+
+          <p>
+            Now that we have a rough idea of the main elements used during the
+            execution of a program, let’s get familiarized with the patterns of
+            instructions that you can encounter reverse engineering your average
+            everyday 32-bit
+            <a
+              href="https://en.wikipedia.org/wiki/Portable_Executable"
+              rel="noopener noreferrer"
+              target="_blank"
+              >PE</a
+            >
+            binary.
+          </p>
+
+          <h4 id="function-prologue">Function prologue</h4>
+
+          <p>
+            A
+            <a
+              href="https://en.wikipedia.org/wiki/Function_prologue"
+              rel="noopener noreferrer"
+              target="_blank"
+              >function prologue</a
+            >
+            is some initial code embedded in the beginning of most functions, it
+            serves to set up a new stack frame for said function.
+          </p>
+
+          <p>It typically looks like this (X being a number):</p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre
+                class="highlight"
+              ><code>55          push    ebp        ; preserve caller function's base pointer in stack
+8B EC       mov     ebp, esp   ; caller function's stack pointer becomes base pointer (new stack frame)
+83 EC XX    sub     esp, X     ; adjust the stack pointer by X bytes to reserve space for local variables
+</code></pre>
+            </div>
+          </div>
+
+          <h4 id="function-epilogue">Function epilogue</h4>
+
+          <p>
+            The
+            <a
+              href="https://en.wikipedia.org/wiki/Function_epilogue"
+              rel="noopener noreferrer"
+              target="_blank"
+              >epilogue</a
+            >
+            is simply the opposite of the prologue - it undoes its steps to
+            restore the stack frame of the caller function, before it returns to
+            it:
+          </p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre
+                class="highlight"
+              ><code>8B E5    mov    esp, ebp    ; restore caller function's stack pointer (current base pointer) 
+5D       pop    ebp         ; restore base pointer from the stack
+C3       retn               ; return to caller function
+</code></pre>
+            </div>
+          </div>
+
+          <p>
+            Now at this point, you might be wondering - how do functions talk to
+            each other? How exactly do you send/access arguments when calling a
+            function, and how do you receive the return value? That’s precisely
+            why we have calling conventions.
+          </p>
+
+          <h4 id="calling-conventions-__cdecl">Calling conventions: __cdecl</h4>
+
+          <p>
+            A
+            <a
+              href="https://en.wikipedia.org/wiki/Calling_convention"
+              rel="noopener noreferrer"
+              target="_blank"
+              >calling convention</a
+            >
+            is basically a protocol used to communicate with functions, there’s
+            a few variations of them, but they share the same principle.
+          </p>
+
+          <p>
+            We will be looking at the
+            <a
+              href="https://en.wikipedia.org/wiki/X86_calling_conventions#cdecl"
+              rel="noopener noreferrer"
+              target="_blank"
+              >__cdecl (C declaration) convention</a
+            >, which is the standard one when compiling C code.
+          </p>
+
+          <p>
+            In __cdecl (32-bit), function arguments are passed on the stack
+            (pushed in reverse order), while the return value is returned in the
+            <code class="language-plaintext highlighter-rouge">EAX</code>
+            register (assuming it’s not a float).
+          </p>
+
+          <p>
+            This means that a
+            <code class="language-plaintext highlighter-rouge"
+              >func(1, 2, 3);</code
+            >
+            call will generate the following:
+          </p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre class="highlight"><code>6A 03             push    3
+6A 02             push    2
+6A 01             push    1
+E8 XX XX XX XX    call    func
+</code></pre>
+            </div>
+          </div>
+
+          <h4 id="putting-everything-together">Putting everything together</h4>
+
+          <p>
+            Assuming
+            <code class="language-plaintext highlighter-rouge">func()</code>
+            simply does an addition on the arguments and returns the result, it
+            would probably look like this:
+          </p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre class="highlight"><code>int __cdecl func(int, int, int):
+
+           prologue:
+55           push    ebp               ; save base pointer
+8B EC        mov     ebp, esp          ; new stack frame
+
+           body:
+8B 45 08     mov     eax, [ebp+8]      ; load first argument to EAX (return value)
+03 45 0C     add     eax, [ebp+0Ch]    ; add 2nd argument
+03 45 10     add     eax, [ebp+10h]    ; add 3rd argument
+
+           epilogue:
+5D           pop     ebp               ; restore base pointer
+C3           retn                      ; return to caller
+</code></pre>
+            </div>
+          </div>
+
+          <p>
+            Now if you’ve been paying attention and you’re still confused, you
+            might be asking yourself one of these 2 questions:
+          </p>
+
+          <p>
+            1) Why do we have to adjust
+            <code class="language-plaintext highlighter-rouge">EBP</code> by 8
+            to get to the first argument?
+          </p>
+
+          <ul>
+            <li>
+              If you
+              <a href="#assembly-instructions">check the definition</a> of the
+              <code class="language-plaintext highlighter-rouge">call</code>
+              instruction we mentioned earlier, you’ll realize that, internally,
+              it actually pushes
+              <code class="language-plaintext highlighter-rouge">EIP</code> to
+              the stack. And if you also check the definition for
+              <code class="language-plaintext highlighter-rouge">push</code>,
+              you’ll realize that it decrements
+              <code class="language-plaintext highlighter-rouge">ESP</code>
+              (which is copied to
+              <code class="language-plaintext highlighter-rouge">EBP</code>
+              after the prologue) by 4 bytes. In addition, the prologue’s first
+              instruction is also a
+              <code class="language-plaintext highlighter-rouge">push</code>, so
+              we end up with 2 decrements of 4, hence the need to add 8.
+            </li>
+          </ul>
+
+          <p>
+            2) What happened to the prologue and epilogue, why are they
+            seemingly ‘truncated’?
+          </p>
+
+          <ul>
+            <li>
+              It’s simply because we haven’t had a use for the stack during the
+              execution of our function - if you’ve noticed, we haven’t modified
+              <code class="language-plaintext highlighter-rouge">ESP</code> at
+              all, which means we also don’t need to restore it.
+            </li>
+          </ul>
+
+          <h4 id="if-conditions">If conditions</h4>
+
+          <p>
+            To demo the flow control assembly instructions, I’d like to add one
+            more example to show how an if condition was compiled to assembly.
+          </p>
+
+          <p>Assume we have the following function:</p>
+
+          <div class="language-c highlighter-rouge">
+            <div class="highlight">
+              <pre
+                class="highlight"
+              ><code><span class="kt">void</span> <span class="nf">print_equal</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"equal"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"nah"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+            </div>
+          </div>
+
+          <p>
+            After compiling it, here’s the disassembly that I got with the help
+            of
+            <a
+              href="https://hex-rays.com/ida-pro/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >IDA</a
+            >:
+          </p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre class="highlight"><code>void __cdecl print_equal(int, int):
+
+     10000000   55                push   ebp
+     10000001   8B EC             mov    ebp, esp
+     10000003   8B 45 08          mov    eax, [ebp+8]       ; load 1st argument
+     10000006   3B 45 0C          cmp    eax, [ebp+0Ch]     ; compare it with 2nd
+  ┌┅ 10000009   75 0F             jnz    short loc_1000001A ; jump if not equal
+  ┊  1000000B   68 94 67 00 10    push   offset aEqual  ; "equal"
+  ┊  10000010   E8 DB F8 FF FF    call   _printf
+  ┊  10000015   83 C4 04          add    esp, 4
+┌─┊─ 10000018   EB 0D             jmp    short loc_10000027
+│ ┊
+│ └ loc_1000001A:
+│    1000001A   68 9C 67 00 10    push   offset aNah    ; "nah"
+│    1000001F   E8 CC F8 FF FF    call   _printf
+│    10000024   83 C4 04          add    esp, 4
+│
+└── loc_10000027:
+     10000027   5D                pop    ebp
+     10000028   C3                retn
+</code></pre>
+            </div>
+          </div>
+
+          <p>
+            Give yourself a minute and try to make sense of this disassembly
+            output (for simplicity’s sake, I’ve changed the real addresses and
+            made the function start from
+            <code class="language-plaintext highlighter-rouge">10000000</code>
+            instead).
+          </p>
+
+          <p>
+            In case you’re wondering about the
+            <code class="language-plaintext highlighter-rouge">add esp, 4</code>
+            part, it’s simply there to adjust
+            <code class="language-plaintext highlighter-rouge">ESP</code> back
+            to its initial value (same effect as a
+            <code class="language-plaintext highlighter-rouge">pop</code>,
+            except without modifying any register), since we had to
+            <code class="language-plaintext highlighter-rouge">push</code> the
+            printf string argument.
+          </p>
+
+          <h3 id="basic-data-structures">Basic data structures</h3>
+
+          <p>
+            Now let’s move on and talk about how data is stored (integers and
+            strings especially).
+          </p>
+
+          <h4 id="endianness">Endianness</h4>
+
+          <p>
+            <a
+              href="https://en.wikipedia.org/wiki/Endianness"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Endianness</a
+            >
+            is the order of the sequence of bytes representing a value in
+            computer memory.
+          </p>
+
+          <p>There’s 2 types - big-endian and little-endian:</p>
+
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <img src="https://i.0x41.cf/b/big-endian-dark.svg" alt="" />
+                </td>
+                <td>
+                  <img
+                    src="https://i.0x41.cf/b/little-endian-dark.svg"
+                    alt=""
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            For reference, x86 family processors (the ones on pretty much any
+            computer you can find) always use little-endian.
+          </p>
+
+          <p>
+            To give you a live example of this concept, I’ve compiled a Visual
+            Studio C++ console app, where I declared an
+            <code class="language-plaintext highlighter-rouge">int</code>
+            variable with the value
+            <code class="language-plaintext highlighter-rouge">1337</code>
+            assigned to it, then I printed the variable’s address using
+            <code class="language-plaintext highlighter-rouge">printf()</code>,
+            on the main function.
+          </p>
+
+          <p>
+            Then I ran the program attached to the debugger in order to check
+            the printed variable’s address on the memory hex view, and here’s
+            the result I obtained:
+          </p>
+
+          <p>
+            <img src="https://i.0x41.cf/b/vs-debug-memory-view.png" alt="" />
+          </p>
+
+          <p>
+            To elaborate more on this -
+            <code class="language-plaintext highlighter-rouge">int</code>
+            variables are 4 bytes long (32 bits) (in case you didn’t know), so
+            this means that if the variable starts from the address
+            <code class="language-plaintext highlighter-rouge">D2FCB8</code> it
+            would end right before
+            <code class="language-plaintext highlighter-rouge">D2FCBC</code>
+            (+4).
+          </p>
+
+          <p>
+            To go from human readable value to memory bytes, follow these steps:
+          </p>
+
+          <p>
+            decimal:
+            <code class="language-plaintext highlighter-rouge">1337</code> -&gt;
+            hex:
+            <code class="language-plaintext highlighter-rouge">539</code> -&gt;
+            bytes:
+            <code class="language-plaintext highlighter-rouge"
+              >00 00 05 39</code
+            >
+            -&gt; little-endian:
+            <code class="language-plaintext highlighter-rouge"
+              >39 05 00 00</code
+            >
+          </p>
+
+          <h4 id="signed-integers">Signed integers</h4>
+
+          <p>
+            This part is interesting yet relatively simple. What you should know
+            here is that integer signing (positive/negative) is typically done
+            on computers with the help of a concept called
+            <a
+              href="https://en.wikipedia.org/wiki/Signed_number_representations#Two's_complement"
+              rel="noopener noreferrer"
+              target="_blank"
+              >two’s complement</a
+            >.
+          </p>
+
+          <p>
+            The gist of it is that the lowest/first half of an integer is
+            reserved for positive numbers, while the highest/last half is for
+            negative numbers, here’s what this looks like in hex, for a 32-bit
+            signed int (highlighted = hex, in parenthesis = decimal):
+          </p>
+
+          <p>
+            Positives (1/2):
+            <code class="language-plaintext highlighter-rouge">00000000</code>
+            (0) -&gt;
+            <code class="language-plaintext highlighter-rouge">7FFFFFFF</code>
+            (2,147,483,647 or
+            <code class="language-plaintext highlighter-rouge">INT_MAX</code>)
+          </p>
+
+          <p>
+            Negatives (2/2):
+            <code class="language-plaintext highlighter-rouge">80000000</code>
+            (-2,147,483,648 or
+            <code class="language-plaintext highlighter-rouge">INT_MIN</code>)
+            -&gt;
+            <code class="language-plaintext highlighter-rouge">FFFFFFFF</code>
+            (-1)
+          </p>
+
+          <p>
+            If you’ve noticed, we’re always <em>ascending</em> in value. Whether
+            we go up in hex or decimal. And that’s the crucial point of this
+            concept - arithmetical operation do not have to do anything special
+            to handle signing, they can simply treat all values as
+            unsigned/positive, and the result would still be interpreted
+            correctly (as long as we don’t go beyond
+            <code class="language-plaintext highlighter-rouge">INT_MAX</code> or
+            <code class="language-plaintext highlighter-rouge">INT_MIN</code>),
+            and that’s because integers will also <em>‘rollover’</em> on
+            overflow/underflow by design, kinda like an analog odometer.
+          </p>
+
+          <p align="center">
+            <img src="https://i.0x41.cf/b/odometer-rollover.jpg" />
+          </p>
+
+          <p>
+            <strong><em>Protip</em></strong
+            >: The Windows calculator is a very helpful tool - you can set it to
+            programmer mode and set the size to DWORD (4 bytes), then enter
+            negative decimal values and visualize them in hex and binary, and
+            have fun performing operations on them.
+          </p>
+
+          <p>
+            <img src="https://i.0x41.cf/b/calcexe-int-signing.png" alt="" />
+          </p>
+
+          <h4 id="strings">Strings</h4>
+
+          <p>
+            In C, strings are stored as
+            <code class="language-plaintext highlighter-rouge">char</code>
+            arrays, therefore, there’s nothing special to note here, except for
+            something called null termination.
+          </p>
+
+          <p>
+            If you ever wondered how
+            <code class="language-plaintext highlighter-rouge">strlen()</code>
+            is able to know the size of a string, it’s very simple - strings
+            have a character that indicates their end, and that’s the null
+            byte/character -
+            <code class="language-plaintext highlighter-rouge">00</code> or
+            <code class="language-plaintext highlighter-rouge">'\0'</code>.
+          </p>
+
+          <p>
+            If you declare a string constant in C code, and hover over it in
+            Visual Studio, for instance, it will tell you the size of the
+            generated array, and as you can see, for this reason, it’s one
+            element more than the ‘visible’ string size.
+          </p>
+
+          <p>
+            <img src="https://i.0x41.cf/b/vs-null-termination.png" alt="" />
+          </p>
+
+          <p>
+            <strong><em>Note</em></strong
+            >: The endianness concept is not applicable on arrays, only on
+            single variables. Therefore, the order of characters in memory would
+            be normal here - low to high.
+          </p>
+
+          <h3 id="making-sense-of-call-and-jmp-instructions">
+            Making sense of
+            <code class="language-plaintext highlighter-rouge">call</code> and
+            <code class="language-plaintext highlighter-rouge">jmp</code>
+            instructions
+          </h3>
+
+          <p>
+            Now that you know all of this, you’re likely able to start making
+            sense of some machine code, and emulate a CPU with your brain, to
+            some extent, so to speak.
+          </p>
+
+          <p>
+            Let’s take the
+            <a href="#if-conditions"
+              ><code class="language-plaintext highlighter-rouge"
+                >print_equal()</code
+              >
+              example</a
+            >, but let’s only focus on the
+            <code class="language-plaintext highlighter-rouge">printf()</code>
+            <code class="language-plaintext highlighter-rouge">call</code>
+            instructions this time.
+          </p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre class="highlight"><code>void print_equal(int, int):
+...
+     10000010   E8 DB F8 FF FF    call   _printf
+...
+     1000001F   E8 CC F8 FF FF    call   _printf
+</code></pre>
+            </div>
+          </div>
+
+          <p>
+            You might be wondering to yourself - wait a second, if these are the
+            same instructions, then why are their bytes different?
+          </p>
+
+          <p>
+            That’s because,
+            <code class="language-plaintext highlighter-rouge">call</code> (and
+            <code class="language-plaintext highlighter-rouge">jmp</code>)
+            instructions (usually) take an <em>offset</em> (relative address) as
+            an argument, not an absolute address.
+          </p>
+
+          <p>
+            An offset is basically the difference between the current location,
+            and the destination, which also means that it can be either negative
+            or positive.
+          </p>
+
+          <p>
+            As you can see, the
+            <a
+              href="https://en.wikipedia.org/wiki/Opcode"
+              rel="noopener noreferrer"
+              target="_blank"
+              >opcode</a
+            >
+            of a
+            <code class="language-plaintext highlighter-rouge">call</code>
+            instruction that takes a 32-bit offset, is
+            <code class="language-plaintext highlighter-rouge">E8</code>, and is
+            followed by said offset - which makes the full instruction:
+            <code class="language-plaintext highlighter-rouge"
+              >E8 XX XX XX XX</code
+            >.
+          </p>
+
+          <p>
+            Pull out your calculator,
+            <del>why’d you close it so early?!</del> and calculate the
+            difference between the offset of both instructions (don’t forget the
+            endianness).
+          </p>
+
+          <p>
+            You’ll notice that (the absolute value of) this difference is the
+            same as the one between the instruction addresses (<code
+              class="language-plaintext highlighter-rouge"
+              >1000001F</code
+            >
+            -
+            <code class="language-plaintext highlighter-rouge">10000010</code> =
+            <code class="language-plaintext highlighter-rouge">F</code>):
+          </p>
+
+          <p>
+            <img src="https://i.0x41.cf/b/calcexe-call-inst-diff.png" alt="" />
+          </p>
+
+          <p>
+            Another small detail that we should add, is the fact that the CPU
+            only executes an instruction after fully ‘reading’ it, which means
+            that by the time the CPU starts ‘executing’,
+            <code class="language-plaintext highlighter-rouge">EIP</code> (the
+            instruction pointer) is already pointing at the
+            <em>next</em> instruction to be executed.
+          </p>
+
+          <p>
+            That’s why these offsets are actually accounting for this behaviour,
+            which means that in order to get the <em>real</em> address of the
+            target function, we have to also <em>add</em> the size of the
+            <code class="language-plaintext highlighter-rouge">call</code>
+            instruction: 5.
+          </p>
+
+          <p>
+            Now let’s apply all these steps in order to resolve
+            <code class="language-plaintext highlighter-rouge">printf()</code>’s
+            address from the first instruction on the example:
+          </p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre
+                class="highlight"
+              ><code>10000010   E8 DB F8 FF FF    call   _printf
+</code></pre>
+            </div>
+          </div>
+
+          <p>
+            1) Extract the offset from the instruction:
+            <code class="language-plaintext highlighter-rouge"
+              >E8 (DB F8 FF FF)</code
+            >
+            -&gt;
+            <code class="language-plaintext highlighter-rouge">FFFFF8D8</code>
+            (-1832)
+          </p>
+
+          <p>
+            2) Add it to the instruction address:
+            <code class="language-plaintext highlighter-rouge">10000010</code> +
+            <code class="language-plaintext highlighter-rouge">FFFFF8D8</code> =
+            <code class="language-plaintext highlighter-rouge">FFFF8E8</code>
+          </p>
+
+          <p>
+            3) And finally, add the instruction size:
+            <code class="language-plaintext highlighter-rouge">FFFF8E8</code> +
+            5 =
+            <code class="language-plaintext highlighter-rouge">FFFF8ED</code>
+            (<code class="language-plaintext highlighter-rouge"
+              >&amp;printf</code
+            >)
+          </p>
+
+          <p>
+            The exact same principle applies to the
+            <code class="language-plaintext highlighter-rouge">jmp</code>
+            instruction:
+          </p>
+
+          <div class="language-plaintext highlighter-rouge">
+            <div class="highlight">
+              <pre class="highlight"><code>...
+┌─── 10000018   EB 0D             jmp    short loc_10000027
+...
+└── loc_10000027:
+     10000027   5D                pop    ebp
+...
+</code></pre>
+            </div>
+          </div>
+          <p>
+            The only difference in this example is that
+            <code class="language-plaintext highlighter-rouge">EB XX</code> is a
+            short version
+            <code class="language-plaintext highlighter-rouge">jmp</code>
+            instruction - which means it only takes an 8-bit (1 byte) offset.
+          </p>
+
+          <p>
+            Therefore:
+            <code class="language-plaintext highlighter-rouge">10000018</code> +
+            <code class="language-plaintext highlighter-rouge">0D</code> + 2 =
+            <code class="language-plaintext highlighter-rouge">10000027</code>
+          </p>
+
+          <h3 id="conclusion">Conclusion</h3>
+
+          <p>
+            That’s it! You should now have enough information (and hopefully,
+            motivation) to start your journey reverse engineering executables.
+          </p>
+
+          <p>
+            Start by writing dummy C code, compiling it, and debugging it while
+            single-stepping through the disassembly instructions (Visual Studio
+            allows you to do this, by the way).
+          </p>
+
+          <p>
+            After that, you can try your luck with closed-source native
+            binaries, by the help of disassemblers such as
+            <a
+              href="https://ghidra-sre.org/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Ghidra</a
+            >
+            and
+            <a
+              href="https://hex-rays.com/ida-free"
+              rel="noopener noreferrer"
+              target="_blank"
+              >IDA</a
+            >, and debuggers such as
+            <a
+              href="https://x64dbg.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >x64dbg</a
+            >.
+          </p>
+
+          <p>
+            <strong><em>Note</em></strong
+            >: If you’ve noticed inaccurate information, or room for improvement
+            regarding this article, and would like to improve it, feel free to
+            <a
+              href="https://github.com/thedroidgeek/0x41.cf/edit/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >submit a pull request</a
+            >
+            on GitHub.
+          </p>
+
+          <p>Thanks for reading!</p>
+
+          <div class="post-tags"></div>
+        </div>
+
+        <br />
+        <table class="kofi-btn">
+          <tbody>
+            <tr>
+              <td>
+                <p align="right">
+                  If you've enjoyed this article, feel free to
+                </p>
+              </td>
+              <td>
+                <a href="https://ko-fi.com/annan" target="_blank">
+                  <img
+                    src="/assets/media/kofi.png"
+                    alt="Buy Me a Coffee at ko-fi.com"
+                  />
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <section class="comments">
+          <h2>Comments</h2>
+
+          <div id="disqus_thread">
+            <button class="disqus-load" onClick="loadDisqusComments()">
+              Load Comments
+            </button>
+          </div>
+          <script src="/assets/js/disqusloader.min.js"></script>
+          <script>
+            /**
+             *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW
+             *  TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+             *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT:s
+             *  https://disqus.com/admin/universalcode/#configuration-variables
+             */
+            var disqus_config = function () {
+              this.page.url =
+                "https://0x41.cf/reversing/2021/07/21/reversing-x86-and-c-code-for-beginners.html";
+              this.page.identifier =
+                "" ||
+                "https://0x41.cf/reversing/2021/07/21/reversing-x86-and-c-code-for-beginners.html";
+            };
+            function loadDisqusComments() {
+              // DON'T EDIT BELOW THIS LINE
+              var d = document,
+                s = d.createElement("script");
+              s.src = "//0x41-cf.disqus.com/embed.js";
+              s.setAttribute("data-timestamp", +new Date());
+              (d.head || d.body).appendChild(s);
+            }
+
+            // Disqus lazy-loading (on visibility)
+            disqusLoader("#disqus_thread", {
+              scriptUrl: "//0x41-cf.disqus.com/embed.js",
+            });
+          </script>
+          <noscript>
+            Please enable JavaScript to view the
+            <a href="https://disqus.com/?ref_noscript"
+              >comments powered by Disqus</a
+            >.
+          </noscript>
+        </section>
+
+        <section class="related">
+          <h2>Related Posts</h2>
+          <ul class="posts-list">
+            <li>
+              <h3>
+                <a
+                  href="/automation/2021/03/02/google-assistant-youtube-smart-tvs.html"
+                >
+                  Google Assistant YouTube command for smart TVs
+                  <small>&bull; 02 Mar 2021</small>
+                </a>
+              </h3>
+            </li>
+
+            <li>
+              <h3>
+                <a href="/reversing/2019/10/08/unlocking-nokia-g240wa.html">
+                  Unlocking IAM's Nokia G-240W-A router (Part 1)
+                  <small>&bull; 08 Oct 2019</small>
+                </a>
+              </h3>
+            </li>
+
+            <li>
+              <h3>
+                <a href="/infosec/2019/05/28/skype-web-plugin-ez-rce.html">
+                  1-click RCE with Skype Web Plugin and Qt apps
+                  <small>&bull; 28 May 2019</small>
+                </a>
+              </h3>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <!-- Optional footer content -->
+  </body>
+</html>

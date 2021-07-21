@@ -1,4 +1,386 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://0x41.cf/feed.xml" rel="self" type="application/atom+xml" /><link href="https://0x41.cf/" rel="alternate" type="text/html" /><updated>2021-07-13T23:33:08+00:00</updated><id>https://0x41.cf/feed.xml</id><title type="html">0x41.cf</title><subtitle>InfoSec, Reverse Engineering, and more (soon&amp;trade;)</subtitle><author><name>Sami ALAOUI KENDIL</name></author><entry><title type="html">Google Assistant YouTube command for smart TVs</title><link href="https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html" rel="alternate" type="text/html" title="Google Assistant YouTube command for smart TVs" /><published>2021-03-02T00:00:00+00:00</published><updated>2021-03-02T00:00:00+00:00</updated><id>https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs</id><content type="html" xml:base="https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html">&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://0x41.cf/feed.xml" rel="self" type="application/atom+xml" /><link href="https://0x41.cf/" rel="alternate" type="text/html" /><updated>2021-07-21T22:32:41+00:00</updated><id>https://0x41.cf/feed.xml</id><title type="html">0x41.cf</title><subtitle>InfoSec, Reverse Engineering, and more (soon&amp;trade;)</subtitle><author><name>Sami ALAOUI KENDIL</name></author><entry><title type="html">Reversing for dummies - x86 assembly and C code (Beginner/ADHD friendly)</title><link href="https://0x41.cf/reversing/2021/07/21/reversing-x86-and-c-code-for-beginners.html" rel="alternate" type="text/html" title="Reversing for dummies - x86 assembly and C code (Beginner/ADHD friendly)" /><published>2021-07-21T00:00:00+00:00</published><updated>2021-07-21T00:00:00+00:00</updated><id>https://0x41.cf/reversing/2021/07/21/reversing-x86-and-c-code-for-beginners</id><content type="html" xml:base="https://0x41.cf/reversing/2021/07/21/reversing-x86-and-c-code-for-beginners.html">&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
+
+&lt;p&gt;Before I got into reverse engineering, executables always seemed like black magic to me. I always wondered how stuff worked under the hood, and how binary code is represented inside .exe files, and how hard it is to modify this ‘compiled code’ without access to the original source code.&lt;/p&gt;
+
+&lt;p&gt;But one of the main intimidating hurdles always seemed to be the assembly language, it’s the thing that scares most people away from trying to learn about this field.&lt;/p&gt;
+
+&lt;p&gt;That’s the main reason why I thought of writing this straight-to-the-point article that only contains the essential stuff that you encounter the most when reversing, albeit missing crucial details for the sake of brevity, and assumes the reader has a reflex of finding answers online, looking up definitions, and more importantly, coming up with examples/ideas/projects to practice on.&lt;/p&gt;
+
+&lt;p&gt;The goal is to hopefully guide an aspiring reverse engineer and arouse motivation towards learning more about this seemingly elusive passion.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Note&lt;/em&gt;&lt;/strong&gt;: This article assumes the reader has elementary knowledge regarding the &lt;a href=&quot;https://en.wikipedia.org/wiki/Hexadecimal&quot;&gt;hexadecimal numeral system&lt;/a&gt;, as well as the &lt;a href=&quot;https://en.wikipedia.org/wiki/C_(programming_language)&quot;&gt;C programming language&lt;/a&gt;, and is based on a 32-bit Windows executable case study - results might differ across different OSes/architectures.&lt;/p&gt;
+
+&lt;h3 id=&quot;introduction&quot;&gt;Introduction&lt;/h3&gt;
+
+&lt;h4 id=&quot;compilation&quot;&gt;Compilation&lt;/h4&gt;
+
+&lt;p&gt;After writing code using a &lt;a href=&quot;https://en.wikipedia.org/wiki/Compiled_language&quot;&gt;compiled language&lt;/a&gt;, a compilation takes place &lt;del&gt;(duh)&lt;/del&gt;, in order to generate the output binary file (an example of such is an .exe file).&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img src=&quot;https://i.0x41.cf/b/compilation-c-to-exe-file.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Compilers are sophisticated programs which do this task. They make sure the syntax of your &lt;del&gt;ugly&lt;/del&gt; code is correct, before compiling and optimizing the resulting machine code by minimizing its size and improving its performance, whenever applicable.&lt;/p&gt;
+
+&lt;h4 id=&quot;binary-code&quot;&gt;Binary code&lt;/h4&gt;
+
+&lt;p&gt;As we were saying, the resulting output file contains binary code, which can only be ‘understood’ by a CPU, it’s essentially a succession of varying-length instructions to be executed in order - here’s what some of them look like:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;CPU-readable instruction data (in hex)&lt;/th&gt;
+      &lt;th&gt;Human-readable interpretation&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;55&lt;/td&gt;
+      &lt;td&gt;push    ebp&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8B EC&lt;/td&gt;
+      &lt;td&gt;mov     ebp, esp&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;83 EC 08&lt;/td&gt;
+      &lt;td&gt;sub     esp, 8&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;33 C5&lt;/td&gt;
+      &lt;td&gt;xor     eax, ebp&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;83 7D 0C 01&lt;/td&gt;
+      &lt;td&gt;cmp     dword ptr [ebp+0Ch], 1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;These instructions are predominantly arithmetical, and they manipulate CPU registers/flags as well as volatile memory, as they’re executed.&lt;/p&gt;
+
+&lt;h4 id=&quot;cpu-registers&quot;&gt;CPU registers&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Processor_register&quot;&gt;A CPU register&lt;/a&gt; is almost like a temporary integer variable - there’s a small fixed number of them, and they exist because they’re quick to access, unlike memory-based variables, and they help the CPU keep track of its data (results, operands, counts, etc.) during execution.&lt;/p&gt;
+
+&lt;p&gt;It’s important to note the presence of a special register called the &lt;a href=&quot;https://en.wikipedia.org/wiki/FLAGS_register&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FLAGS&lt;/code&gt; register&lt;/a&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EFLAGS&lt;/code&gt; on 32-bit), which houses a bunch of flags (boolean indicators), which hold information about the state of the CPU, which include details about the last arithmetic operation (zero: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ZF&lt;/code&gt;, overflow: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OF&lt;/code&gt;, parity: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PF&lt;/code&gt;, sign: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SF&lt;/code&gt;, etc.).&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img src=&quot;https://i.0x41.cf/b/x32dbg-cpu-registers.png&quot; /&gt;
+  &lt;small&gt;CPU registers visualized while debugging a 32-bit process on x64dbg, a debugging tool.&lt;/small&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Some of these registers can also be spotted on the assembly excerpt mentioned &lt;a href=&quot;#binary-code&quot;&gt;previously&lt;/a&gt;, namely: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EAX&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ESP&lt;/code&gt; (stack pointer) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EBP&lt;/code&gt; (base pointer).&lt;/p&gt;
+
+&lt;h4 id=&quot;memory-access&quot;&gt;Memory access&lt;/h4&gt;
+
+&lt;p&gt;As the CPU executes stuff, it needs to access and interact with memory, that’s when the role of the &lt;em&gt;stack&lt;/em&gt; and the &lt;em&gt;heap&lt;/em&gt; comes.&lt;/p&gt;
+
+&lt;p&gt;These are (without getting into too much detail) the 2 main ways of ‘keeping track of variable data’ during the execution of a program:&lt;/p&gt;
+
+&lt;h5 id=&quot;-stack&quot;&gt;🥞 &lt;em&gt;Stack&lt;/em&gt;&lt;/h5&gt;
+&lt;p&gt;The simpler and faster of the two - it’s a linear contiguous LIFO (last in = first out) data structure with a push/pop mechanism, it serves to remember function-scoped variables, arguments, and keeps track of calls (ever heard of a &lt;a href=&quot;https://en.wikipedia.org/wiki/Stack_trace&quot;&gt;stack trace&lt;/a&gt;?)&lt;/p&gt;
+
+&lt;h5 id=&quot;-heap&quot;&gt;⛰ &lt;em&gt;Heap&lt;/em&gt;&lt;/h5&gt;
+&lt;p&gt;The heap, however, is pretty unordered, and is for more complicated data structures, it’s typically used for dynamic allocations, where the size of the buffer isn’t initially known, and/or if it’s too big, and/or needs to be modified later.&lt;/p&gt;
+
+&lt;h3 id=&quot;assembly-instructions&quot;&gt;Assembly instructions&lt;/h3&gt;
+
+&lt;p&gt;As I’ve mentioned earlier, assembly instructions have a varying ‘byte-size’, and a varying number of arguments.&lt;/p&gt;
+
+&lt;p&gt;Arguments can also be either immediate (‘hardcoded’), or they can be registers, depending on the instruction:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;55         push    ebp     ; size: 1 byte,  argument: register
+6A 01      push    1       ; size: 2 bytes, argument: immediate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s quickly run through a very small set of some of the common ones we’ll get to see - feel free to do your own research for more detail:&lt;/p&gt;
+
+&lt;h4 id=&quot;stack-operations&quot;&gt;Stack operations&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;push &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;value&lt;/code&gt;&lt;/strong&gt; &lt;em&gt;; pushes a value into the stack (decrements &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ESP&lt;/code&gt; by 4, the size of one stack ‘unit’).&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;pop &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;register&lt;/code&gt;&lt;/strong&gt; &lt;em&gt;; pops a value to a register (increments &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ESP&lt;/code&gt; by 4).&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;data-transfer&quot;&gt;Data transfer&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;mov &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;destination&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;source&lt;/code&gt;&lt;/strong&gt; ; &lt;em&gt;&lt;del&gt;moves&lt;/del&gt; copies a value from/to a register.&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;mov &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;destination&lt;/code&gt;, [&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;expression&lt;/code&gt;]&lt;/strong&gt; ; &lt;em&gt;copies a value from a memory address resolved from a ‘register expression’ (single register or arithmetic expression involving one or more registers) into a register.&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;flow-control&quot;&gt;Flow control&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;jmp &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;destination&lt;/code&gt;&lt;/strong&gt; ; &lt;em&gt;jumps into a code location (sets &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EIP&lt;/code&gt; (instruction pointer)).&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;jz/je &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;destination&lt;/code&gt;&lt;/strong&gt; ; &lt;em&gt;jumps into a code location if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ZF&lt;/code&gt; (the zero flag) is set.&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;jnz/jne &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;destination&lt;/code&gt;&lt;/strong&gt; ; &lt;em&gt;jumps into a code location if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ZF&lt;/code&gt; is not set.&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;operations&quot;&gt;Operations&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;cmp &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;operand1&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;operand2&lt;/code&gt;&lt;/strong&gt; ; &lt;em&gt;compares the 2 operands and sets &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ZF&lt;/code&gt; if they’re equal.&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;add &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;operand1&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;operand2&lt;/code&gt;&lt;/strong&gt; ; &lt;em&gt;operand1 += operand2;&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;sub &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;operand1&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;operand2&lt;/code&gt;&lt;/strong&gt; ; &lt;em&gt;operand1 -= operand2;&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;function-transitions&quot;&gt;Function transitions&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;function&lt;/code&gt;&lt;/strong&gt; ; &lt;em&gt;calls a function (pushes current &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EIP&lt;/code&gt;, then jumps to the function).&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;retn&lt;/strong&gt; ; &lt;em&gt;returns to caller function (pops back the previous &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EIP&lt;/code&gt;).&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Note&lt;/em&gt;&lt;/strong&gt;: You might notice the words ‘equal’ and ‘zero’ being used interchangeably in x86 terminology - that’s because comparison instructions internally perform a subtraction, which means if the 2 operands are equal, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ZF&lt;/code&gt; is set.&lt;/p&gt;
+
+&lt;h3 id=&quot;assembly-patterns&quot;&gt;Assembly patterns&lt;/h3&gt;
+
+&lt;p&gt;Now that we have a rough idea of the main elements used during the execution of a program, let’s get familiarized with the patterns of instructions that you can encounter reverse engineering your average everyday 32-bit &lt;a href=&quot;https://en.wikipedia.org/wiki/Portable_Executable&quot;&gt;PE&lt;/a&gt; binary.&lt;/p&gt;
+
+&lt;h4 id=&quot;function-prologue&quot;&gt;Function prologue&lt;/h4&gt;
+
+&lt;p&gt;A &lt;a href=&quot;https://en.wikipedia.org/wiki/Function_prologue&quot;&gt;function prologue&lt;/a&gt; is some initial code embedded in the beginning of most functions, it serves to set up a new stack frame for said function.&lt;/p&gt;
+
+&lt;p&gt;It typically looks like this (X being a number):&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;55          push    ebp        ; preserve caller function's base pointer in stack
+8B EC       mov     ebp, esp   ; caller function's stack pointer becomes base pointer (new stack frame)
+83 EC XX    sub     esp, X     ; adjust the stack pointer by X bytes to reserve space for local variables
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;function-epilogue&quot;&gt;Function epilogue&lt;/h4&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://en.wikipedia.org/wiki/Function_epilogue&quot;&gt;epilogue&lt;/a&gt; is simply the opposite of the prologue - it undoes its steps to restore the stack frame of the caller function, before it returns to it:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;8B E5    mov    esp, ebp    ; restore caller function's stack pointer (current base pointer) 
+5D       pop    ebp         ; restore base pointer from the stack
+C3       retn               ; return to caller function
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now at this point, you might be wondering - how do functions talk to each other? How exactly do you send/access arguments when calling a function, and how do you receive the return value? That’s precisely why we have calling conventions.&lt;/p&gt;
+
+&lt;h4 id=&quot;calling-conventions-__cdecl&quot;&gt;Calling conventions: __cdecl&lt;/h4&gt;
+
+&lt;p&gt;A &lt;a href=&quot;https://en.wikipedia.org/wiki/Calling_convention&quot;&gt;calling convention&lt;/a&gt; is basically a protocol used to communicate with functions, there’s a few variations of them, but they share the same principle.&lt;/p&gt;
+
+&lt;p&gt;We will be looking at the &lt;a href=&quot;https://en.wikipedia.org/wiki/X86_calling_conventions#cdecl&quot;&gt;__cdecl (C declaration) convention&lt;/a&gt;, which is the standard one when compiling C code.&lt;/p&gt;
+
+&lt;p&gt;In __cdecl (32-bit), function arguments are passed on the stack (pushed in reverse order), while the return value is returned in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EAX&lt;/code&gt; register (assuming it’s not a float).&lt;/p&gt;
+
+&lt;p&gt;This means that a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;func(1, 2, 3);&lt;/code&gt; call will generate the following:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;6A 03             push    3
+6A 02             push    2
+6A 01             push    1
+E8 XX XX XX XX    call    func
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;putting-everything-together&quot;&gt;Putting everything together&lt;/h4&gt;
+
+&lt;p&gt;Assuming &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;func()&lt;/code&gt; simply does an addition on the arguments and returns the result, it would probably look like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int __cdecl func(int, int, int):
+
+           prologue:
+55           push    ebp               ; save base pointer
+8B EC        mov     ebp, esp          ; new stack frame
+
+           body:
+8B 45 08     mov     eax, [ebp+8]      ; load first argument to EAX (return value)
+03 45 0C     add     eax, [ebp+0Ch]    ; add 2nd argument
+03 45 10     add     eax, [ebp+10h]    ; add 3rd argument
+
+           epilogue:
+5D           pop     ebp               ; restore base pointer
+C3           retn                      ; return to caller
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now if you’ve been paying attention and you’re still confused, you might be asking yourself one of these 2 questions:&lt;/p&gt;
+
+&lt;p&gt;1) Why do we have to adjust &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EBP&lt;/code&gt; by 8 to get to the first argument?&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;If you &lt;a href=&quot;#assembly-instructions&quot;&gt;check the definition&lt;/a&gt; of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;call&lt;/code&gt; instruction we mentioned earlier, you’ll realize that, internally, it actually pushes &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EIP&lt;/code&gt; to the stack. And if you also check the definition for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;push&lt;/code&gt;, you’ll realize that it decrements &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ESP&lt;/code&gt; (which is copied to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EBP&lt;/code&gt; after the prologue) by 4 bytes. In addition, the prologue’s first instruction is also a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;push&lt;/code&gt;, so we end up with 2 decrements of 4, hence the need to add 8.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;2) What happened to the prologue and epilogue, why are they seemingly ‘truncated’?&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It’s simply because we haven’t had a use for the stack during the execution of our function - if you’ve noticed, we haven’t modified &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ESP&lt;/code&gt; at all, which means we also don’t need to restore it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;if-conditions&quot;&gt;If conditions&lt;/h4&gt;
+
+&lt;p&gt;To demo the flow control assembly instructions, I’d like to add one more example to show how an if condition was compiled to assembly.&lt;/p&gt;
+
+&lt;p&gt;Assume we have the following function:&lt;/p&gt;
+
+&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_equal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;equal&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;nah&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After compiling it, here’s the disassembly that I got with the help of &lt;a href=&quot;https://hex-rays.com/ida-pro/&quot;&gt;IDA&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void __cdecl print_equal(int, int):
+
+     10000000   55                push   ebp
+     10000001   8B EC             mov    ebp, esp
+     10000003   8B 45 08          mov    eax, [ebp+8]       ; load 1st argument
+     10000006   3B 45 0C          cmp    eax, [ebp+0Ch]     ; compare it with 2nd
+  ┌┅ 10000009   75 0F             jnz    short loc_1000001A ; jump if not equal
+  ┊  1000000B   68 94 67 00 10    push   offset aEqual  ; &quot;equal&quot;
+  ┊  10000010   E8 DB F8 FF FF    call   _printf
+  ┊  10000015   83 C4 04          add    esp, 4
+┌─┊─ 10000018   EB 0D             jmp    short loc_10000027
+│ ┊
+│ └ loc_1000001A:
+│    1000001A   68 9C 67 00 10    push   offset aNah    ; &quot;nah&quot;
+│    1000001F   E8 CC F8 FF FF    call   _printf
+│    10000024   83 C4 04          add    esp, 4
+│
+└── loc_10000027:
+     10000027   5D                pop    ebp
+     10000028   C3                retn
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Give yourself a minute and try to make sense of this disassembly output (for simplicity’s sake, I’ve changed the real addresses and made the function start from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10000000&lt;/code&gt; instead).&lt;/p&gt;
+
+&lt;p&gt;In case you’re wondering about the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;add esp, 4&lt;/code&gt; part, it’s simply there to adjust &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ESP&lt;/code&gt; back to its initial value (same effect as a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pop&lt;/code&gt;, except without modifying any register), since we had to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;push&lt;/code&gt; the printf string argument.&lt;/p&gt;
+
+&lt;h3 id=&quot;basic-data-structures&quot;&gt;Basic data structures&lt;/h3&gt;
+
+&lt;p&gt;Now let’s move on and talk about how data is stored (integers and strings especially).&lt;/p&gt;
+
+&lt;h4 id=&quot;endianness&quot;&gt;Endianness&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Endianness&quot;&gt;Endianness&lt;/a&gt; is the order of the sequence of bytes representing a value in computer memory.&lt;/p&gt;
+
+&lt;p&gt;There’s 2 types - big-endian and little-endian:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;img src=&quot;https://i.0x41.cf/b/big-endian-dark.svg&quot; alt=&quot;&quot; /&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;img src=&quot;https://i.0x41.cf/b/little-endian-dark.svg&quot; alt=&quot;&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;For reference, x86 family processors (the ones on pretty much any computer you can find) always use little-endian.&lt;/p&gt;
+
+&lt;p&gt;To give you a live example of this concept, I’ve compiled a Visual Studio C++ console app, where I declared an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt; variable with the value &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1337&lt;/code&gt; assigned to it, then I printed the variable’s address using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;printf()&lt;/code&gt;, on the main function.&lt;/p&gt;
+
+&lt;p&gt;Then I ran the program attached to the debugger in order to check the printed variable’s address on the memory hex view, and here’s the result I obtained:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/vs-debug-memory-view.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;To elaborate more on this - &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt; variables are 4 bytes long (32 bits) (in case you didn’t know), so this means that if the variable starts from the address &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;D2FCB8&lt;/code&gt; it would end right before &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;D2FCBC&lt;/code&gt; (+4).&lt;/p&gt;
+
+&lt;p&gt;To go from human readable value to memory bytes, follow these steps:&lt;/p&gt;
+
+&lt;p&gt;decimal: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1337&lt;/code&gt; -&amp;gt; hex: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;539&lt;/code&gt; -&amp;gt; bytes: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;00 00 05 39&lt;/code&gt; -&amp;gt; little-endian: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;39 05 00 00&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;signed-integers&quot;&gt;Signed integers&lt;/h4&gt;
+
+&lt;p&gt;This part is interesting yet relatively simple. What you should know here is that integer signing (positive/negative) is typically done on computers with the help of a concept called &lt;a href=&quot;https://en.wikipedia.org/wiki/Signed_number_representations#Two's_complement&quot;&gt;two’s complement&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The gist of it is that the lowest/first half of an integer is reserved for positive numbers, while the highest/last half is for negative numbers, here’s what this looks like in hex, for a 32-bit signed int (highlighted = hex, in parenthesis = decimal):&lt;/p&gt;
+
+&lt;p&gt;Positives (1/2): &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;00000000&lt;/code&gt; (0) -&amp;gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;7FFFFFFF&lt;/code&gt; (2,147,483,647 or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INT_MAX&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;Negatives (2/2): &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;80000000&lt;/code&gt; (-2,147,483,648 or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INT_MIN&lt;/code&gt;) -&amp;gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FFFFFFFF&lt;/code&gt; (-1)&lt;/p&gt;
+
+&lt;p&gt;If you’ve noticed, we’re always &lt;em&gt;ascending&lt;/em&gt; in value. Whether we go up in hex or decimal. And that’s the crucial point of this concept - arithmetical operation do not have to do anything special to handle signing, they can simply treat all values as unsigned/positive, and the result would still be interpreted correctly (as long as we don’t go beyond &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INT_MAX&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INT_MIN&lt;/code&gt;), and that’s because integers will also &lt;em&gt;‘rollover’&lt;/em&gt; on overflow/underflow by design, kinda like an analog odometer.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img src=&quot;https://i.0x41.cf/b/odometer-rollover.jpg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Protip&lt;/em&gt;&lt;/strong&gt;: The Windows calculator is a very helpful tool - you can set it to programmer mode and set the size to DWORD (4 bytes), then enter negative decimal values and visualize them in hex and binary, and have fun performing operations on them.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/calcexe-int-signing.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;strings&quot;&gt;Strings&lt;/h4&gt;
+
+&lt;p&gt;In C, strings are stored as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;char&lt;/code&gt; arrays, therefore, there’s nothing special to note here, except for something called null termination.&lt;/p&gt;
+
+&lt;p&gt;If you ever wondered how &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;strlen()&lt;/code&gt; is able to know the size of a string, it’s very simple - strings have a character that indicates their end, and that’s the null byte/character - &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;00&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;'\0'&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you declare a string constant in C code, and hover over it in Visual Studio, for instance, it will tell you the size of the generated array, and as you can see, for this reason, it’s one element more than the ‘visible’ string size.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/vs-null-termination.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Note&lt;/em&gt;&lt;/strong&gt;: The endianness concept is not applicable on arrays, only on single variables. Therefore, the order of characters in memory would be normal here - low to high.&lt;/p&gt;
+
+&lt;h3 id=&quot;making-sense-of-call-and-jmp-instructions&quot;&gt;Making sense of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;call&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jmp&lt;/code&gt; instructions&lt;/h3&gt;
+
+&lt;p&gt;Now that you know all of this, you’re likely able to start making sense of some machine code, and emulate a CPU with your brain, to some extent, so to speak.&lt;/p&gt;
+
+&lt;p&gt;Let’s take the &lt;a href=&quot;#if-conditions&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;print_equal()&lt;/code&gt; example&lt;/a&gt;, but let’s only focus on the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;printf()&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;call&lt;/code&gt; instructions this time.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void print_equal(int, int):
+...
+     10000010   E8 DB F8 FF FF    call   _printf
+...
+     1000001F   E8 CC F8 FF FF    call   _printf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You might be wondering to yourself - wait a second, if these are the same instructions, then why are their bytes different?&lt;/p&gt;
+
+&lt;p&gt;That’s because, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;call&lt;/code&gt; (and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jmp&lt;/code&gt;) instructions (usually) take an &lt;em&gt;offset&lt;/em&gt; (relative address) as an argument, not an absolute address.&lt;/p&gt;
+
+&lt;p&gt;An offset is basically the difference between the current location, and the destination, which also means that it can be either negative or positive.&lt;/p&gt;
+
+&lt;p&gt;As you can see, the &lt;a href=&quot;https://en.wikipedia.org/wiki/Opcode&quot;&gt;opcode&lt;/a&gt; of a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;call&lt;/code&gt; instruction that takes a 32-bit offset, is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;E8&lt;/code&gt;, and is followed by said offset - which makes the full instruction: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;E8 XX XX XX XX&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pull out your calculator, &lt;del&gt;why’d you close it so early?!&lt;/del&gt; and calculate the difference between the offset of both instructions (don’t forget the endianness).&lt;/p&gt;
+
+&lt;p&gt;You’ll notice that (the absolute value of) this difference is the same as the one between the instruction addresses (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1000001F&lt;/code&gt; - &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10000010&lt;/code&gt; = &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F&lt;/code&gt;):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.0x41.cf/b/calcexe-call-inst-diff.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Another small detail that we should add, is the fact that the CPU only executes an instruction after fully ‘reading’ it, which means that by the time the CPU starts ‘executing’, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EIP&lt;/code&gt; (the instruction pointer) is already pointing at the &lt;em&gt;next&lt;/em&gt; instruction to be executed.&lt;/p&gt;
+
+&lt;p&gt;That’s why these offsets are actually accounting for this behaviour, which means that in order to get the &lt;em&gt;real&lt;/em&gt; address of the target function, we have to also &lt;em&gt;add&lt;/em&gt; the size of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;call&lt;/code&gt; instruction: 5.&lt;/p&gt;
+
+&lt;p&gt;Now let’s apply all these steps in order to resolve &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;printf()&lt;/code&gt;’s address from the first instruction on the example:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;10000010   E8 DB F8 FF FF    call   _printf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;1) Extract the offset from the instruction: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;E8 (DB F8 FF FF)&lt;/code&gt; -&amp;gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FFFFF8D8&lt;/code&gt; (-1832)&lt;/p&gt;
+
+&lt;p&gt;2) Add it to the instruction address: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10000010&lt;/code&gt; + &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FFFFF8D8&lt;/code&gt; = &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FFFF8E8&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;3) And finally, add the instruction size: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FFFF8E8&lt;/code&gt; + 5 = &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FFFF8ED&lt;/code&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;printf&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;The exact same principle applies to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jmp&lt;/code&gt; instruction:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+┌─── 10000018   EB 0D             jmp    short loc_10000027
+...
+└── loc_10000027:
+     10000027   5D                pop    ebp
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The only difference in this example is that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EB XX&lt;/code&gt; is a short version &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jmp&lt;/code&gt; instruction - which means it only takes an 8-bit (1 byte) offset.&lt;/p&gt;
+
+&lt;p&gt;Therefore: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10000018&lt;/code&gt; + &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0D&lt;/code&gt; + 2 = &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;10000027&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;That’s it! You should now have enough information (and hopefully, motivation) to start your journey reverse engineering executables.&lt;/p&gt;
+
+&lt;p&gt;Start by writing dummy C code, compiling it, and debugging it while single-stepping through the disassembly instructions (Visual Studio allows you to do this, by the way).&lt;/p&gt;
+
+&lt;p&gt;After that, you can try your luck with closed-source native binaries, by the help of disassemblers such as &lt;a href=&quot;https://ghidra-sre.org/&quot;&gt;Ghidra&lt;/a&gt; and &lt;a href=&quot;https://hex-rays.com/ida-free&quot;&gt;IDA&lt;/a&gt;, and debuggers such as &lt;a href=&quot;https://x64dbg.com/&quot;&gt;x64dbg&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Note&lt;/em&gt;&lt;/strong&gt;: If you’ve noticed inaccurate information, or room for improvement regarding this article, and would like to improve it, feel free to &lt;a href=&quot;https://github.com/thedroidgeek/0x41.cf/edit/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md&quot;&gt;submit a pull request&lt;/a&gt; on GitHub.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Sami ALAOUI KENDIL</name></author><category term="Reversing" /><summary type="html">Context Before I got into reverse engineering, executables always seemed like black magic to me. I always wondered how stuff worked under the hood, and how binary code is represented inside .exe files, and how hard it is to modify this ‘compiled code’ without access to the original source code. But one of the main intimidating hurdles always seemed to be the assembly language, it’s the thing that scares most people away from trying to learn about this field. That’s the main reason why I thought of writing this straight-to-the-point article that only contains the essential stuff that you encounter the most when reversing, albeit missing crucial details for the sake of brevity, and assumes the reader has a reflex of finding answers online, looking up definitions, and more importantly, coming up with examples/ideas/projects to practice on. The goal is to hopefully guide an aspiring reverse engineer and arouse motivation towards learning more about this seemingly elusive passion. Note: This article assumes the reader has elementary knowledge regarding the hexadecimal numeral system, as well as the C programming language, and is based on a 32-bit Windows executable case study - results might differ across different OSes/architectures. Introduction Compilation After writing code using a compiled language, a compilation takes place (duh), in order to generate the output binary file (an example of such is an .exe file). Compilers are sophisticated programs which do this task. They make sure the syntax of your ugly code is correct, before compiling and optimizing the resulting machine code by minimizing its size and improving its performance, whenever applicable. Binary code As we were saying, the resulting output file contains binary code, which can only be ‘understood’ by a CPU, it’s essentially a succession of varying-length instructions to be executed in order - here’s what some of them look like: CPU-readable instruction data (in hex) Human-readable interpretation 55 push ebp 8B EC mov ebp, esp 83 EC 08 sub esp, 8 33 C5 xor eax, ebp 83 7D 0C 01 cmp dword ptr [ebp+0Ch], 1 These instructions are predominantly arithmetical, and they manipulate CPU registers/flags as well as volatile memory, as they’re executed. CPU registers A CPU register is almost like a temporary integer variable - there’s a small fixed number of them, and they exist because they’re quick to access, unlike memory-based variables, and they help the CPU keep track of its data (results, operands, counts, etc.) during execution. It’s important to note the presence of a special register called the FLAGS register (EFLAGS on 32-bit), which houses a bunch of flags (boolean indicators), which hold information about the state of the CPU, which include details about the last arithmetic operation (zero: ZF, overflow: OF, parity: PF, sign: SF, etc.). CPU registers visualized while debugging a 32-bit process on x64dbg, a debugging tool. Some of these registers can also be spotted on the assembly excerpt mentioned previously, namely: EAX, ESP (stack pointer) and EBP (base pointer). Memory access As the CPU executes stuff, it needs to access and interact with memory, that’s when the role of the stack and the heap comes. These are (without getting into too much detail) the 2 main ways of ‘keeping track of variable data’ during the execution of a program: 🥞 Stack The simpler and faster of the two - it’s a linear contiguous LIFO (last in = first out) data structure with a push/pop mechanism, it serves to remember function-scoped variables, arguments, and keeps track of calls (ever heard of a stack trace?) ⛰ Heap The heap, however, is pretty unordered, and is for more complicated data structures, it’s typically used for dynamic allocations, where the size of the buffer isn’t initially known, and/or if it’s too big, and/or needs to be modified later. Assembly instructions As I’ve mentioned earlier, assembly instructions have a varying ‘byte-size’, and a varying number of arguments. Arguments can also be either immediate (‘hardcoded’), or they can be registers, depending on the instruction: 55 push ebp ; size: 1 byte, argument: register 6A 01 push 1 ; size: 2 bytes, argument: immediate Let’s quickly run through a very small set of some of the common ones we’ll get to see - feel free to do your own research for more detail: Stack operations push value ; pushes a value into the stack (decrements ESP by 4, the size of one stack ‘unit’). pop register ; pops a value to a register (increments ESP by 4). Data transfer mov destination, source ; moves copies a value from/to a register. mov destination, [expression] ; copies a value from a memory address resolved from a ‘register expression’ (single register or arithmetic expression involving one or more registers) into a register. Flow control jmp destination ; jumps into a code location (sets EIP (instruction pointer)). jz/je destination ; jumps into a code location if ZF (the zero flag) is set. jnz/jne destination ; jumps into a code location if ZF is not set. Operations cmp operand1, operand2 ; compares the 2 operands and sets ZF if they’re equal. add operand1, operand2 ; operand1 += operand2; sub operand1, operand2 ; operand1 -= operand2; Function transitions call function ; calls a function (pushes current EIP, then jumps to the function). retn ; returns to caller function (pops back the previous EIP). Note: You might notice the words ‘equal’ and ‘zero’ being used interchangeably in x86 terminology - that’s because comparison instructions internally perform a subtraction, which means if the 2 operands are equal, ZF is set. Assembly patterns Now that we have a rough idea of the main elements used during the execution of a program, let’s get familiarized with the patterns of instructions that you can encounter reverse engineering your average everyday 32-bit PE binary. Function prologue A function prologue is some initial code embedded in the beginning of most functions, it serves to set up a new stack frame for said function. It typically looks like this (X being a number): 55 push ebp ; preserve caller function's base pointer in stack 8B EC mov ebp, esp ; caller function's stack pointer becomes base pointer (new stack frame) 83 EC XX sub esp, X ; adjust the stack pointer by X bytes to reserve space for local variables Function epilogue The epilogue is simply the opposite of the prologue - it undoes its steps to restore the stack frame of the caller function, before it returns to it: 8B E5 mov esp, ebp ; restore caller function's stack pointer (current base pointer) 5D pop ebp ; restore base pointer from the stack C3 retn ; return to caller function Now at this point, you might be wondering - how do functions talk to each other? How exactly do you send/access arguments when calling a function, and how do you receive the return value? That’s precisely why we have calling conventions. Calling conventions: __cdecl A calling convention is basically a protocol used to communicate with functions, there’s a few variations of them, but they share the same principle. We will be looking at the __cdecl (C declaration) convention, which is the standard one when compiling C code. In __cdecl (32-bit), function arguments are passed on the stack (pushed in reverse order), while the return value is returned in the EAX register (assuming it’s not a float). This means that a func(1, 2, 3); call will generate the following: 6A 03 push 3 6A 02 push 2 6A 01 push 1 E8 XX XX XX XX call func Putting everything together Assuming func() simply does an addition on the arguments and returns the result, it would probably look like this: int __cdecl func(int, int, int): prologue: 55 push ebp ; save base pointer 8B EC mov ebp, esp ; new stack frame body: 8B 45 08 mov eax, [ebp+8] ; load first argument to EAX (return value) 03 45 0C add eax, [ebp+0Ch] ; add 2nd argument 03 45 10 add eax, [ebp+10h] ; add 3rd argument epilogue: 5D pop ebp ; restore base pointer C3 retn ; return to caller Now if you’ve been paying attention and you’re still confused, you might be asking yourself one of these 2 questions: 1) Why do we have to adjust EBP by 8 to get to the first argument? If you check the definition of the call instruction we mentioned earlier, you’ll realize that, internally, it actually pushes EIP to the stack. And if you also check the definition for push, you’ll realize that it decrements ESP (which is copied to EBP after the prologue) by 4 bytes. In addition, the prologue’s first instruction is also a push, so we end up with 2 decrements of 4, hence the need to add 8. 2) What happened to the prologue and epilogue, why are they seemingly ‘truncated’? It’s simply because we haven’t had a use for the stack during the execution of our function - if you’ve noticed, we haven’t modified ESP at all, which means we also don’t need to restore it. If conditions To demo the flow control assembly instructions, I’d like to add one more example to show how an if condition was compiled to assembly. Assume we have the following function: void print_equal(int a, int b) { if (a == b) { printf(&quot;equal&quot;); } else { printf(&quot;nah&quot;); } } After compiling it, here’s the disassembly that I got with the help of IDA: void __cdecl print_equal(int, int): 10000000 55 push ebp 10000001 8B EC mov ebp, esp 10000003 8B 45 08 mov eax, [ebp+8] ; load 1st argument 10000006 3B 45 0C cmp eax, [ebp+0Ch] ; compare it with 2nd ┌┅ 10000009 75 0F jnz short loc_1000001A ; jump if not equal ┊ 1000000B 68 94 67 00 10 push offset aEqual ; &quot;equal&quot; ┊ 10000010 E8 DB F8 FF FF call _printf ┊ 10000015 83 C4 04 add esp, 4 ┌─┊─ 10000018 EB 0D jmp short loc_10000027 │ ┊ │ └ loc_1000001A: │ 1000001A 68 9C 67 00 10 push offset aNah ; &quot;nah&quot; │ 1000001F E8 CC F8 FF FF call _printf │ 10000024 83 C4 04 add esp, 4 │ └── loc_10000027: 10000027 5D pop ebp 10000028 C3 retn Give yourself a minute and try to make sense of this disassembly output (for simplicity’s sake, I’ve changed the real addresses and made the function start from 10000000 instead). In case you’re wondering about the add esp, 4 part, it’s simply there to adjust ESP back to its initial value (same effect as a pop, except without modifying any register), since we had to push the printf string argument. Basic data structures Now let’s move on and talk about how data is stored (integers and strings especially). Endianness Endianness is the order of the sequence of bytes representing a value in computer memory. There’s 2 types - big-endian and little-endian: For reference, x86 family processors (the ones on pretty much any computer you can find) always use little-endian. To give you a live example of this concept, I’ve compiled a Visual Studio C++ console app, where I declared an int variable with the value 1337 assigned to it, then I printed the variable’s address using printf(), on the main function. Then I ran the program attached to the debugger in order to check the printed variable’s address on the memory hex view, and here’s the result I obtained: To elaborate more on this - int variables are 4 bytes long (32 bits) (in case you didn’t know), so this means that if the variable starts from the address D2FCB8 it would end right before D2FCBC (+4). To go from human readable value to memory bytes, follow these steps: decimal: 1337 -&amp;gt; hex: 539 -&amp;gt; bytes: 00 00 05 39 -&amp;gt; little-endian: 39 05 00 00 Signed integers This part is interesting yet relatively simple. What you should know here is that integer signing (positive/negative) is typically done on computers with the help of a concept called two’s complement. The gist of it is that the lowest/first half of an integer is reserved for positive numbers, while the highest/last half is for negative numbers, here’s what this looks like in hex, for a 32-bit signed int (highlighted = hex, in parenthesis = decimal): Positives (1/2): 00000000 (0) -&amp;gt; 7FFFFFFF (2,147,483,647 or INT_MAX) Negatives (2/2): 80000000 (-2,147,483,648 or INT_MIN) -&amp;gt; FFFFFFFF (-1) If you’ve noticed, we’re always ascending in value. Whether we go up in hex or decimal. And that’s the crucial point of this concept - arithmetical operation do not have to do anything special to handle signing, they can simply treat all values as unsigned/positive, and the result would still be interpreted correctly (as long as we don’t go beyond INT_MAX or INT_MIN), and that’s because integers will also ‘rollover’ on overflow/underflow by design, kinda like an analog odometer. Protip: The Windows calculator is a very helpful tool - you can set it to programmer mode and set the size to DWORD (4 bytes), then enter negative decimal values and visualize them in hex and binary, and have fun performing operations on them. Strings In C, strings are stored as char arrays, therefore, there’s nothing special to note here, except for something called null termination. If you ever wondered how strlen() is able to know the size of a string, it’s very simple - strings have a character that indicates their end, and that’s the null byte/character - 00 or '\0'. If you declare a string constant in C code, and hover over it in Visual Studio, for instance, it will tell you the size of the generated array, and as you can see, for this reason, it’s one element more than the ‘visible’ string size. Note: The endianness concept is not applicable on arrays, only on single variables. Therefore, the order of characters in memory would be normal here - low to high. Making sense of call and jmp instructions Now that you know all of this, you’re likely able to start making sense of some machine code, and emulate a CPU with your brain, to some extent, so to speak. Let’s take the print_equal() example, but let’s only focus on the printf() call instructions this time. void print_equal(int, int): ... 10000010 E8 DB F8 FF FF call _printf ... 1000001F E8 CC F8 FF FF call _printf You might be wondering to yourself - wait a second, if these are the same instructions, then why are their bytes different? That’s because, call (and jmp) instructions (usually) take an offset (relative address) as an argument, not an absolute address. An offset is basically the difference between the current location, and the destination, which also means that it can be either negative or positive. As you can see, the opcode of a call instruction that takes a 32-bit offset, is E8, and is followed by said offset - which makes the full instruction: E8 XX XX XX XX. Pull out your calculator, why’d you close it so early?! and calculate the difference between the offset of both instructions (don’t forget the endianness). You’ll notice that (the absolute value of) this difference is the same as the one between the instruction addresses (1000001F - 10000010 = F): Another small detail that we should add, is the fact that the CPU only executes an instruction after fully ‘reading’ it, which means that by the time the CPU starts ‘executing’, EIP (the instruction pointer) is already pointing at the next instruction to be executed. That’s why these offsets are actually accounting for this behaviour, which means that in order to get the real address of the target function, we have to also add the size of the call instruction: 5. Now let’s apply all these steps in order to resolve printf()’s address from the first instruction on the example: 10000010 E8 DB F8 FF FF call _printf 1) Extract the offset from the instruction: E8 (DB F8 FF FF) -&amp;gt; FFFFF8D8 (-1832) 2) Add it to the instruction address: 10000010 + FFFFF8D8 = FFFF8E8 3) And finally, add the instruction size: FFFF8E8 + 5 = FFFF8ED (&amp;amp;printf) The exact same principle applies to the jmp instruction: ... ┌─── 10000018 EB 0D jmp short loc_10000027 ... └── loc_10000027: 10000027 5D pop ebp ... The only difference in this example is that EB XX is a short version jmp instruction - which means it only takes an 8-bit (1 byte) offset. Therefore: 10000018 + 0D + 2 = 10000027 Conclusion That’s it! You should now have enough information (and hopefully, motivation) to start your journey reverse engineering executables. Start by writing dummy C code, compiling it, and debugging it while single-stepping through the disassembly instructions (Visual Studio allows you to do this, by the way). After that, you can try your luck with closed-source native binaries, by the help of disassemblers such as Ghidra and IDA, and debuggers such as x64dbg. Note: If you’ve noticed inaccurate information, or room for improvement regarding this article, and would like to improve it, feel free to submit a pull request on GitHub. Thanks for reading!</summary></entry><entry><title type="html">Google Assistant YouTube command for smart TVs</title><link href="https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html" rel="alternate" type="text/html" title="Google Assistant YouTube command for smart TVs" /><published>2021-03-02T00:00:00+00:00</published><updated>2021-03-02T00:00:00+00:00</updated><id>https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs</id><content type="html" xml:base="https://0x41.cf/automation/2021/03/02/google-assistant-youtube-smart-tvs.html">&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
 
 &lt;p&gt;After I’ve noticed my 2019 Samsung TV had support for Google Assistant commands for basic controls such as power, volume, channel, input source, etc., I thought it would be cool to also be able to cast media content using my voice, but I then realized that the only officially supported TVs were labeled ‘Chromecast-enabled’, and that people without those generally end up buying the Chromecast TV stick, for the ‘full compatibility’, which sounds like a waste when you already own a ‘smart’ TV.&lt;/p&gt;
 

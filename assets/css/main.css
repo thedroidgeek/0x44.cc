@@ -467,7 +467,7 @@ button.disqus-load { margin-top: 1em; }
 @media (min-width: 55rem) { .kofi-btn img { max-height: 40px; } }
 
 /* Pagination Super lightweight (HTML-wise) blog pagination. Should only be visible when there is navigation available -- single buttons at top or bottom of each page. */
-.pagination { margin-bottom: 2rem; color: #ccc; text-align: center; }
+.pagination { margin-bottom: 0; color: #ccc; text-align: center; }
 
 .pagination > a { display: inline-block; padding: 0.5em 0.5em; border: solid #313131; border-radius: 10px; border-width: 1px; width: 120px; max-width: 20rem; background: #111; box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.16); }
 
@@ -475,12 +475,11 @@ button.disqus-load { margin-top: 1em; }
 
 .pagination > a.disabled { background: #313131; color: #ccc; }
 
-* + .pagination { margin-top: 2rem; }
+* + .pagination { margin-top: 1rem; }
 
 .content .pagination:first-child { margin-top: -4rem; }
 
-.index #sidebar { padding-bottom: calc(2rem + 1em); }
-
+/*.index #sidebar { padding-bottom: calc(2rem + 1em); }*/
 .home.index #sidebar { padding-bottom: 2rem; }
 
 @media (min-width: 55rem) { .pagination > a { box-shadow: none; } .pagination > a:hover { box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.16); } .content .pagination:first-child { margin-top: 0; } .content .pagination:first-child + * { padding-top: 2rem; border-top: 1px solid #313131; margin-top: 2rem; } .index #sidebar { padding-bottom: 2rem; } }
