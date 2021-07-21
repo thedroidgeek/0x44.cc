@@ -20,8 +20,7 @@ disqus:
   shortname:     0x41-cf
 
 paginate:           3
-# paginate_path:    '/page:num'
-                    # Or '/blog/page:num' if you want to move your index pages
+paginate_path:    '/page/:num'
 excerpt_max_length: 300
 
 plugins:

@@ -7,7 +7,7 @@
 */
 
 .pagination {
-  margin-bottom: $section-spacing;
+  margin-bottom: 0;
   color: $gray-3;
   text-align: center;
 
@@ -36,7 +36,7 @@
 
 // Bottom -> margin-top;
 * + .pagination {
-  margin-top: $section-spacing;
+  margin-top: 1rem;
 }
 
 // Push above header if newer on mobile
@@ -45,9 +45,9 @@
 }
 
 // Make room for larger header by extending margin below title
-.index #sidebar {
+/*.index #sidebar {
   padding-bottom: calc(#{$section-spacing} + #{$padding-v});
-}
+}*/
 
 // But not on page1
 .home.index #sidebar {
