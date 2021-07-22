@@ -348,9 +348,9 @@ Now let's apply all these steps in order to resolve `printf()`'s address from th
 
 1) Extract the offset from the instruction: `E8 (DB F8 FF FF)` -> `FFFFF8D8` (-1832)
 
-2) Add it to the instruction address: `10000010` + `FFFFF8D8` = `FFFF8E8`
+2) Add it to the instruction address: `10000010` + `FFFFF8D8` = `0FFFF8E8`
 
-3) And finally, add the instruction size: `FFFF8E8` + 5 = `FFFF8ED` (`&printf`)
+3) And finally, add the instruction size: `0FFFF8E8` + 5 = `0FFFF8ED` (`&printf`)
 
 The exact same principle applies to the `jmp` instruction:
 
