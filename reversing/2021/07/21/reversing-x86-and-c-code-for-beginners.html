@@ -1272,14 +1272,14 @@ C3           retn                      ; return to caller
             2) Add it to the instruction address:
             <code class="language-plaintext highlighter-rouge">10000010</code> +
             <code class="language-plaintext highlighter-rouge">FFFFF8D8</code> =
-            <code class="language-plaintext highlighter-rouge">FFFF8E8</code>
+            <code class="language-plaintext highlighter-rouge">0FFFF8E8</code>
           </p>
 
           <p>
             3) And finally, add the instruction size:
-            <code class="language-plaintext highlighter-rouge">FFFF8E8</code> +
+            <code class="language-plaintext highlighter-rouge">0FFFF8E8</code> +
             5 =
-            <code class="language-plaintext highlighter-rouge">FFFF8ED</code>
+            <code class="language-plaintext highlighter-rouge">0FFFF8ED</code>
             (<code class="language-plaintext highlighter-rouge"
               >&amp;printf</code
             >)
