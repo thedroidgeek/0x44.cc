@@ -1264,22 +1264,22 @@ C3           retn                      ; return to caller
               >E8 (DB F8 FF FF)</code
             >
             -&gt;
-            <code class="language-plaintext highlighter-rouge">FFFFF8D8</code>
-            (-1832)
+            <code class="language-plaintext highlighter-rouge">FFFFF8DB</code>
+            (-1829)
           </p>
 
           <p>
             2) Add it to the instruction address:
             <code class="language-plaintext highlighter-rouge">10000010</code> +
-            <code class="language-plaintext highlighter-rouge">FFFFF8D8</code> =
-            <code class="language-plaintext highlighter-rouge">0FFFF8E8</code>
+            <code class="language-plaintext highlighter-rouge">FFFFF8DB</code> =
+            <code class="language-plaintext highlighter-rouge">0FFFF8EB</code>
           </p>
 
           <p>
             3) And finally, add the instruction size:
-            <code class="language-plaintext highlighter-rouge">0FFFF8E8</code> +
+            <code class="language-plaintext highlighter-rouge">0FFFF8EB</code> +
             5 =
-            <code class="language-plaintext highlighter-rouge">0FFFF8ED</code>
+            <code class="language-plaintext highlighter-rouge">0FFFF8F0</code>
             (<code class="language-plaintext highlighter-rouge"
               >&amp;printf</code
             >)
@@ -1368,6 +1368,15 @@ C3           retn                      ; return to caller
           </p>
 
           <p>Thanks for reading!</p>
+
+          <p>
+            <a
+              href="https://github.com/thedroidgeek/0x41.cf/commits/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >(edited)</a
+            >
+          </p>
 
           <div class="post-tags"></div>
         </div>
