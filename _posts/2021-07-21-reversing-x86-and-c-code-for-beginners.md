@@ -346,11 +346,11 @@ Now let's apply all these steps in order to resolve `printf()`'s address from th
 10000010   E8 DB F8 FF FF    call   _printf
 ```
 
-1) Extract the offset from the instruction: `E8 (DB F8 FF FF)` -> `FFFFF8D8` (-1832)
+1) Extract the offset from the instruction: `E8 (DB F8 FF FF)` -> `FFFFF8DB` (-1829)
 
-2) Add it to the instruction address: `10000010` + `FFFFF8D8` = `0FFFF8E8`
+2) Add it to the instruction address: `10000010` + `FFFFF8DB` = `0FFFF8EB`
 
-3) And finally, add the instruction size: `0FFFF8E8` + 5 = `0FFFF8ED` (`&printf`)
+3) And finally, add the instruction size: `0FFFF8EB` + 5 = `0FFFF8F0` (`&printf`)
 
 The exact same principle applies to the `jmp` instruction:
 
@@ -379,3 +379,5 @@ After that, you can try your luck with closed-source native binaries, by the hel
 ***Note***: If you've noticed inaccurate information, or room for improvement regarding this article, and would like to improve it, feel free to [submit a pull request](https://github.com/thedroidgeek/0x41.cf/edit/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md) on GitHub.
 
 Thanks for reading!
+
+[(edited)](https://github.com/thedroidgeek/0x41.cf/commits/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md)
