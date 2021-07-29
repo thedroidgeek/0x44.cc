@@ -372,7 +372,9 @@ Therefore: `10000018` + `0D` + 2 = `10000027`
 
 That's it! You should now have enough information (and hopefully, motivation) to start your journey reverse engineering executables.
 
-Start by writing dummy C code, compiling it, and debugging it while single-stepping through the disassembly instructions (Visual Studio allows you to do this, by the way). If you want to compare the output of different compilers, or see how certain options affect the output, you can do that on the [Compiler Explorer website](https://godbolt.org/).
+Start by writing dummy C code, compiling it, and debugging it while single-stepping through the disassembly instructions (Visual Studio allows you to do this, by the way).
+
+[Compiler Explorer](https://godbolt.org/) is also an extremely helpful website which compiles C code to assembly for you in real time using multiple compilers (select the `x86 msvc` compiler for Windows 32-bit).
 
 After that, you can try your luck with closed-source native binaries, by the help of disassemblers such as [Ghidra](https://ghidra-sre.org/) and [IDA](https://hex-rays.com/ida-free), and debuggers such as [x64dbg](https://x64dbg.com/).
 
