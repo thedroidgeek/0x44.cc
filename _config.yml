@@ -27,7 +27,6 @@ plugins:
   - jekyll-feed
   - jekyll-gist
   - jekyll-paginate
-  - jekyll-extlinks
   - jekyll-timeago
 
 # Simplify category URLs
