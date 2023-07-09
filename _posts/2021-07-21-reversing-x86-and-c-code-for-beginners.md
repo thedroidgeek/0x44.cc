@@ -60,7 +60,7 @@ It's important to note the presence of a special register called the [`FLAGS` re
   <small>CPU registers visualized while debugging a 32-bit process on x64dbg, a debugging tool.</small>
 </p>
 
-Some of these registers can also be spotted on the assembly excerpt mentioned [previously](#binary-code), namely: `EAX`(Extended Accumulator), `ESP` (stack pointer) and `EBP` (base pointer). [x86 Assembly/X86 Architecture](https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture)
+Some of these registers can also be spotted on the assembly excerpt mentioned [previously](#binary-code), namely: `EAX`(Extended Accumulator), `ESP` (Extended Stack Pointer) and `EBP` (Extended Base Pointer). [x86 Assembly/X86 Architecture](https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture)
 
 
 #### Memory access
