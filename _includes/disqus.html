@@ -17,6 +17,9 @@
     this.page.url = "{{ page.url | absolute_url }}";
     this.page.identifier = "{{ page.guid or page.id }}" ||
                            "{{ page.url | absolute_url }}";
+    // hack: preserve old comments by using old domain
+    this.page.url = this.page.url.replace("{{ site.url }}","https://0x41.cf")
+    this.page.identifier = this.page.identifier.replace("{{ site.url }}","https://0x41.cf")
   }
   function loadDisqusComments() { // DON'T EDIT BELOW THIS LINE
     var d = document, s = d.createElement('script');
