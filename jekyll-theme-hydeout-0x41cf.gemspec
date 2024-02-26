@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["4ndroidgeek@gmail.com"]
 
   spec.summary       = %q{The Hyde theme for Jekyll, refreshed, hexified.}
-  spec.homepage      = "https://github.com/thedroidgeek/0x41.cf"
+  spec.homepage      = "https://github.com/thedroidgeek/0x44.cc"
   spec.license       = "MIT"
 
   spec.metadata["plugin_type"] = "theme"

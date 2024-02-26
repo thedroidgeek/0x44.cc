@@ -378,8 +378,8 @@ Start by writing dummy C code, compiling it, and debugging it while single-stepp
 
 After that, you can try your luck with closed-source native binaries, by the help of disassemblers such as [Ghidra](https://ghidra-sre.org/) and [IDA](https://hex-rays.com/ida-free), and debuggers such as [x64dbg](https://x64dbg.com/).
 
-***Note***: If you've noticed inaccurate information, or room for improvement regarding this article, and would like to improve it, feel free to [submit a pull request](https://github.com/thedroidgeek/0x41.cf/edit/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md) on GitHub.
+***Note***: If you've noticed inaccurate information, or room for improvement regarding this article, and would like to improve it, feel free to [submit a pull request](https://github.com/thedroidgeek/0x44.cc/edit/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md) on GitHub.
 
 Thanks for reading!
 
-[(edited)](https://github.com/thedroidgeek/0x41.cf/commits/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md)
+[(edited)](https://github.com/thedroidgeek/0x44.cc/commits/master/_posts/2021-07-21-reversing-x86-and-c-code-for-beginners.md)
