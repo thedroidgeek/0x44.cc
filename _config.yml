@@ -3,10 +3,10 @@ markdown:         kramdown
 highlighter:      rouge
 
 # Setup
-title:            0x41.cf
+title:            0x44.cc
 tagline:          'InfoSec, Reversing, and more'
 description:      'InfoSec, Reverse Engineering, and more (soon&trade;)'
-url:              https://0x41.cf
+url:              https://0x44.cc
 #baseurl:          '/hydeout'
 
 author:

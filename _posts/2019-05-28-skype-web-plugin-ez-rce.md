@@ -142,4 +142,4 @@ Microsoft released the [KB4503293](https://support.microsoft.com/en-us/help/4503
 
 As a result, this attack is no longer feasible on an up-to-date Windows system.
 
-[(edited)](https://github.com/thedroidgeek/0x41.cf/commits/master/_posts/2019-05-28-skype-web-plugin-ez-rce.md){:target="_blank"}{:rel="noopener noreferrer"}
+[(edited)](https://github.com/thedroidgeek/0x44.cc/commits/master/_posts/2019-05-28-skype-web-plugin-ez-rce.md){:target="_blank"}{:rel="noopener noreferrer"}
