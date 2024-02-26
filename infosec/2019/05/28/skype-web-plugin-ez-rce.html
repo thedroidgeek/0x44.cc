@@ -733,6 +733,15 @@
               this.page.identifier =
                 "" ||
                 "https://0x44.cc/infosec/2019/05/28/skype-web-plugin-ez-rce.html";
+              // hack: preserve old comments by using old domain
+              this.page.url = this.page.url.replace(
+                "https://0x44.cc",
+                "https://0x41.cf"
+              );
+              this.page.identifier = this.page.identifier.replace(
+                "https://0x44.cc",
+                "https://0x41.cf"
+              );
             };
             function loadDisqusComments() {
               // DON'T EDIT BELOW THIS LINE
