@@ -77,11 +77,13 @@ a[href^="#fn:"], a[href^="#fnref:"] { display: inline-block; margin-left: .1rem;
 
 .lead { font-size: 1.25rem; font-weight: 300; }
 
-a svg, .icon svg { height: 1em; }
+a svg, .icon svg { height: 1.1em; }
+
+.post-categories a svg { transform: translate(0, 0.1em); }
 
 a svg { fill: #50b0ff; }
 
-.home a svg:hover, .home a svg:focus { fill: white; }
+.index a svg:hover, .index a svg:focus { fill: white; }
 
 #category { background-color: #111; height: auto; }
 

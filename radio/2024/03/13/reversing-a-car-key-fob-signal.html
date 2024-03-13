@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <link href="https://gmpg.org/xfn/11" rel="profile" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <!-- Enable responsiveness on mobile devices-->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
+
+    <title>
+      Reverse engineering a car key fob signal (Part 1) &middot; 0x44.cc
+    </title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css" />
+
+    <!-- Icons -->
+    <link
+      rel="apple-touch-icon-precomposed"
+      sizes="144x144"
+      href="/favicon.png"
+    />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- RSS -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RSS"
+      href="/feed.xml"
+    />
+
+    <!-- Additional head bits without overriding original head -->
+  </head>
+
+  <body class="post">
+    <script src="/assets/js/anchor.min.js"></script>
+    <script>
+      // IE support
+      if (window.MSInputMethodContext && document.documentMode) {
+        document.write(
+          '<script src="/assets/js/ie11CustomProperties.min.js"><\x2fscript>'
+        );
+      }
+      // progress bar
+      prog = document.createElement("div");
+      prog.setAttribute("id", "progress-bar");
+      prog.style.setProperty("--progress", "0%");
+      document.body.insertBefore(prog, document.body.childNodes[0]);
+      const article = document.querySelector(".post");
+      const progressBar = document.querySelector("#progress-bar");
+      document.addEventListener("scroll", function () {
+        const articleScroll = pageYOffset - article.offsetTop;
+        const height =
+          document.documentElement.scrollHeight -
+          innerHeight -
+          article.offsetTop;
+        const readPercent = (articleScroll / height) * 100;
+        if (readPercent > 0) {
+          progressBar.style.setProperty("--progress", readPercent + "%");
+        } else {
+          progressBar.style.setProperty("--progress", "0%");
+        }
+      });
+
+      // initialize AnchorJS
+      document.addEventListener("DOMContentLoaded", function (event) {
+        anchors.add(".post-body h3, .post-body h4");
+        anchors.options.placement = "left";
+      });
+    </script>
+
+    <div id="sidebar">
+      <header>
+        <div class="site-title">
+          <a href="/">
+            <span class="back-arrow icon"
+              ><svg
+                fill="#000000"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                /></svg
+            ></span>
+
+            <span id="site-title">0x44.cc</span>
+          </a>
+        </div>
+        <p class="lead">InfoSec, Reverse Engineering, and more (soon&trade;)</p>
+      </header>
+      <nav id="sidebar-nav-links">
+        <a class="home-link" href="/">Home</a>
+
+        <a class="page-link" href="/about.html">whoami</a>
+
+        <a class="category-link" href="/reversing/">Reverse Engineering</a>
+
+        <a class="category-link" href="/radio/">Radio Frequency</a>
+
+        <a class="category-link" href="/infosec/">InfoSec</a>
+
+        <a class="category-link" href="/automation/">Automation</a>
+
+        <!-- Optional additional links to insert in sidebar nav -->
+      </nav>
+
+      <nav id="sidebar-icon-links">
+        <a
+          id="subscribe-link"
+          class="icon"
+          title="Subscribe"
+          aria-label="Subscribe"
+          href="/feed.xml"
+        >
+          <svg
+            fill="#000000"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <circle cx="6.18" cy="17.82" r="2.18" />
+            <path
+              d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"
+            />
+          </svg>
+        </a>
+
+        <a
+          id="github-link"
+          class="icon"
+          title="GitHub"
+          aria-label="GitHub"
+          href="https://github.com/thedroidgeek"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+          >
+            <path
+              d="M12 2c6.625 0 12 5.375 12 12 0 5.297-3.437 9.797-8.203 11.391-0.609 0.109-0.828-0.266-0.828-0.578 0-0.391 0.016-1.687 0.016-3.297 0-1.125-0.375-1.844-0.812-2.219 2.672-0.297 5.484-1.313 5.484-5.922 0-1.313-0.469-2.375-1.234-3.219 0.125-0.313 0.531-1.531-0.125-3.187-1-0.313-3.297 1.234-3.297 1.234-0.953-0.266-1.984-0.406-3-0.406s-2.047 0.141-3 0.406c0 0-2.297-1.547-3.297-1.234-0.656 1.656-0.25 2.875-0.125 3.187-0.766 0.844-1.234 1.906-1.234 3.219 0 4.594 2.797 5.625 5.469 5.922-0.344 0.313-0.656 0.844-0.766 1.609-0.688 0.313-2.438 0.844-3.484-1-0.656-1.141-1.844-1.234-1.844-1.234-1.172-0.016-0.078 0.734-0.078 0.734 0.781 0.359 1.328 1.75 1.328 1.75 0.703 2.141 4.047 1.422 4.047 1.422 0 1 0.016 1.937 0.016 2.234 0 0.313-0.219 0.688-0.828 0.578-4.766-1.594-8.203-6.094-8.203-11.391 0-6.625 5.375-12 12-12zM4.547 19.234c0.031-0.063-0.016-0.141-0.109-0.187-0.094-0.031-0.172-0.016-0.203 0.031-0.031 0.063 0.016 0.141 0.109 0.187 0.078 0.047 0.172 0.031 0.203-0.031zM5.031 19.766c0.063-0.047 0.047-0.156-0.031-0.25-0.078-0.078-0.187-0.109-0.25-0.047-0.063 0.047-0.047 0.156 0.031 0.25 0.078 0.078 0.187 0.109 0.25 0.047zM5.5 20.469c0.078-0.063 0.078-0.187 0-0.297-0.063-0.109-0.187-0.156-0.266-0.094-0.078 0.047-0.078 0.172 0 0.281s0.203 0.156 0.266 0.109zM6.156 21.125c0.063-0.063 0.031-0.203-0.063-0.297-0.109-0.109-0.25-0.125-0.313-0.047-0.078 0.063-0.047 0.203 0.063 0.297 0.109 0.109 0.25 0.125 0.313 0.047zM7.047 21.516c0.031-0.094-0.063-0.203-0.203-0.25-0.125-0.031-0.266 0.016-0.297 0.109s0.063 0.203 0.203 0.234c0.125 0.047 0.266 0 0.297-0.094zM8.031 21.594c0-0.109-0.125-0.187-0.266-0.172-0.141 0-0.25 0.078-0.25 0.172 0 0.109 0.109 0.187 0.266 0.172 0.141 0 0.25-0.078 0.25-0.172zM8.937 21.438c-0.016-0.094-0.141-0.156-0.281-0.141-0.141 0.031-0.234 0.125-0.219 0.234 0.016 0.094 0.141 0.156 0.281 0.125s0.234-0.125 0.219-0.219z"
+            ></path>
+          </svg>
+        </a>
+
+        <a
+          id="linkedin-link"
+          class="icon"
+          title="LinkedIn"
+          aria-label="LinkedIn"
+          href="https://linkedin.com/in/thedroidgeek"
+          target="_blank"
+          rel="noopener"
+        >
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+          >
+            <path
+              d="M 24.007812 14.597656 L 24.007812 23.472656 L 18.859375 23.472656 L 18.859375 15.191406 C 18.859375 13.113281 18.117188 11.691406 16.253906 11.691406 C 14.832031 11.691406 13.988281 12.648438 13.613281 13.574219 C 13.480469 13.90625 13.445312 14.367188 13.445312 14.828125 L 13.445312 23.472656 L 8.296875 23.472656 C 8.296875 23.472656 8.367188 9.449219 8.296875 7.996094 L 13.441406 7.996094 L 13.441406 10.1875 C 13.433594 10.207031 13.417969 10.222656 13.410156 10.238281 L 13.441406 10.238281 L 13.441406 10.1875 C 14.128906 9.136719 15.347656 7.632812 18.082031 7.632812 C 21.46875 7.632812 24.007812 9.84375 24.007812 14.597656 Z M 2.914062 0.535156 C 1.152344 0.535156 0 1.6875 0 3.207031 C 0 4.691406 1.117188 5.882812 2.84375 5.882812 L 2.878906 5.882812 C 4.671875 5.882812 5.789062 4.691406 5.789062 3.207031 C 5.757812 1.6875 4.671875 0.535156 2.914062 0.535156 Z M 0.304688 23.472656 L 5.449219 23.472656 L 5.449219 7.996094 L 0.304688 7.996094 Z M 0.304688 23.472656 "
+            />
+          </svg>
+        </a>
+      </nav>
+
+      <p>
+        &copy; 2024.
+        <a href="/LICENSE.md">MIT License.</a>
+      </p>
+    </div>
+
+    <main class="container">
+      <header>
+        <h1 class="post-title">
+          Reverse engineering a car key fob signal (Part 1)
+        </h1>
+      </header>
+      <div class="content">
+        <div class="post-meta">
+          <span class="post-date">13 Mar 2024</span>
+          <span class="post-categories">
+            &bull;
+
+            <a href="/radio/">
+              <svg
+                class="svg-icon"
+                style="width: 24px"
+                viewBox="0 0 960 960"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M512 426.666667a85.333333 85.333333 0 0 1 85.333333 85.333333 85.333333 85.333333 0 0 1-20.053333 55.04L712.533333 938.666667h-90.88L512 637.013333 402.346667 938.666667H311.466667l135.253333-371.626667A85.333333 85.333333 0 0 1 426.666667 512a85.333333 85.333333 0 0 1 85.333333-85.333333m0-85.333334a170.666667 170.666667 0 0 0-170.666667 170.666667c0 21.333333 4.266667 42.666667 11.946667 62.293333l-37.546667 102.4A257.109333 257.109333 0 0 1 256 512a256 256 0 0 1 256-256 256 256 0 0 1 256 256c0 62.72-22.613333 119.893333-59.733333 164.693333l-37.546667-102.4C678.4 554.666667 682.666667 533.333333 682.666667 512a170.666667 170.666667 0 0 0-170.666667-170.666667m0-170.666666a341.333333 341.333333 0 0 0-341.333333 341.333333c0 100.693333 42.666667 192 112.64 253.44l-30.72 85.333333A426.88 426.88 0 0 1 85.333333 512 426.666667 426.666667 0 0 1 512 85.333333a426.666667 426.666667 0 0 1 426.666667 426.666667c0 137.813333-65.706667 260.693333-167.253334 338.773333l-30.72-85.333333C810.666667 704 853.333333 612.693333 853.333333 512a341.333333 341.333333 0 0 0-341.333333-341.333333z"
+                  fill=""
+                />
+              </svg>
+
+              Radio Frequency
+            </a>
+          </span>
+        </div>
+
+        <div class="post-body">
+          <h3 id="context">Context</h3>
+
+          <p>
+            I’ve had the curiosity to explore radio communication protocols for
+            a few years now, ever since I’ve started fiddling around with an
+            RTL-SDR dongle. I always had the goal of figuring out how data is
+            transmitted in remote controls (car key fobs particularly), trying
+            replay attacks, and other possible attack vectors.
+          </p>
+
+          <p>
+            Despite capturing some car key fob signals over the years, I haven’t
+            had the chance of doing meaningful analysis on them, and that’s
+            mainly due to the limited access I had to cars I could test on.
+          </p>
+
+          <p>
+            This blog post aims to bring the uninitiated through my journey of
+            having successfully reverse engineered and replayed a car’s key fob
+            signal last year, starting from the very basic concepts of radio
+            frequency and going all the way through my entire thought process
+            while I was working on this project.
+          </p>
+
+          <p>
+            Another goal I guess is to also prove that most cars are definitely
+            not that easy to steal using replay attacks (unless it’s a
+            <a
+              href="https://rollingpwn.github.io/rolling-pwn/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Honda</a
+            >, lol), despite Canada’s recent ban of the Flipper Zero, and them
+            claiming the risk warrants the ban of a device made of very cheap
+            and accessible wireless modules.
+          </p>
+
+          <h3 id="hardware-used">Hardware used</h3>
+
+          <h4 id="rtl-sdr">RTL-SDR</h4>
+
+          <p>
+            I’ve had my first dive into the world of radio frequency back in
+            2016 when I learned that a very cheap (~$10) terrestrial TV/radio
+            USB dongle can easily be turned into a multi-purpose RF receiver to
+            inspect and decode pretty much anything happening in the range of 24
+            to 1750 MHz - this device is widely known as ‘RTL-SDR’:
+          </p>
+
+          <p><img src="https://i.0x44.cc/b/rtl-sdr.png" alt="" /></p>
+
+          <p>
+            The secret why this cheap device is very powerful, is the simple
+            fact that it uses a chip which allows the use of
+            <a
+              href="https://en.wikipedia.org/wiki/Software-defined_radio"
+              rel="noopener noreferrer"
+              target="_blank"
+              >SDR (software defined radio)</a
+            >. It turns out that this chip (RTL2832U) allowed skipping the
+            signal processing that usually happens on the hardware-level which
+            converts the raw signal into ‘meaningful’ data to be used by the
+            host device (a TV/radio feed in the case of this device).
+          </p>
+
+          <p>
+            By having direct access to the raw I/Q data, we can receive,
+            visualize and save pretty much any signal in raw format, without
+            needing to know the specifics of the RF configuration used to
+            transmit (modulation, bandwidth, data rate, etc.), since we can
+            analyze/process the raw data ourselves. This effectively gives us a
+            window to scan for virtually any activity on the radio spectrum
+            under the 1.7 GHz frequency.
+          </p>
+
+          <h4 id="flipper-zero">Flipper Zero</h4>
+
+          <p>
+            The Flipper Zero is an electronic gadget which attracted a lot of
+            attention lately for being a hacker/troll’s ultimate Swiss knife,
+            since it hosts a bunch of wireless hardware modules that allow
+            ‘interacting with’ everyday electronics and consumer appliances.
+          </p>
+
+          <p><img src="https://i.0x44.cc/b/flipper-zero.jpg" alt="" /></p>
+
+          <p>
+            The module that’s interesting to us in the Flipper is the Sub-GHz
+            one, which is essentially a
+            <a
+              href="https://www.ti.com/product/CC1101"
+              rel="noopener noreferrer"
+              target="_blank"
+              >CC1101</a
+            >
+            chip that supports frequencies that are typically used in wireless
+            consumer devices, and that are under 1 GHz, hence the name of the
+            module.
+          </p>
+
+          <p>
+            It’s important to note, however, that one could just buy the CC1101
+            module separately ($5+) and make it work with an Arduino/Raspberry
+            Pi or simply a USB-to-TTL adapter, but the Flipper is definitely
+            cooler and more practical. ¯\_(ツ)_/¯
+          </p>
+
+          <h4 id="cc1101-vs-rtl2832u">CC1101 vs RTL2832U</h4>
+
+          <p>
+            The CC1101 chip in the Flipper Zero, unlike the RTL2832U chip that’s
+            on the RTL-SDR, is actually a transceiver module (supports sending
+            and receiving), which means the Flipper Zero is the device we’ll be
+            using to send signals.
+          </p>
+
+          <p>
+            However, the CC1101 chip doesn’t support SDR, which means that it
+            would only send back data that it had completely processed. In other
+            terms, the CC1101 will only be useful to us if we set the right RF
+            configuration of the transmitted signal.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th> </th>
+                <th>Flipper Zero (CC1101)</th>
+                <th>RTL-SDR dongle (RTL2832U)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Receiving signals</td>
+                <td>✔️</td>
+                <td>✔️</td>
+              </tr>
+              <tr>
+                <td>Sending signals</td>
+                <td>✔️</td>
+                <td>❌</td>
+              </tr>
+              <tr>
+                <td>Receiving/analyzing raw signals</td>
+                <td>❌</td>
+                <td>✔️</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            <strong><em>Note:</em></strong> Transceiver SDR devices do exist of
+            course, but they tend to be very pricey.
+          </p>
+
+          <h3 id="radio-frequency-signal-basics-oversimplified">
+            Radio frequency signal basics (<em>oversimplified</em>)
+          </h3>
+
+          <p>
+            Now that we know a bit about the hardware we’ll be using, let’s go
+            through some minimum basic concepts that are needed to tackle this
+            subject.
+          </p>
+
+          <h4 id="intro">Intro</h4>
+
+          <p>
+            Radio frequency transmissions use radio waves, which are a type of
+            electromagnetic radiation, in order to send signals.
+          </p>
+
+          <p>
+            These waves are of a typically higher frequency than the original
+            signal we’re transmitting and this is to ensure reliability in
+            sending data, since signals can have varying characteristics that
+            make sending them as radio waves impractical and susceptible to
+            interference and weak travel distance.
+          </p>
+
+          <p>
+            These waves are called carrier waves, since they are essentially
+            modified to carry the original signal reliably through the air (more
+            on this below).
+          </p>
+
+          <p>
+            Let’s take a look at <em>some</em> of the basic information needed
+            to send/receive a radio signal:
+          </p>
+
+          <h4 id="frequency">Frequency</h4>
+
+          <p>
+            This one is self-explanatory, it’s the number of times a second a
+            carrier wave occurs. Frequency affects the wavelength (the higher
+            the frequency the shorter the waves). This parameter is also
+            typically used to define the communication channel.
+          </p>
+
+          <h4 id="modulation">Modulation</h4>
+
+          <p>
+            This refers to the way a signal is represented in the radio waves.
+            The two most common modulation types, which I’m sure most people
+            already know of, are:
+          </p>
+
+          <p>
+            <strong>AM</strong> (<em>amplitude</em> modulation) and
+            <strong>FM</strong> (<em>frequency</em> modulation).
+          </p>
+
+          <p>
+            The difference between these is simply the fact that for AM, the
+            signal is modulated (encoded) in <em>amplitude</em> (or strength),
+            which roughly means that the <em>change</em> in signal
+            <em>strength</em> on the carrier waves is how the data is
+            represented.
+          </p>
+
+          <p>
+            For FM, as one can guess, the data is rather modulated in
+            <em>frequency</em>. So, changes in the frequency of the waves are
+            used here to determine the data.
+          </p>
+
+          <p>
+            This is well visualized in this animation I found on Wikipedia (the
+            ‘signal’ graph represents the data we’re trying to transmit):
+          </p>
+
+          <p>
+            <img src="https://i.0x44.cc/b/radio-fm-vs-am-anim.gif" alt="" />
+          </p>
+
+          <p>
+            Modulations can also have different subtypes and characteristics
+            which we’ll talk about later on.
+          </p>
+
+          <h4 id="bandwidth">Bandwidth</h4>
+
+          <p>
+            This refers to the range of frequencies occupied by a modulated RF
+            signal, or in other words, the difference between the highest and
+            the lowest frequency a modulated signal can have. This essentially
+            dictates the amount of data a signal can carry.
+          </p>
+
+          <p>
+            Since the rest of the radio characteristics are not terribly
+            important for us to know at this stage, let’s move on to the fun
+            stuff!
+          </p>
+
+          <h3 id="visual-analysis">Visual analysis</h3>
+
+          <h4 id="sdr">SDR#</h4>
+
+          <p>
+            <a
+              href="https://airspy.com/download/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >SDR#</a
+            >
+            is a free, intuitive, computer-based DSP (Digital Signal Processing)
+            application for SDR written in C# with a focus on performance. It
+            allows visualizing the radio spectrum in real time, and supports the
+            demodulation of some common modulations. It also supports
+            third-party plugins for custom modulations and integrations.
+          </p>
+
+          <p>
+            We’ll be using this software for our signal discovery and initial
+            analysis phase.
+          </p>
+
+          <h4 id="signal-discovery">Signal discovery</h4>
+
+          <p>
+            By tuning into the 433.92 MHz frequency with our RTL-SDR dongle
+            plugged in (using the WinUSB driver instead of the stock DVB-T one),
+            we can watch the activity of most remote controls in close proximity
+            (433.92 MHz being the standard unregulated frequency in the EU and
+            other neighboring countries, including Morocco, where I live).
+          </p>
+
+          <p>
+            On each car key fob button press we instantly notice that there’s 3
+            successive short bursts generated, as can be seen on the waterfall
+            view under the spectrum visualizer:
+          </p>
+
+          <p>
+            <img src="https://i.0x44.cc/b/sdrsharp-key-fob-433.png" alt="" />
+          </p>
+
+          <p>
+            <small style="display: block; text-align: center"
+              >SDR# visualizing the key fob signal (X axis = frequency, Y axis =
+              signal intensity)</small
+            >
+          </p>
+
+          <p>
+            We can also notice that the signal has two major ‘peaks’ on both
+            sides of the 433.92 MHz frequency (the red line in the middle is the
+            exact tuning frequency).
+          </p>
+
+          <p>
+            Doing some research on common modulation schemes, we come across
+            2-FSK that sounds interesting:
+          </p>
+
+          <h4 id="2-fsk">2-FSK</h4>
+
+          <p>
+            FSK stands for Frequency-Shift Keying, which is a frequency
+            modulation scheme in which data is encoded on a carrier signal by
+            periodically shifting the frequency of the carrier between several
+            discrete frequencies.
+          </p>
+
+          <p>
+            Pretty straightforward so far, sounds like we’re dealing with FM
+            here.
+          </p>
+
+          <p>
+            The interesting part is the ‘2’ however, which here stands for the
+            number of channels used in the encoding. So, we’re actually encoding
+            binary data in two separate frequencies here, one for the
+            <strong>0</strong> and the other for the <strong>1</strong>, which
+            would explain the two peaks we’re noticing.
+          </p>
+
+          <p>
+            <strong><em>Note:</em></strong> One might wonder what the other
+            smaller ‘peaks’ are in that screen capture - those are basically
+            unwanted frequencies that are generated accidentally by the emitter
+            chip, due to the cheap nature of the hardware, and due to the very
+            close proximity of the remote and the antenna. So, it’s just a bunch
+            of ‘noise’ that we can safely ignore.
+          </p>
+
+          <h3 id="practical-analysis">Practical analysis</h3>
+
+          <p>
+            Now that we checked what the signal looks like visually, let’s
+            explore how we can work on analyzing it in order to read the bits
+            from the RF waves in hopes to spot some sort of
+            structure/consistency.
+          </p>
+
+          <h4 id="universal-radio-hacker">Universal Radio Hacker</h4>
+
+          <p>
+            As the README of its repository states, the
+            <a
+              href="https://github.com/jopohl/urh"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Universal Radio Hacker (URH)</a
+            >
+            is a complete open-source suite for wireless protocol investigation
+            with native support for many common SDRs. URH allows easy
+            demodulation of signals combined with an automatic detection of
+            modulation parameters making it a breeze to identify the bits and
+            bytes that fly over the air.
+          </p>
+
+          <p>
+            This is precisely the software we need to decode radio waves into
+            bits.
+          </p>
+
+          <p>
+            As we open URH, we’re invited to either open a file or record
+            directly from a device.
+          </p>
+
+          <p>
+            Before recording, we have to select the source device, and set some
+            basic radio parameters (I actually only made sure to put the right
+            frequency and left everything else as default):
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-record-dialog-rtlsdr.png"
+              alt=""
+            />
+          </p>
+
+          <p>
+            After recording a signal, URH will try to autodetect the right
+            configuration to use when decoding the radio waves.
+          </p>
+
+          <p>
+            On my initial recordings, I wasn’t able to get URH to find the right
+            parameters for me, which gave me wrong results. I have however later
+            figured out that recording multiple repetitive signals in one go
+            increases the chance that URH will figure out the right
+            configuration, which turned out to be in my case: 50 samples/symbol,
+            FSK.
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-signal-interpretation.png"
+              alt=""
+            />
+          </p>
+
+          <p>
+            Zooming in on one of the signals, we notice the 3 bursts we
+            identified on SDR# (the second of which is made of 3 separate ones -
+            so we have 5 sections to analyze now):
+          </p>
+
+          <p><img src="https://i.0x44.cc/b/urh-signal-zoom-in.png" alt="" /></p>
+
+          <p>
+            For each of these sections, a bit sequence is automatically
+            extracted, which we can also convert to hex for a better
+            visualization:
+          </p>
+
+          <p>
+            <img src="https://i.0x44.cc/b/urh-signal-zoom-in-hex.png" alt="" />
+          </p>
+
+          <p>
+            We can already notice a lot of consistency and repeating patterns in
+            the bytes, which is a sign that we’re on the right path.
+          </p>
+
+          <p>
+            However, to my eyes, we’re still missing something here, because we
+            notice the same 5 hex digits being repeated, with a lot of 0x55
+            bytes (01010101) also, which is pretty intriguing.
+          </p>
+
+          <p>
+            Going over to the next tab labeled ‘Analysis’, we can see the bytes
+            we’ve just extracted from each burst, each represented in a line,
+            and there’s a decoding option that shows up with a bunch of curious
+            algorithms:
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-analysis-decoding-options.png"
+              alt=""
+            />
+          </p>
+
+          <p>
+            By brute forcing my way and trying them consecutively, I noticed
+            that one of them (Manchester II) converted all the 0x55 bytes to
+            null ones, and without producing any decoding errors:
+          </p>
+
+          <p>
+            <img src="https://i.0x44.cc/b/urh-manchester-decoded.png" alt="" />
+          </p>
+
+          <p>These bytes look more legit now.</p>
+
+          <h5 id="manchester-encoding">Manchester encoding</h5>
+
+          <p>
+            <a
+              href="https://en.wikipedia.org/wiki/Manchester_code"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Manchester</a
+            >
+            is a very simple digital modulation scheme that ensures that the
+            signal never remains at logic low or logic high for an extended
+            period of time, and also converts the data signal into a
+            data-plus-synchronization signal (for
+            <a
+              href="https://en.wikipedia.org/wiki/Clock_recovery"
+              rel="noopener noreferrer"
+              target="_blank"
+              >clock recovery</a
+            >).
+          </p>
+
+          <p>
+            These characteristics are very useful when sending digital data over
+            analog mediums that tend to be susceptible to noise and
+            interference.
+          </p>
+
+          <p>
+            In Manchester, binary data is encoded in two opposite bits,
+            therefore:
+          </p>
+
+          <p>
+            <strong>0</strong> becomes <strong>01</strong> and
+            <strong>1</strong> becomes <strong>10</strong> (or the other way
+            around, depending on the convention):
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/manchester-visualization-wiki.png"
+              alt=""
+            />
+          </p>
+
+          <p>Let’s go back and continue our investigation.</p>
+
+          <p>
+            By doing some manual examination and comparison of the different
+            captures, we’re able to note that each button press generates a
+            signal with the following characteristics:
+          </p>
+
+          <ol>
+            <li>
+              A <span style="color: yellow">long burst</span> with no data
+              (decodes to 100 null bytes).
+            </li>
+            <li>
+              3 bursts which look very similar with only 2 bytes partially
+              <span style="color: red">changing</span>.
+            </li>
+            <li>
+              A <span style="color: lightgreen">final burst</span> which is
+              shorter but still looks fairly similar to the previous 3 bursts.
+            </li>
+          </ol>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-initial-signal-structure-highlight.png"
+              alt=""
+            />
+          </p>
+
+          <p>
+            I decided to look more closely at the 3 bursts (let’s call them
+            packets) in the middle since they seem to be the important part of
+            the signal, and I was quickly able to spot what seems to be an
+            <span style="color: deepskyblue">incremental ID</span> which
+            increases by 1 on each new signal:
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-incremental-id-spotted.png"
+              alt=""
+            />
+          </p>
+
+          <p>
+            To be able to move forward with our analysis, we must learn about a
+            very important remote control security mechanism:
+          </p>
+
+          <h4 id="rolling-codes">Rolling codes</h4>
+
+          <p>
+            A rolling code is used in keyless entry systems to prevent a simple
+            form of replay attack, where an eavesdropper records the
+            transmission and replays it at a later time to cause the receiver to
+            ‘unlock’. Such systems are typical in garage door openers and
+            keyless car entry systems. More on
+            <a
+              href="https://en.wikipedia.org/wiki/Rolling_code"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Wikipedia</a
+            >.
+          </p>
+
+          <p>
+            The gist of this system is that the key and the car both ‘agree’ on
+            a cryptographically secure algorithm in order to generate rolling
+            codes that are used to authenticate the remote.
+          </p>
+
+          <p>
+            These keys are generated and tracked using a <em>counter</em> which
+            has to stay in sync between the remote and the car. This ensures
+            that the car doesn’t reuse an old key, and that the remote always
+            generates fresh keys.
+          </p>
+
+          <p>
+            An example of a rolling code implementation is pictured below
+            <small
+              >(credits:
+              <a
+                href="https://www.youtube.com/watch?v=8P_Wgl89jPU"
+                rel="noopener noreferrer"
+                target="_blank"
+                >RuhrSec 2017</a
+              >)</small
+            >:
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/rolling-code-explanation.png"
+              alt=""
+            />
+          </p>
+
+          <ul>
+            <li><strong>uid</strong>: ID of the car/remote link</li>
+            <li>
+              <strong>enc<sub>k</sub></strong
+              >: Implementation of the rolling code algorithm
+            </li>
+            <li><strong>ctr</strong>: The car’s counter</li>
+            <li><strong>ctr’</strong>: The remote’s counter</li>
+          </ul>
+
+          <p>
+            The validity window permits the remote to not go out of sync if the
+            car doesn’t happen to receive the signal (typically with a max of
+            255 out-of-range button presses on most implementations, after which
+            the remote has to be manually resynchronized).
+          </p>
+
+          <p>Alright, let’s go back to the drawing board.</p>
+
+          <p>
+            Since we now know that rolling codes are
+            <em>cryptographically</em> secure, it becomes easy for us to spot
+            the
+            <span style="color: lightgreen">part of the signal</span>
+            responsible for this implementation (which would be the one with the
+            highest entropy):
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-rolling-code-spotted.png"
+              alt=""
+            />
+          </p>
+
+          <p>
+            We can also make the assumption that the
+            <span style="color: deepskyblue">incremental ID</span> we’ve
+            identified earlier is the counter for the rolling code system. As it
+            also conveniently sits right next to the code.
+          </p>
+
+          <p>
+            By comparing lock and unlock signals, I was also able to quickly
+            spot <span style="color: plum">the byte</span> responsible for the
+            command (8 = unlock, 4 = lock):
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-command-byte-spotted.png"
+              alt=""
+            />
+          </p>
+
+          <p>
+            Now all that’s left for us to guess from the signal’s ‘variable
+            parts’ are the two <span style="color: red">red changes</span> we
+            marked earlier:
+          </p>
+
+          <p>
+            <strong>1)</strong> For the first one, we notice that the same
+            values repeat themselves across the other captured signals.
+          </p>
+
+          <p>Converting the 3 values to binary, we notice the following:</p>
+
+          <ul>
+            <li>0x6: <strong>01</strong>10</li>
+            <li>0xA: <strong>10</strong>10</li>
+            <li>0xE: <strong>11</strong>10</li>
+          </ul>
+
+          <p>
+            Interesting, looks as if it’s packing some sort of sequence number
+            for the packets.
+          </p>
+
+          <p>And what if we check the final (4th) packet as well?</p>
+
+          <ul>
+            <li>0x13: <strong>100</strong>11</li>
+          </ul>
+
+          <p>
+            Yup, our theory seems to check out
+            <small>(ignore the lowest bit that changed here)</small>.
+          </p>
+
+          <p><strong>2)</strong> Let’s guess the last byte now.</p>
+
+          <p>
+            We can notice that this one not only changes for each packet, but it
+            does so completely across all signals as well.
+          </p>
+
+          <p>
+            Seeing that this is the last byte on the packet and that it changes
+            pretty randomly, leads me to suspect this being a checksum.
+          </p>
+
+          <p>
+            One thing we can try doing is a XOR of this byte with the other byte
+            we just analyzed, to see if we can end up with a static value (since
+            pretty much <em>everything</em> besides these two bytes actually
+            stays <em>static</em> when it comes to the 3 rolling code packets).
+          </p>
+
+          <p>Let’s try with these two examples:</p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-checksum-theory-test.png"
+              alt=""
+            />
+          </p>
+
+          <p>Example 1:</p>
+
+          <ul>
+            <li>0x06 ^ 0xB9 = <strong>0xBF</strong></li>
+            <li>0x0A ^ 0xB5 = <strong>0xBF</strong></li>
+            <li>0x0E ^ 0xB1 = <strong>0xBF</strong></li>
+          </ul>
+
+          <p>Example 2:</p>
+
+          <ul>
+            <li>0x06 ^ 0xCC = <strong>0xCA</strong></li>
+            <li>0x0A ^ 0xC0 = <strong>0xCA</strong></li>
+            <li>0x0E ^ 0xC4 = <strong>0xCA</strong></li>
+          </ul>
+
+          <p>Bingo. This is definitely a XOR checksum.</p>
+
+          <p>
+            By applying XOR on all the bytes of the packets, we notice that the
+            value always ends up being off by 1:
+          </p>
+
+          <p><img src="https://i.0x44.cc/b/urh-bad-checksum.png" alt="" /></p>
+
+          <p>
+            This leads us to conclude that the first 2 bytes of the packet are
+            likely excluded from the checksum (which is where the 1 is coming
+            from):
+          </p>
+
+          <p>
+            <img
+              src="https://i.0x44.cc/b/urh-synchronization-bytes.png"
+              alt=""
+            />
+          </p>
+
+          <p>
+            And this actually makes sense, since these bytes would act here as a
+            <a
+              href="https://en.wikipedia.org/wiki/Syncword"
+              rel="noopener noreferrer"
+              target="_blank"
+              >syncword</a
+            >
+            to synchronize the receiver and indicate the beginning of the data.
+          </p>
+
+          <p>
+            <strong>Note:</strong> If you’re wondering about the utility of the
+            initial <span style="color: yellow">long burst</span> highlighted in
+            yellow in the captures - that one serves to basically wake up the
+            radio receiver and prepare it to start receiving data (since it goes
+            in an idle low power state on inactivity). And if you’re also
+            wondering why the remote sends 3 packets with roughly the same data,
+            it’s simply to insure some sort of reliability. In case one of the
+            packets gets corrupted on the way (which we saw happen on an earlier
+            screenshot).
+          </p>
+
+          <h4 id="final-result">Final result</h4>
+
+          <p>
+            After labeling the rest of the bytes to my best guess, this is the
+            result I ended up with:
+          </p>
+
+          <p>
+            <img src="https://i.0x44.cc/b/urh-final-labelization.png" alt="" />
+          </p>
+
+          <p>Neat. We’ve just reverse engineered a car key fob signal.</p>
+
+          <p>
+            Tune in next time when I (hopefully) write about how I integrated
+            support for this signal format on the Flipper Zero in order to be
+            able to read, re-serialize, and replay it.
+          </p>
+
+          <p>Thanks for reading!</p>
+
+          <p>
+            <strong>Note:</strong> If you’ve noticed inaccurate information, or
+            room for improvement regarding this article, and would like to
+            improve it, feel free to
+            <a
+              href="https://github.com/thedroidgeek/0x44.cc/edit/master/_posts/2024-03-13-reversing-a-car-key-fob-signal.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >submit a pull request</a
+            >
+            on GitHub.
+          </p>
+
+          <div class="post-tags"></div>
+        </div>
+
+        <br />
+        <table class="kofi-btn">
+          <tbody>
+            <tr>
+              <td>
+                <p align="right">
+                  If you've enjoyed this article, feel free to
+                </p>
+              </td>
+              <td>
+                <a href="https://ko-fi.com/annan" target="_blank">
+                  <img
+                    src="/assets/media/kofi.png"
+                    alt="Buy Me a Coffee at ko-fi.com"
+                  />
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <section class="comments">
+          <h2>Comments</h2>
+
+          <div id="disqus_thread">
+            <button class="disqus-load" onClick="loadDisqusComments()">
+              Load Comments
+            </button>
+          </div>
+          <script src="/assets/js/disqusloader.min.js"></script>
+          <script>
+            /**
+             *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW
+             *  TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+             *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT:s
+             *  https://disqus.com/admin/universalcode/#configuration-variables
+             */
+            var disqus_config = function () {
+              this.page.url =
+                "https://0x44.cc/radio/2024/03/13/reversing-a-car-key-fob-signal.html";
+              this.page.identifier =
+                "" ||
+                "https://0x44.cc/radio/2024/03/13/reversing-a-car-key-fob-signal.html";
+            };
+            function loadDisqusComments() {
+              // DON'T EDIT BELOW THIS LINE
+              var d = document,
+                s = d.createElement("script");
+              s.src = "//0x41-cf.disqus.com/embed.js";
+              s.setAttribute("data-timestamp", +new Date());
+              (d.head || d.body).appendChild(s);
+            }
+
+            // Disqus lazy-loading (on visibility)
+            disqusLoader("#disqus_thread", {
+              scriptUrl: "//0x41-cf.disqus.com/embed.js",
+              disqusConfig: disqus_config,
+            });
+          </script>
+          <noscript>
+            Please enable JavaScript to view the
+            <a href="https://disqus.com/?ref_noscript"
+              >comments powered by Disqus</a
+            >.
+          </noscript>
+        </section>
+
+        <section class="related">
+          <h2>Related Posts</h2>
+          <ul class="posts-list">
+            <li>
+              <h3>
+                <a
+                  href="/reversing/2021/07/21/reversing-x86-and-c-code-for-beginners.html"
+                >
+                  Reversing for dummies - x86 assembly and C code (Beginner/ADHD
+                  friendly)
+                  <small>&bull; 21 Jul 2021</small>
+                </a>
+              </h3>
+            </li>
+
+            <li>
+              <h3>
+                <a
+                  href="/automation/2021/03/02/google-assistant-youtube-smart-tvs.html"
+                >
+                  Google Assistant YouTube command for smart TVs
+                  <small>&bull; 02 Mar 2021</small>
+                </a>
+              </h3>
+            </li>
+
+            <li>
+              <h3>
+                <a href="/reversing/2019/10/08/unlocking-nokia-g240wa.html">
+                  Unlocking IAM's Nokia G-240W-A router (Part 1)
+                  <small>&bull; 08 Oct 2019</small>
+                </a>
+              </h3>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <!-- Optional footer content -->
+  </body>
+</html>
