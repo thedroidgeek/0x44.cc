@@ -118,12 +118,15 @@ a[href^="#fnref:"] {
 
 // SVG Icons
 a svg, .icon svg {
-  height: 1em;
+  height: 1.1em;
+}
+.post-categories a svg {
+  transform: translate(0,0.1em);
 }
 a svg {
   fill: $link-color;
 }
-.home a svg {
+.index a svg {
   &:hover, &:focus {
     fill: $heading-color;
   }
