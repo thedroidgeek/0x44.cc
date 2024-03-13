@@ -3,7 +3,7 @@ layout: post
 title: 1-click RCE with Skype Web Plugin and Qt apps
 excerpt_separator:  <!--more-->
 categories:
-  - InfoSec
+  - infosec
 ---
 
 ### Context

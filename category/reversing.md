@@ -1,7 +1,7 @@
 ---
 layout: category
-title: Reversing
+title: reversing
 fullname: Reverse Engineering
 icon: bug
-sidebar_sort_order: 2
+sidebar_sort_order: 1
 ---

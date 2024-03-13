@@ -3,7 +3,7 @@ layout: post
 title: Google Assistant YouTube command for smart TVs
 excerpt_separator:  <!--more-->
 categories:
-  - Automation
+  - automation
 ---
 
 

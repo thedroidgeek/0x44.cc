@@ -3,7 +3,7 @@ layout: post
 title: Unlocking IAM's Nokia G-240W-A router (Part 1)
 excerpt_separator:  <!--more-->
 categories:
-  - Reversing
+  - reversing
 ---
 
 

@@ -1,7 +1,7 @@
 ---
 layout: category
-title: InfoSec
+title: infosec
 fullname: InfoSec
 icon: infosec
-sidebar_sort_order: 1
+sidebar_sort_order: 3
 ---

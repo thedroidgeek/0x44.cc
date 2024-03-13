@@ -3,7 +3,7 @@ layout: post
 title: Reversing for dummies - x86 assembly and C code (Beginner/ADHD friendly)
 excerpt_separator:  <!--more-->
 categories:
-  - Reversing
+  - reversing
 ---
 
 ### Context

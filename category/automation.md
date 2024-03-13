@@ -1,7 +1,7 @@
 ---
 layout: category
-title: Automation
+title: automation
 fullname: Automation
 icon: robot
-sidebar_sort_order: 3
+sidebar_sort_order: 4
 ---
