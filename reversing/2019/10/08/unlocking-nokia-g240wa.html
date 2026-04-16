@@ -590,6 +590,7 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT:s
              *  https://disqus.com/admin/universalcode/#configuration-variables
              */
+
             var disqus_config = function () {
               this.page.url =
                 "https://0x44.cc/reversing/2019/10/08/unlocking-nokia-g240wa.html";
@@ -597,6 +598,7 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
                 "" ||
                 "https://0x44.cc/reversing/2019/10/08/unlocking-nokia-g240wa.html";
             };
+
             function loadDisqusComments() {
               // DON'T EDIT BELOW THIS LINE
               var d = document,
@@ -605,6 +607,25 @@ DECIMAL     HEXADECIMAL   DESCRIPTION
               s.setAttribute("data-timestamp", +new Date());
               (d.head || d.body).appendChild(s);
             }
+
+            // unbloat
+            new MutationObserver((m) =>
+              m.forEach((x) =>
+                x.addedNodes.forEach((n) => {
+                  if (n.nodeType !== 1) return;
+                  (n.matches?.('iframe[id^="dsq-app"]') ? [n] : [])
+                    .concat([...n.querySelectorAll('iframe[id^="dsq-app"]')])
+                    .forEach((el) => {
+                      try {
+                        if (new URL(el.src, location).hostname !== "disqus.com")
+                          el.remove();
+                      } catch {
+                        el.remove();
+                      }
+                    });
+                })
+              )
+            ).observe(document.body, { childList: true, subtree: true });
 
             // Disqus lazy-loading (on visibility)
             disqusLoader("#disqus_thread", {
